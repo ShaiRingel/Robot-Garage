@@ -9,92 +9,90 @@
         MinHeight="450" MinWidth="800"
         SizeChanged="Window_SizeChanged">
 
-    <Viewbox>
-        <Grid Height="450" Width="800">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <Rectangle Grid.Column="0" Fill="{StaticResource DarkBlueBrush}"/>
+        <Rectangle Grid.Column="0" Fill="{StaticResource DarkBlueBrush}"/>
 
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Image Source="/assets/images/Logo Small BackGround Removed.png" ToolTip="Robots Garage" Width="30" Margin="10, 0, 10, 0" />
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Image Source="/assets/images/Logo Small BackGround Removed.png" ToolTip="Robots Garage" Width="30" Margin="10, 0, 10, 0" />
 
-                <Label Content="Robots Garage" FontSize="18" FontWeight="ExtraBold" Margin="0, 0, 0, 0" VerticalAlignment="Center"/>
-                
-                <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
-            Style="{StaticResource NoHighlightButtonStyle}" Click="btnSales_Click" Cursor="Hand" Margin="10, 0, 0, 0">
-                    <TextBlock Text="Sales" />
-                </Button>
-                <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+            <Label Content="Robots Garage" FontSize="18" FontWeight="ExtraBold" Margin="0, 0, 0, 0" VerticalAlignment="Center"/>
+
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+        Style="{StaticResource NoHighlightButtonStyle}" Click="btnSales_Click" Cursor="Hand" Margin="10, 0, 0, 0">
+                <TextBlock Text="Sales" />
+            </Button>
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
 Style="{StaticResource NoHighlightButtonStyle}" Click="btnRequests_Click" Cursor="Hand" Margin="10, 0, 0, 0">
-                    <TextBlock Text="Requested" />
-                </Button>
-                <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+                <TextBlock Text="Requested" />
+            </Button>
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
 Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor="Hand" Margin="10, 0, 0, 0">
-                    <TextBlock Text="My Items" />
+                <TextBlock Text="My Items" />
+            </Button>
+        </StackPanel>
+
+        <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" HorizontalAlignment="Right"
+            Style="{StaticResource NoHighlightButtonStyle}" Click="btnNotifications_Click" Cursor="Hand" Margin="0, 0, 20, 0">
+            <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
+        </Button>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0, 15, 0, 0">
+                <Button Margin="5, 0, 0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/menu.svg" Height="12" 
+                                            Margin="5, 0, 5, 0"/>
+                        <Label Content="General" FontSize="14"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5, 0, 0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/Mechanics.svg" Height="15" Margin="5, 0, 5, 0"/>
+                        <Label Content="Mechanics" FontSize="14"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5, 0, 0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/Electronics.svg" Height="15" Margin="5, 0, 5, 0"/>
+                        <Label Content="Electronics" FontSize="14"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5, 0, 0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/Programming.svg" Height="15" Margin="5, 0, 5, 0"/>
+                        <Label Content="Programming" FontSize="14"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5, 0, 0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/Engine.svg" Height="15" Margin="5, 0, 5, 0"/>
+                        <Label Content="Engines" FontSize="14"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5, 0, 0, 10">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Source="/assets/images/Manufacturing.svg" Height="18" Margin="5, 0, 5, 0"/>
+                        <Label Content="manufacturing" FontSize="14"/>
+                    </StackPanel>
                 </Button>
             </StackPanel>
 
-            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" HorizontalAlignment="Right"
-                Style="{StaticResource NoHighlightButtonStyle}" Click="btnNotifications_Click" Cursor="Hand" Margin="0, 0, 20, 0">
-                <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
-            </Button>
-            
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="0, 15, 0, 0">
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/menu.svg" Height="12" 
-                                             Margin="5, 0, 5, 0"/>
-                            <Label Content="General" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/Mechanics.svg" Height="15" Margin="5, 0, 5, 0"/>
-                            <Label Content="Mechanics" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/Electronics.svg" Height="15" Margin="5, 0, 5, 0"/>
-                            <Label Content="Electronics" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/Programming.svg" Height="15" Margin="5, 0, 5, 0"/>
-                            <Label Content="Programming" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/Engine.svg" Height="15" Margin="5, 0, 5, 0"/>
-                            <Label Content="Engines" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="0, 0, 0, 10" Width="150">
-                        <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Source="/assets/images/Manufacturing.svg" Height="18" Margin="5, 0, 5, 0"/>
-                            <Label Content="manufacturing" FontSize="14"/>
-                        </StackPanel>
-                    </Button>
+            <Grid Grid.Column="1" Margin="15">
+                <StackPanel Orientation="Horizontal">
+                    <local:Card HorizontalAlignment="Left" VerticalAlignment="Top"
+                        ImageSource="/assets/images/Hammer.png" Price="99.99"/>
                 </StackPanel>
-
-                <Grid Grid.Column="1" Margin="15">
-                    <StackPanel Orientation="Horizontal">
-                        <local:Card HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
-                            ImageSource="/assets/images/Hammer.png" Price="99.99"/>
-                    </StackPanel>
-                </Grid>
             </Grid>
         </Grid>
-    </Viewbox>
+    </Grid>
 </Window>
