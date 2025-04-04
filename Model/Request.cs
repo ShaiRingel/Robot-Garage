@@ -6,35 +6,30 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class Request
-    {
-        private int id;
-        private Product product;
-        private double desiredPrice;
-        private string requestStatus;
+	public class Request : BaseEntity {
+		private Product product;
+		private Renter renter;
+		private decimal desiredPrice;
+		private string requestStatus;
 
-        public int ID
-        {
-            get => id;
-            set => id = value;
-        }
+		public Product Product {
+			get => product;
+			set => product = value;
+		}
 
-        public Product Product
-        {
-            get => product;
-            set => product = value;
-        }
+		public Renter Renter {
+			get => renter;
+			set => renter = value;
+		}
 
-        public decimal DesiredPrice
-        {
-            get => desiredPrice;
-            set => desiredPrice = value;
-        }
+		public decimal DesiredPrice {
+			get => desiredPrice;
+			set => desiredPrice = value;
+		}
 
-        public string RequestStatus
-        {
-            get => requestStatus;
-            set => requestStatus = value;
-        }
-    }
+		public string RequestStatus {
+			get => requestStatus;
+			set => requestStatus = value;
+		}
+	}
 }

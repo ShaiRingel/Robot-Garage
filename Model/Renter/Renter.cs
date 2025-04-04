@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-	public class Vendor : User {
+	public class Renter : User {
+		public Renter() : base() {
 
+		}
 	}
 }
+

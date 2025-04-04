@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B7E9BFC4-1445-4A8A-91BF-840AD619FFEF}</ProjectGuid>
+    <ProjectGuid>{C4180C68-D3C7-4D1F-B098-82976F910676}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Model</RootNamespace>
-    <AssemblyName>Model</AssemblyName>
+    <RootNamespace>View_Model</RootNamespace>
+    <AssemblyName>View Model</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -43,21 +43,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEntity.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Product.cs" />
+    <Compile Include="BaseEntityDB.cs" />
+    <Compile Include="MessageDB.cs" />
+    <Compile Include="ProductDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renter\Renter.cs" />
-    <Compile Include="Renter\RenterList.cs" />
-    <Compile Include="Request.cs" />
-    <Compile Include="Transaction.cs" />
-    <Compile Include="User\User.cs" />
-    <Compile Include="User\UserList.cs" />
-    <Compile Include="Vendor.cs" />
+    <Compile Include="RenterDB.cs" />
+    <Compile Include="RequestDB.cs" />
+    <Compile Include="TransactionDB.cs" />
+    <Compile Include="UserDB.cs" />
+    <Compile Include="VendorDB.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{B7E9BFC4-1445-4A8A-91BF-840AD619FFEF}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RobotGarageDB.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

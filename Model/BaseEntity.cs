@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
-{
-	public class Vendor : User {
-
+namespace Model {
+	public abstract class BaseEntity {
+		public int ID { get; set; }
 	}
 }

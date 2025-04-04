@@ -170,9 +170,6 @@
     <Resource Include="assets\images\Notification.svg" />
     <Resource Include="assets\images\Hammer.png" />
     <Resource Include="assets\images\Manufacturing.svg" />
-    <Content Include="assets\Rental Services project.accdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
