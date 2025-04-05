@@ -18,5 +18,16 @@ namespace Model {
 			}
 			return output;
 		}
+
+		public void PrintUsers() {
+			for (int i = 0; i < this.Count; i++) {
+				Console.WriteLine("---------------------------");
+				Console.WriteLine($"ID: {this[i].ID}" +
+					$"Username: {this[i].Username}" +
+					$"Group Number: {this[i].GroupNumber}" +
+					$"Unique Code: {this[i].UniqueCode}");
+			}
+			Console.WriteLine("---------------------------");
+		}
 	}
 }

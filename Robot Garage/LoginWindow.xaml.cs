@@ -29,11 +29,9 @@ namespace Robot_Garage {
 		}
 
 		private void btnLogin_Click(object sender, RoutedEventArgs e) {
-			if (txtUsername.Text == "Shai Ringel" && txtNumber.Text == "5554" && txtPassword.Password == "123456") {
-				SalesWindow mainWindow = new SalesWindow();
-				mainWindow.Show();
-				this.Close();
-			}
+			SalesWindow mainWindow = new SalesWindow();
+			mainWindow.Show();
+			this.Close();
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
@@ -58,38 +56,30 @@ namespace Robot_Garage {
 		}
 
 		private void IntegerUpDown_PreviewTextInput(object sender, TextCompositionEventArgs e) {
-			// Cast sender to IntegerUpDown
 			if (!(sender is IntegerUpDown control))
 				return;
 
-			// Find the underlying TextBox (usually named PART_TextBox)
 			if (!(control.Template.FindName("PART_TextBox", control) is TextBox textBox))
 				return;
 
-			// Get the current text, selection start and selection length
 			int selectionStart = textBox.SelectionStart;
 			int selectionLength = textBox.SelectionLength;
 			string currentText = control.Text ?? string.Empty;
 
-			// Calculate the prospective text by replacing the selected text with the new input
 			string newText = currentText.Remove(selectionStart, selectionLength)
 										.Insert(selectionStart, e.Text);
 
-			// Prevent input that leads to multiple-digit numbers with a leading zero (unless the value is "0")
 			if (newText.Length > 1 && newText.StartsWith("0")) {
 				e.Handled = true;
 				return;
 			}
 
-			// Ensure the new text is a valid integer
 			if (int.TryParse(newText, out int prospectiveValue)) {
-				// Check if the prospective value exceeds the Maximum property
 				if (prospectiveValue > control.Maximum) {
 					e.Handled = true;
 				}
 			}
 			else {
-				// If parsing fails, reject the input
 				e.Handled = true;
 			}
 		}

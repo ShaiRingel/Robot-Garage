@@ -61,6 +61,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -94,12 +96,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Carousel.xaml.cs">
+      <DependentUpon>Carousel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalesWindow.xaml.cs">
       <DependentUpon>SalesWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Card.xaml.cs">
       <DependentUpon>Card.xaml</DependentUpon>
     </Compile>
+    <Page Include="Carousel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -170,6 +179,10 @@
     <Resource Include="assets\images\Notification.svg" />
     <Resource Include="assets\images\Hammer.png" />
     <Resource Include="assets\images\Manufacturing.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\images\LeftArrow.svg" />
+    <Resource Include="assets\images\RightArrow.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

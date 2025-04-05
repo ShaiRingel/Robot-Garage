@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Robot_Garage.Carousel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Robot_Garage" xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d">
+    <Grid Background="Transparent">
+        <ScrollViewer x:Name="PART_ScrollViewer" HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Disabled" ScrollChanged="OnScrollChanged">
+            <ItemsControl x:Name="ItemsHost"
+                          ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        
+        <Button x:Name="BtnLeft" Width="30" Height="150"
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                Style="{StaticResource ArrowButtonStyle}"
+                Click="OnLeftClick" Visibility="Collapsed">
+            <svgc:SvgViewbox Source="\assets\images\LeftArrow.svg" Width="15" VerticalAlignment="Center"/>
+        </Button>
+
+        <Button x:Name="BtnRight" Width="30" Height="150"
+                HorizontalAlignment="Right" VerticalAlignment="Center"
+                Style="{StaticResource ArrowButtonStyle}"
+                Click="OnRightClick" Visibility="Visible">
+            <svgc:SvgViewbox Source="\assets\images\RightArrow.svg" Width="15" VerticalAlignment="Center"/>
+        </Button>
+    </Grid>
+</UserControl>

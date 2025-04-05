@@ -18,11 +18,19 @@ namespace Robot_Garage {
 	/// </summary>
 	public partial class SalesWindow : Window {
 		private bool _isUpdatingSize = false;
-		private const double TargetAspectRatio = 1252.0 / 720.0;
+		private const double TargetAspectRatio = 16.0 / 9.0;
 
 		public SalesWindow() {
 			InitializeComponent();
 			SetResourceReference(StyleProperty, typeof(Window));
+			createCard("/assets/images/Hammer.png", 50);
+		}
+
+		private void createCard(string source, double price) {
+			Card card = new Card();
+			card.SetValue(Card.ImageSourceProperty, new BitmapImage(new Uri($"pack://application:,,,{source}")));
+			card.SetValue(Card.PriceProperty, price);
+			//CardsSP.Children.Add(card);
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {

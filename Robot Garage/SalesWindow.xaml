@@ -87,11 +87,21 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
                 </Button>
             </StackPanel>
 
-            <Grid Grid.Column="1" Margin="15">
-                <StackPanel Orientation="Horizontal">
-                    <local:Card HorizontalAlignment="Left" VerticalAlignment="Top"
-                        ImageSource="/assets/images/Hammer.png" Price="99.99"/>
-                </StackPanel>
+            <Grid Grid.Column="1" Margin="15, 15, 5, 15">
+                <ScrollViewer>
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Recently Added:" FontSize="24" FontWeight="Bold" Margin="0, 0, 0, 5"/>
+                        <local:Carousel x:Name="RecentlyAddedCsl">
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="99.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="89.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="79.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="69.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="59.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="49.99" Margin="5"/>
+                            <local:Card ImageSource="/assets/images/Hammer.png" Price="39.99" Margin="5"/>
+                        </local:Carousel>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
         </Grid>
     </Grid>
