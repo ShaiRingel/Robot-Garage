@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Transaction ([product_id], [renter_id], [start_date], [end_date], [status]) " +
+			cmd.CommandText = "INSERT INTO TransactionTbl ([product_id], [renter_id], [start_date], [end_date], [status]) " +
 								"VALUES (@Product, @Renter, @StartDate, @EndDate, @Status)";
 
 			cmd.Parameters.AddWithValue("@Product", transaction.Product);
@@ -49,7 +49,7 @@ namespace View_Model {
 		}
 
 		public List<Transaction> GetAll() {
-			cmd.CommandText = "SELECT * FROM Transaction";
+			cmd.CommandText = "SELECT * FROM TransactionTbl";
 
 			List<Transaction> transactionList = SelectTransactions();
 			return transactionList;
@@ -57,7 +57,7 @@ namespace View_Model {
 
 		public int Update(Transaction transaction) {
 			int records = 0;
-			string sqlStr = $"UPDATE Transaction SET [product_id]={transaction.Product}, [renter_id]={transaction.Renter}, " +
+			string sqlStr = $"UPDATE TransactionTbl SET [product_id]={transaction.Product}, [renter_id]={transaction.Renter}, " +
 				$"[start_date]='{transaction.StartDate}', [end_date]='{transaction.EndDate}', " +
 				$"[status]={(int)transaction.Status} WHERE [transaction_id]={transaction.ID}";
 			try {
@@ -77,7 +77,7 @@ namespace View_Model {
 
 		public int Delete(Transaction transaction) {
 			StringBuilder sql_builder = new StringBuilder();
-			sql_builder.AppendFormat($"DELETE FROM Transaction WHERE [transaction_id]={transaction.ID}");
+			sql_builder.AppendFormat($"DELETE FROM TransactionTbl WHERE [transaction_id]={transaction.ID}");
 			return SaveChanges(sql_builder.ToString());
 		}
 

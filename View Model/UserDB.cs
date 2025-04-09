@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO User ([username], [password], [group_number], [unique_code]) " +
+			cmd.CommandText = "INSERT INTO UserTbl ([username], [password], [group_number], [unique_code]) " +
 								"VALUES (@Username, @Password, @GroupNumber, @UniqueCode)";
 
 			cmd.Parameters.AddWithValue("@Username", user.Username);
@@ -48,8 +48,19 @@ namespace View_Model {
 		}
 
 		public UserList GetAll() {
-			cmd.CommandText = "SELECT * FROM User";
+			cmd.CommandText = "SELECT * FROM UserTbl";
+
 			return SelectUsers();
+		}
+
+		public User GetByName(string Username) {
+			cmd.Parameters.Clear();
+
+			cmd.CommandText = "SELECT * FROM UserTbl WHERE username=@Username";
+
+			cmd.Parameters.AddWithValue("@Username", Username);
+
+			return SelectUsers().FirstOrDefault();
 		}
 
 		public int Update(User user) {
@@ -57,7 +68,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "UPDATE User SET username=@Username, password=@Password, group_number=@GroupNumber, unique_code=@UniqueCode WHERE ID=@ID";
+			cmd.CommandText = "UPDATE UserTbl SET [username]=@Username, [password]=@Password, [group_number]=@GroupNumber, [unique_code]=@UniqueCode WHERE [ID]=@ID";
 
 			cmd.Parameters.AddWithValue("@Username", user.Username);
 			cmd.Parameters.AddWithValue("@Password", user.Password);
@@ -90,7 +101,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "DELETE FROM User WHERE ID=@ID";
+			cmd.CommandText = "DELETE FROM UserTbl WHERE ID=@ID";
 			cmd.Parameters.AddWithValue("@ID", user.ID);
 
 			try {
@@ -119,7 +130,7 @@ namespace View_Model {
 
 		protected override BaseEntity CreateModel(BaseEntity entity) {
 			User user = (User)entity;
-			user.ID = (int)reader["ID"];
+			user.ID = (int)reader["user_id"];
 			user.Username = reader["username"].ToString();
 			user.Password = reader["password"].ToString();
 			user.GroupNumber = (int)reader["group_number"];

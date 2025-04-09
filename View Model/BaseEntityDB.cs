@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace View_Model {
 	public abstract class BaseEntityDB {
@@ -18,8 +20,11 @@ namespace View_Model {
 		protected abstract BaseEntity CreateModel(BaseEntity entity);
 
 		public BaseEntityDB() {
-			string relativePath = @"..\..\RobotGarageDB.accdb";
-			string absolutePath = Path.GetFullPath(relativePath);
+			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+			DirectoryInfo di = new DirectoryInfo(baseDir);
+			string projectDir = di.Parent.Parent.Parent.FullName;
+			string absolutePath = Path.Combine(projectDir, "View Model", "RobotGarageDB.accdb");
+			Debug.WriteLine("Absolute Path Found: " + absolutePath);
 			_connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
 								Data Source={absolutePath};
 								Persist Security Info=True";

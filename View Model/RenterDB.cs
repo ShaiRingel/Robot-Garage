@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Renter ([username], [password], [group_number], [unique_code]) " +
+			cmd.CommandText = "INSERT INTO RenterTbl ([username], [password], [group_number], [unique_code]) " +
 								"VALUES (@Username, @Password, @GroupNumber, @UniqueCode)";
 
 			cmd.Parameters.AddWithValue("@Username", renter.Username);
@@ -48,7 +48,7 @@ namespace View_Model {
 		}
 
 		public RenterList GetAll() {
-			cmd.CommandText = "SELECT * FROM Renter";
+			cmd.CommandText = "SELECT * FROM RenterTbl";
 			return SelectRenters();
 		}
 
@@ -57,7 +57,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "UPDATE Renter SET username=@Username, password=@Password, group_number=@GroupNumber, unique_code=@UniqueCode WHERE ID=@ID";
+			cmd.CommandText = "UPDATE RenterTbl SET username=@Username, password=@Password, group_number=@GroupNumber, unique_code=@UniqueCode WHERE ID=@ID";
 
 			cmd.Parameters.AddWithValue("@Username", renter.Username);
 			cmd.Parameters.AddWithValue("@Password", renter.Password);
@@ -90,7 +90,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "DELETE FROM Renter WHERE ID=@ID";
+			cmd.CommandText = "DELETE FROM RenterTbl WHERE ID=@ID";
 			cmd.Parameters.AddWithValue("@ID", renter.ID);
 
 			try {

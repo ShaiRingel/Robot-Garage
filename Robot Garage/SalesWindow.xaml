@@ -36,10 +36,20 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
             </Button>
         </StackPanel>
 
-        <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" HorizontalAlignment="Right"
-            Style="{StaticResource NoHighlightButtonStyle}" Click="btnNotifications_Click" Cursor="Hand" Margin="0, 0, 20, 0">
-            <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
-        </Button>
+        <StackPanel HorizontalAlignment="Right" Margin="0, 0, 15, 0" Orientation="Horizontal">
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+                    Style="{StaticResource NoHighlightButtonStyle}"
+                    Click="btnNotifications_Click"
+                    Cursor="Hand" Margin="15, 0">
+                <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
+            </Button>
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+                    Style="{StaticResource NoHighlightButtonStyle}"
+                    Click="btnMessages_Click"
+                    Cursor="Hand" >
+                <svgc:SvgViewbox Source="/assets/images/Messages.svg" Height="18" VerticalAlignment="Center"/>
+            </Button>
+        </StackPanel>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using View_Model;
 using Xceed.Wpf.Toolkit;
 
 namespace Robot_Garage {
@@ -29,9 +32,22 @@ namespace Robot_Garage {
 		}
 
 		private void btnLogin_Click(object sender, RoutedEventArgs e) {
-			SalesWindow mainWindow = new SalesWindow();
-			mainWindow.Show();
-			this.Close();
+			User user = new UserDB().GetByName(txtUsername.Text);
+			UserList users = new UserDB().GetAll();
+			Debug.WriteLine(users.Count);
+			if (user == null) {
+				Debug.WriteLine("No user found with that name!");
+				return;
+			}
+
+			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
+				SalesWindow mainWindow = new SalesWindow();
+				mainWindow.Show();
+				this.Close();
+			}
+			else {
+				System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");	
+			}
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {

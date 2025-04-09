@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Vendor ([ID]) VALUES (@ID)";
+			cmd.CommandText = "INSERT INTO VendorTbl ([ID]) VALUES (@ID)";
 
 			cmd.Parameters.AddWithValue("@ID", vendor.ID);
 
@@ -44,7 +44,7 @@ namespace View_Model {
 		}
 
 		public List<Vendor> GetAll() {
-			cmd.CommandText = "SELECT * FROM Vendor";
+			cmd.CommandText = "SELECT * FROM VendorTbl";
 
 			List<Vendor> vendorList = SelectVendors();
 			return vendorList;
@@ -52,7 +52,7 @@ namespace View_Model {
 
 		public int Update(Vendor vendor) {
 			int records = 0;
-			string sqlStr = $"UPDATE Vendor SET ID={vendor.ID} WHERE ID={vendor.ID}";
+			string sqlStr = $"UPDATE VendorTbl SET ID={vendor.ID} WHERE ID={vendor.ID}";
 			try {
 				cmd.CommandText = sqlStr;
 				connection.Open();
@@ -70,7 +70,7 @@ namespace View_Model {
 
 		public int Delete(Vendor vendor) {
 			StringBuilder sql_builder = new StringBuilder();
-			sql_builder.AppendFormat("DELETE FROM Vendor WHERE ID={0}", vendor.ID);
+			sql_builder.AppendFormat("DELETE FROM VendorTbl WHERE ID={0}", vendor.ID);
 			return SaveChanges(sql_builder.ToString());
 		}
 
@@ -80,7 +80,7 @@ namespace View_Model {
 
 		protected override BaseEntity CreateModel(BaseEntity entity) {
 			Vendor vendor = (Vendor)entity;
-			vendor.ID = (int)reader["ID"];
+			vendor.ID = (int)reader["vendor_id"];
 			return vendor;
 		}
 

@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Product ([vendor_id], [product_name], [description], [condition], [price], [image_url], [availability]) " +
+			cmd.CommandText = "INSERT INTO ProductTbl ([vendor_id], [product_name], [description], [condition], [price], [image_url], [availability]) " +
 								"VALUES (@Vendor, @ProductName, @Description, @Condition, @Price, @ImageUrl, @Availability)";
 
 			cmd.Parameters.AddWithValue("@Vendor", product.Vendor.ID);
@@ -51,7 +51,7 @@ namespace View_Model {
 		}
 
 		public List<Product> GetAll() {
-			cmd.CommandText = "SELECT * FROM Product";
+			cmd.CommandText = "SELECT * FROM ProductTbl";
 
 			List<Product> productList = SelectProducts();
 			return productList;
@@ -59,7 +59,7 @@ namespace View_Model {
 
 		public int Update(Product product) {
 			int records = 0;
-			string sqlStr = $"UPDATE Product SET [vendor_id]={product.Vendor.ID}, [product_name]={product.Name}, " +
+			string sqlStr = $"UPDATE ProductTbl SET [vendor_id]={product.Vendor.ID}, [product_name]={product.Name}, " +
 				$"[description]='{product.Description}', [condition]={(int)product.Condition}, [price]={product.Price}, " +
 				$"[image_url]='{product.ImageUrl}', [availability]={product.Availability} WHERE [product_id]={product.ID}";
 			try {
@@ -79,7 +79,7 @@ namespace View_Model {
 
 		public int Delete(Product product) {
 			StringBuilder sql_builder = new StringBuilder();
-			sql_builder.AppendFormat($"DELETE FROM Product WHERE [product_id]={product.ID}");
+			sql_builder.AppendFormat($"DELETE FROM ProductTbl WHERE [product_id]={product.ID}");
 			return SaveChanges(sql_builder.ToString());
 		}
 

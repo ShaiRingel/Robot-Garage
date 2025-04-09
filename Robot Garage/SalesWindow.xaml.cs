@@ -30,7 +30,7 @@ namespace Robot_Garage {
 			Card card = new Card();
 			card.SetValue(Card.ImageSourceProperty, new BitmapImage(new Uri($"pack://application:,,,{source}")));
 			card.SetValue(Card.PriceProperty, price);
-			//CardsSP.Children.Add(card);
+			RecentlyAddedCsl.Items.Add(card);
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
@@ -68,6 +68,11 @@ namespace Robot_Garage {
 
 		private void btnNotifications_Click(object sender, RoutedEventArgs e) {
 			MessageBox.Show("Notifications clicked");
+		}
+
+		private void btnMessages_Click(object sender, RoutedEventArgs e) {
+			new ChatWindow().Show();
+			this.Close();
 		}
     }
 }

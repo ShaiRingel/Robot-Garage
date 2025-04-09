@@ -99,6 +99,15 @@
     <Compile Include="Carousel.xaml.cs">
       <DependentUpon>Carousel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChatsListWindow.xaml.cs">
+      <DependentUpon>ChatsListWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProductWindow.xaml.cs">
+      <DependentUpon>ProductWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalesWindow.xaml.cs">
       <DependentUpon>SalesWindow.xaml</DependentUpon>
     </Compile>
@@ -106,6 +115,14 @@
       <DependentUpon>Card.xaml</DependentUpon>
     </Compile>
     <Page Include="Carousel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChatsListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -121,6 +138,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ProductWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SalesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -183,6 +204,22 @@
   <ItemGroup>
     <Resource Include="assets\images\LeftArrow.svg" />
     <Resource Include="assets\images\RightArrow.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{B7E9BFC4-1445-4A8A-91BF-840AD619FFEF}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\View Model\View Model.csproj">
+      <Project>{C4180C68-D3C7-4D1F-B098-82976F910676}</Project>
+      <Name>View Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\images\BestProgrammer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\images\Messages.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

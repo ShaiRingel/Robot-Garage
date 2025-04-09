@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Message ([product_id], [sender_id], [receiver_id], [message], [timestamp]) " +
+			cmd.CommandText = "INSERT INTO MessageTbl ([product_id], [sender_id], [receiver_id], [message], [timestamp]) " +
 								"VALUES (@Product, @Sender, @Receiver, @Message, @Timestamp)";
 
 			cmd.Parameters.AddWithValue("@Product", message.Product.ID);
@@ -49,7 +49,7 @@ namespace View_Model {
 		}
 
 		public List<Message> GetAll() {
-			cmd.CommandText = "SELECT * FROM Message";
+			cmd.CommandText = "SELECT * FROM MessageTbl";
 
 			List<Message> messageList = SelectMessages();
 			return messageList;
@@ -57,7 +57,7 @@ namespace View_Model {
 
 		public int Update(Message message) {
 			int records = 0;
-			string sqlStr = $"UPDATE Message SET [product_id]={message.Product.ID}, [sender_id]={message.Sender.ID}, " +
+			string sqlStr = $"UPDATE MessageTbl SET [product_id]={message.Product.ID}, [sender_id]={message.Sender.ID}, " +
 				$"[receiver_id]={message.Receiver.ID}, [message]='{message.Content}', [timestamp]='{message.Timestamp}' " +
 				$"WHERE [message_id]={message.ID}";
 			try {
@@ -77,7 +77,7 @@ namespace View_Model {
 
 		public int Delete(Message message) {
 			StringBuilder sql_builder = new StringBuilder();
-			sql_builder.AppendFormat($"DELETE FROM Message WHERE [message_id]={message.ID}");
+			sql_builder.AppendFormat($"DELETE FROM MessageTbl WHERE [message_id]={message.ID}");
 			return SaveChanges(sql_builder.ToString());
 		}
 

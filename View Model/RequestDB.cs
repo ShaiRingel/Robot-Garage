@@ -19,7 +19,7 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO Request ([product_id], [renter_id], [desired_price], [request_status]) " +
+			cmd.CommandText = "INSERT INTO RequestTbl ([product_id], [renter_id], [desired_price], [request_status]) " +
 								"VALUES (@Product, @Renter, @DesiredPrice, @RequestStatus)";
 
 			cmd.Parameters.AddWithValue("@Product", request.Product);
@@ -48,7 +48,7 @@ namespace View_Model {
 		}
 
 		public List<Request> GetAll() {
-			cmd.CommandText = "SELECT * FROM Request";
+			cmd.CommandText = "SELECT * FROM RequestTbl";
 
 			List<Request> requestList = SelectRequests();
 			return requestList;
@@ -56,7 +56,7 @@ namespace View_Model {
 
 		public int Update(Request request) {
 			int records = 0;
-			string sqlStr = $"UPDATE Request SET [product_id]={request.Product}, [renter_id]={request.Renter}" +
+			string sqlStr = $"UPDATE RequestTbl SET [product_id]={request.Product}, [renter_id]={request.Renter}" +
 				$"[desired_price]={request.DesiredPrice}, [request_status]='{request.RequestStatus}' " +
 				$"WHERE [request_id]={request.ID}";
 			try {
@@ -76,7 +76,7 @@ namespace View_Model {
 
 		public int Delete(Request request) {
 			StringBuilder sql_builder = new StringBuilder();
-			sql_builder.AppendFormat("DELETE FROM Request WHERE [request_id]={0}", request.ID);
+			sql_builder.AppendFormat("DELETE FROM RequestTbl WHERE [request_id]={0}", request.ID);
 			return SaveChanges(sql_builder.ToString());
 		}
 
