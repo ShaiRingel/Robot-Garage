@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:Robot_Garage"
-             StartupUri="LoginWindow.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- Dark Accents -->
         <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#FF1F1F1F"/>
@@ -30,6 +30,13 @@
         <SolidColorBrush x:Key="LightPinkBrush" Color="#C2185B"/>
         <SolidColorBrush x:Key="LightBrownBrush" Color="#8D6E63"/>
         <SolidColorBrush x:Key="LightGrayBrush" Color="#9E9E9E"/>
+
+
+        <ResourceDictionary x:Key="Animations">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Animations.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
         <ControlTemplate x:Key="roundbutton" TargetType="Button">
             <Grid>

@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Controls {
 	/// <summary>
 	/// Interaction logic for Card.xaml
 	/// </summary>

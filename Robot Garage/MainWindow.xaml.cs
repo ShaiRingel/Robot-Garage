@@ -14,23 +14,19 @@ using System.Windows.Shapes;
 
 namespace Robot_Garage {
 	/// <summary>
-	/// Interaction logic for Window1.xaml
+	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class SalesWindow : Window {
+	public partial class MainWindow : Window {
+
 		private bool _isUpdatingSize = false;
 		private const double TargetAspectRatio = 16.0 / 9.0;
 
-		public SalesWindow() {
+		public MainWindow() {
 			InitializeComponent();
-			SetResourceReference(StyleProperty, typeof(Window));
-			createCard("/assets/images/Hammer.png", 50);
-		}
 
-		private void createCard(string source, double price) {
-			Card card = new Card();
-			card.SetValue(Card.ImageSourceProperty, new BitmapImage(new Uri($"pack://application:,,,{source}")));
-			card.SetValue(Card.PriceProperty, price);
-			RecentlyAddedCsl.Items.Add(card);
+			SetResourceReference(StyleProperty, typeof(Window));
+
+			MainFrame.Navigate(new LoginPage());
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
@@ -52,27 +48,6 @@ namespace Robot_Garage {
 			}
 
 			_isUpdatingSize = false;
-		}
-
-		private void btnSales_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("Sales clicked");
-		}
-
-		private void btnRequests_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("Requests clicked");
-		}
-
-		private void btnMyItems_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("MyItems clicked");
-		}
-
-		private void btnNotifications_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("Notifications clicked");
-		}
-
-		private void btnMessages_Click(object sender, RoutedEventArgs e) {
-			new ChatWindow().Show();
-			this.Close();
 		}
     }
 }

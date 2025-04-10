@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -21,17 +22,15 @@ namespace Robot_Garage {
 	/// <summary>
 	/// Interaction logic for LoginWindow.xaml
 	/// </summary>
-	public partial class LoginWindow : Window {
-
-		private bool _isUpdatingSize = false;
-		private const double TargetAspectRatio = 16.0 / 9.0;
-
-		public LoginWindow() {
+	public partial class LoginPage : Page {
+		public LoginPage() {
 			InitializeComponent();
-			SetResourceReference(StyleProperty, typeof(Window));
+
+			if (this.RenderTransform == null || !(this.RenderTransform is TranslateTransform))
+				this.RenderTransform = new TranslateTransform();
 		}
 
-		private void btnLogin_Click(object sender, RoutedEventArgs e) {
+		private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e) {
 			User user = new UserDB().GetByName(txtUsername.Text);
 			UserList users = new UserDB().GetAll();
 			Debug.WriteLine(users.Count);
@@ -41,34 +40,17 @@ namespace Robot_Garage {
 			}
 
 			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
-				SalesWindow mainWindow = new SalesWindow();
-				mainWindow.Show();
-				this.Close();
+				lblStatus.Text = "Login Successful";
+
+				await Task.Delay(2000);
+
+				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
+
+				NavigationService?.Navigate(new SalesPage());
 			}
 			else {
 				System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");	
 			}
-		}
-
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
-			if (_isUpdatingSize)
-				return;
-
-			_isUpdatingSize = true;
-
-			double currentWidth = this.ActualWidth;
-			double currentHeight = this.ActualHeight;
-
-			double currentAspect = currentWidth / currentHeight;
-
-			if (currentAspect > TargetAspectRatio) {
-				this.Width = currentHeight * TargetAspectRatio;
-			}
-			else if (currentAspect < TargetAspectRatio) {
-				this.Height = currentWidth / TargetAspectRatio;
-			}
-
-			_isUpdatingSize = false;
 		}
 
 		private void IntegerUpDown_PreviewTextInput(object sender, TextCompositionEventArgs e) {
@@ -100,7 +82,7 @@ namespace Robot_Garage {
 			}
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e) {
+		private void btnForgotPassword_Clicked(object sender, RoutedEventArgs e) {
 
 		}
 	}

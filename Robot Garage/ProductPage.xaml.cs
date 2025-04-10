@@ -19,12 +19,11 @@ namespace Robot_Garage {
 	/// <summary>
 	/// Interaction logic for ProductWindow.xaml
 	/// </summary>
-	public partial class ProductWindow : Window {
+	public partial class ProductPage : Page {
 		private readonly Product _product;
 
-		public ProductWindow(Product product) {
+		public ProductPage(Product product) {
 			InitializeComponent();
-			SetResourceReference(StyleProperty, typeof(Window));
 			_product = product;
 		}
 

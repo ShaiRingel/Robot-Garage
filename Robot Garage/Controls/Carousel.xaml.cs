@@ -18,7 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Controls {
 	/// <summary>
 	/// Interaction logic for HorizontalScrollerArrows.xaml
 	/// </summary>
