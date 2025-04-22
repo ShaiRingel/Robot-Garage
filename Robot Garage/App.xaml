@@ -100,7 +100,7 @@
             <Setter Property="Title" Value="Robot Garage"/>
             <Setter Property="Icon" Value="/assets/images/Logo Small BackGround Removed.png"/>
         </Style>
-        
+
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="FontFamily" Value="Rubik"/>
@@ -113,16 +113,18 @@
         
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
         </Style>
         
         <Style TargetType="{x:Type PasswordBox}">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
         </Style>
         
         <Style TargetType="{x:Type Button}">
@@ -136,10 +138,27 @@
 
         <Style TargetType="{x:Type xctk:IntegerUpDown}">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
         </Style>
+
+        <Style TargetType="{x:Type xctk:DropDownButton}">
+            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}" />
+            <Setter Property="FontFamily" Value="Rubik" />
+        </Style>
+
+
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}" />
+            <Setter Property="FontFamily" Value="Rubik" />
+        </Style>
+
 
     </Application.Resources>
 </Application>

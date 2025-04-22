@@ -40,15 +40,25 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
             <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
                     Style="{StaticResource NoHighlightButtonStyle}"
                     Click="btnNotifications_Click"
-                    Cursor="Hand" Margin="15, 0">
+                    VerticalAlignment="Center"
+                    Cursor="Hand">
                 <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
             </Button>
             <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
-                    Style="{StaticResource NoHighlightButtonStyle}"
-                    Click="btnMessages_Click"
-                    Cursor="Hand" >
-                <svgc:SvgViewbox Source="/assets/images/Messages.svg" Height="18" VerticalAlignment="Center"/>
+                Style="{StaticResource NoHighlightButtonStyle}"
+                Click="btnMessages_Click"
+                VerticalAlignment="Center"
+                Cursor="Hand" Margin="15, 0">
+                <svgc:SvgViewbox Source="/assets/images/Messages.svg" Height="20" VerticalAlignment="Center"/>
             </Button>
+            <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+                    Style="{StaticResource NoHighlightButtonStyle}"
+                    Click="btnAddProduct_Click"
+                    Cursor="Hand"
+                    VerticalAlignment="Center">
+                <svgc:SvgViewbox Source="/assets/images/Add.svg" Height="20" VerticalAlignment="Center"/>
+            </Button>
+            
         </StackPanel>
 
         <Grid Grid.Row="1">

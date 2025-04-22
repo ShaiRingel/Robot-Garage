@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Model {
-	public class RenterList : List<User> {
+	public class RenterList : List<Renter> {
 		public RenterList() { }
-		public RenterList(IEnumerable<User> list) : base(list) { }
-		public RenterList(IEnumerable<BaseEntity> list) : base(list.Cast<User>().ToList()) { }
+		public RenterList(IEnumerable<Renter> list) : base(list) { }
+		public RenterList(IEnumerable<BaseEntity> list) : base(list.Cast<Renter>().ToList()) { }
 
 		public override string ToString() {
 			string output = "";
@@ -21,13 +22,13 @@ namespace Model {
 
 		public void PrintRenter() {
 			for (int i = 0; i < this.Count; i++) {
-				Console.WriteLine("---------------------------");
-				Console.WriteLine($"ID: {this[i].ID}" +
-					$"Username: {this[i].Username}" +
+				Debug.WriteLine("---------------------------");
+				Debug.WriteLine($"ID: {this[i].ID}" +
+					$"Rentername: {this[i].Username}" +
 					$"Group Number: {this[i].GroupNumber}" +
 					$"Unique Code: {this[i].UniqueCode}");
 			}
-			Console.WriteLine("---------------------------");
+			Debug.WriteLine("---------------------------");
 		}
 	}
 }

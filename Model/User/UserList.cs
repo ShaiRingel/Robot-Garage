@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,13 @@ namespace Model {
 
 		public void PrintUsers() {
 			for (int i = 0; i < this.Count; i++) {
-				Console.WriteLine("---------------------------");
-				Console.WriteLine($"ID: {this[i].ID}" +
+				Debug.WriteLine("---------------------------");
+				Debug.WriteLine($"ID: {this[i].ID}" +
 					$"Username: {this[i].Username}" +
 					$"Group Number: {this[i].GroupNumber}" +
 					$"Unique Code: {this[i].UniqueCode}");
 			}
-			Console.WriteLine("---------------------------");
+			Debug.WriteLine("---------------------------");
 		}
 	}
 }

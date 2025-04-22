@@ -53,14 +53,14 @@
                 <Label Content="Login" Grid.Row="0" FontSize="32" FontWeight="Bold" Margin="0,-20,0,0"/>
 
                 <Label Content="Username:" Grid.Row="1"/>
-                <TextBox x:Name="txtUsername" Grid.Row="2" Margin="5" BorderThickness="0,0,0,1"/>
+                <TextBox x:Name="txtUsername" Grid.Row="2" Margin="5"/>
 
                 <Label Content="Team Number:" Grid.Row="3" VerticalAlignment="Center"/>
                 <xctk:IntegerUpDown x:Name="txtNumber" FormatString="G"  Grid.Row="4" Margin="5" Width="80" HorizontalAlignment="Left"
-                                    BorderThickness="0,0,0,1" Minimum="0" Maximum="99999" Text="0" PreviewTextInput="IntegerUpDown_PreviewTextInput" />
+                                    Minimum="0" Maximum="99999" Text="0" PreviewTextInput="IntegerUpDown_PreviewTextInput" />
 
                 <Label Content="Password:" Grid.Row="5"/>
-                <PasswordBox x:Name="txtPassword" Grid.Row="6" Margin="5" BorderThickness="0,0,0,1"/>
+                <PasswordBox x:Name="txtPassword" Grid.Row="6" Margin="5"/>
 
                 <Button Grid.Row="7" HorizontalAlignment="Right" BorderBrush="Transparent" Background="{x:Null}" 
                         Style="{StaticResource NoHighlightButtonStyle}" Click="btnForgotPassword_Clicked" Cursor="Hand">

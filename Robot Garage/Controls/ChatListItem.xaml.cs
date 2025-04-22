@@ -13,19 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Controls
+{
 	/// <summary>
-	/// Interaction logic for ChatsListWindow.xaml
+	/// Interaction logic for ChatListItem.xaml
 	/// </summary>
-	public partial class ChatsListPage : Page {
-		public ChatsListPage() {
+	public partial class ChatListItem : UserControl
+	{
+		public ChatListItem()
+		{
 			InitializeComponent();
-		}
-
-		private void ChatsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			if (ChatsList.SelectedItem != null) {
-
-			}
 		}
 	}
 }

@@ -42,11 +42,11 @@ namespace Robot_Garage {
 			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
 				lblStatus.Text = "Login Successful";
 
-				await Task.Delay(2000);
+				await Task.Delay(500);
 
 				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
-				NavigationService?.Navigate(new SalesPage());
+				NavigationService?.Navigate(new SalesPage(user));
 			}
 			else {
 				System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");	

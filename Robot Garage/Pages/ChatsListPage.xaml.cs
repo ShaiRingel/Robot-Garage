@@ -10,28 +10,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Robot_Garage {
 	/// <summary>
-	/// Interaction logic for ChatWindow.xaml
+	/// Interaction logic for ChatsListWindow.xaml
 	/// </summary>
-	public partial class ChatPage : Page {
-		public ChatPage() {
+	public partial class ChatsListPage : Page {
+		public ChatsListPage()
+		{
 			InitializeComponent();
 		}
 
-		private void SendButton_Click(object sender, RoutedEventArgs e) {
-			string message = MessageInput.Text.Trim();
-			if (!string.IsNullOrEmpty(message)) {
-				TextBlock newMessage = new TextBlock {
-					Text = $"message",
-					Margin = new Thickness(5)
-				};
+		private void ChatsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			if (ChatsList.SelectedItem != null) {
 
-				MessagesPanel.Children.Add(newMessage);
-
-				MessageInput.Text = string.Empty;
 			}
 		}
 	}

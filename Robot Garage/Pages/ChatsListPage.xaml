@@ -1,0 +1,36 @@
+﻿<Page x:Class="Robot_Garage.ChatsListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="clr-namespace:Robot_Garage.Controls"
+      xmlns:local="clr-namespace:Robot_Garage"
+      mc:Ignorable="d"
+      Title="ChatsListWindow"
+      Height="450" Width="800">
+
+    <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Your chats:"
+                   FontSize="36"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+        <ListView Grid.Row="1"
+                  Name="ChatsList"
+                  Background="{StaticResource ControlBackgroundBrush}"
+                  BorderBrush="{StaticResource ControlBackgroundBrush}"
+                  ItemsSource="{Binding Chats}"  
+                  SelectionChanged="ChatsList_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:ChatListItem />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

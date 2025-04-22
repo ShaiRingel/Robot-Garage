@@ -48,10 +48,32 @@ namespace View_Model {
 			return records;
 		}
 
-		public List<Message> GetAll() {
+		public MessageList GetAll() {
 			cmd.CommandText = "SELECT * FROM MessageTbl";
 
-			List<Message> messageList = SelectMessages();
+			MessageList messageList = SelectMessages();
+			return messageList;
+		}
+
+		public MessageList GetAllMessagesInChat(int sender, int receiver)
+		{
+			cmd.Parameters.Clear();
+
+			cmd.CommandText = "SELECT * FROM MessageTbl WHERE [sender_id]=@SenderID AND [receiver_id]=@ReceiverID";
+			cmd.Parameters.AddWithValue("@SenderID", sender);
+			cmd.Parameters.AddWithValue("@ReceiverID", receiver);
+
+			MessageList messageList = SelectMessages();
+
+			cmd.Parameters.Clear();
+			cmd.CommandText = "SELECT * FROM MessageTbl WHERE [sender_id]=@ReceiverID AND [receiver_id]=@SenderID";
+			cmd.Parameters.AddWithValue("@ReceiverID", receiver);
+			cmd.Parameters.AddWithValue("@SenderID", sender);
+
+			MessageList reverseMessages = SelectMessages();
+
+			messageList.AddRange(reverseMessages);
+
 			return messageList;
 		}
 
@@ -88,14 +110,16 @@ namespace View_Model {
 		protected override BaseEntity CreateModel(BaseEntity entity) {
 			Message message = (Message)entity;
 			message.ID = (int)reader["message_id"];
+			message.Sender = new User { ID = (int)reader["sender_id"] };
+			message.Receiver = new User { ID = (int)reader["receiver_id"] };
 			message.Product = new Product { ID = (int)reader["product_id"] };
 			message.Content = reader["message"].ToString();
 			message.Timestamp = (DateTime)reader["timestamp"];
 			return message;
 		}
 
-		private List<Message> SelectMessages() {
-			List<Message> messageList = new List<Message>();
+		private MessageList SelectMessages() {
+			MessageList messageList = new MessageList();
 			try {
 				cmd.Connection = connection;
 				connection.Open();

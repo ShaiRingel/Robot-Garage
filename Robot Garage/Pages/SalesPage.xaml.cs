@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,11 +20,14 @@ namespace Robot_Garage {
 	/// Interaction logic for Window1.xaml
 	/// </summary>
 	public partial class SalesPage : Page {
+		private User _loggedUser;
 		private bool _isUpdatingSize = false;
 		private const double TargetAspectRatio = 16.0 / 9.0;
 
-		public SalesPage() {
+		public SalesPage(User loggedUser) {
 			InitializeComponent();
+
+			this._loggedUser = loggedUser;
 			
 			Loaded += SalesPage_Loaded;
 
@@ -80,5 +84,10 @@ namespace Robot_Garage {
 			DoubleAnimation slideIn = new DoubleAnimation(this.ActualWidth, 0, new Duration(TimeSpan.FromMilliseconds(250)));
 			trans.BeginAnimation(TranslateTransform.XProperty, slideIn);
 		}
-	}
+
+		private void btnAddProduct_Click(object sender, RoutedEventArgs e)
+		{
+			NavigationService?.Navigate(new ProductUploadPage());
+		}
+    }
 }
