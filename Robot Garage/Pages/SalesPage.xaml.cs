@@ -73,7 +73,7 @@ namespace Robot_Garage {
 		}
 
 		private void btnMessages_Click(object sender, RoutedEventArgs e) {
-			NavigationService?.Navigate(new ChatsListPage());
+			NavigationService?.Navigate(new ChatsListPage(_loggedUser));
 		}
 
 		private void SalesPage_Loaded(object sender, RoutedEventArgs e) {

@@ -21,12 +21,17 @@ namespace Robot_Garage {
 			InitializeComponent();
 		}
 
-		private void btnSendResetLink_Click(object sender, RoutedEventArgs e) {
+		private void SendResetLink_Click(object sender, RoutedEventArgs e) {
 
         }
 
-		private void btnBackToLogin_Click(object sender, RoutedEventArgs e) {
-
+		private void BackButton_Click(object sender, RoutedEventArgs e) {
+			if (NavigationService != null && NavigationService.CanGoBack) {
+				NavigationService.GoBack();
+			}
+			else {
+				MessageBox.Show("No previous page to navigate to.");
+			}
 		}
 	}
 }

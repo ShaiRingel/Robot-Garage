@@ -4,33 +4,36 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="clr-namespace:Robot_Garage.Controls"
-      xmlns:local="clr-namespace:Robot_Garage"
+      xmlns:local="clr-namespace:Robot_Garage" xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
-      Title="ChatsListWindow"
-      Height="450" Width="800">
+      Title="Chats List"
+      d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Your chats:"
-                   FontSize="36"
-                   FontWeight="Bold"
-                   Margin="0,0,0,10"/>
-        <ListView Grid.Row="1"
-                  Name="ChatsList"
-                  Background="{StaticResource ControlBackgroundBrush}"
-                  BorderBrush="{StaticResource ControlBackgroundBrush}"
-                  ItemsSource="{Binding Chats}"  
-                  SelectionChanged="ChatsList_SelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <controls:ChatListItem />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5">
+            <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 15, 20, 15" 
+        Background="Transparent" BorderBrush="Transparent"
+        Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
+                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
+            </Button>
+            <TextBlock Text="My Chats:" FontSize="36" FontWeight="Bold"/>
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding ChatItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:ChatListItem 
+                DataContext="{Binding}" 
+                MouseLeftButtonUp="ChatListItem_Click" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Page>

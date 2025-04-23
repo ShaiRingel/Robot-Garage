@@ -26,7 +26,7 @@ namespace View_Model {
 			cmd.Parameters.AddWithValue("@Sender", message.Sender.ID);
 			cmd.Parameters.AddWithValue("@Receiver", message.Receiver.ID);
 			cmd.Parameters.AddWithValue("@Message", message.Content);
-			cmd.Parameters.AddWithValue("@Timestamp", message.Timestamp);
+			cmd.Parameters.AddWithValue("@Timestamp", message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
 
 			try {
 				connection.Open();
@@ -55,27 +55,53 @@ namespace View_Model {
 			return messageList;
 		}
 
-		public MessageList GetAllMessagesInChat(int sender, int receiver)
-		{
+		public MessageList GetAllMessagesInChat(int sender, int receiver) {
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "SELECT * FROM MessageTbl WHERE [sender_id]=@SenderID AND [receiver_id]=@ReceiverID";
+			cmd.CommandText = @"SELECT * FROM MessageTbl WHERE (sender_id = @SenderID AND receiver_id = @ReceiverID)
+					   OR (sender_id = @ReceiverID AND receiver_id = @SenderID) ORDER BY [timestamp] ASC";
+
 			cmd.Parameters.AddWithValue("@SenderID", sender);
 			cmd.Parameters.AddWithValue("@ReceiverID", receiver);
 
 			MessageList messageList = SelectMessages();
 
-			cmd.Parameters.Clear();
-			cmd.CommandText = "SELECT * FROM MessageTbl WHERE [sender_id]=@ReceiverID AND [receiver_id]=@SenderID";
-			cmd.Parameters.AddWithValue("@ReceiverID", receiver);
-			cmd.Parameters.AddWithValue("@SenderID", sender);
-
-			MessageList reverseMessages = SelectMessages();
-
-			messageList.AddRange(reverseMessages);
-
 			return messageList;
 		}
+
+
+		public UserList GetChatUsers(int currentUserId) {
+			UserList users = new UserList();
+			cmd.Parameters.Clear();
+
+			cmd.CommandText = @"
+        SELECT DISTINCT sender_id AS user_id FROM MessageTbl WHERE receiver_id = @CurrentUserID
+        UNION
+        SELECT DISTINCT receiver_id AS user_id FROM MessageTbl WHERE sender_id = @CurrentUserID";
+
+			cmd.Parameters.AddWithValue("@CurrentUserID", currentUserId);
+
+			try {
+				connection.Open();
+				reader = cmd.ExecuteReader();
+				while (reader.Read()) {
+					users.Add(new UserDB().GetByID((int)reader["user_id"]));
+				}
+			}
+			catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine("Error in GetChatUsers: " + e.Message);
+			}
+			finally {
+				if (reader != null)
+					reader.Close();
+
+				if (connection.State == System.Data.ConnectionState.Open)
+					connection.Close();
+			}
+
+			return users;
+		}
+
 
 		public int Update(Message message) {
 			int records = 0;

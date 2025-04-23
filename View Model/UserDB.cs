@@ -53,12 +53,22 @@ namespace View_Model {
 			return SelectUsers();
 		}
 
-		public User GetByName(string Username) {
+		public User GetByID(int id) {
+			cmd.Parameters.Clear();
+
+			cmd.CommandText = "SELECT * FROM UserTbl WHERE user_id=@ID";
+
+			cmd.Parameters.AddWithValue("@ID", id);
+
+			return SelectUsers().FirstOrDefault();
+		}
+
+		public User GetByName(string username) {
 			cmd.Parameters.Clear();
 
 			cmd.CommandText = "SELECT * FROM UserTbl WHERE username=@Username";
 
-			cmd.Parameters.AddWithValue("@Username", Username);
+			cmd.Parameters.AddWithValue("@Username", username);
 
 			return SelectUsers().FirstOrDefault();
 		}

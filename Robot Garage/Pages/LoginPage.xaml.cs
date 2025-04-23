@@ -42,7 +42,7 @@ namespace Robot_Garage {
 			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
 				lblStatus.Text = "Login Successful";
 
-				await Task.Delay(500);
+				await Task.Delay(250);
 
 				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
@@ -83,7 +83,7 @@ namespace Robot_Garage {
 		}
 
 		private void btnForgotPassword_Clicked(object sender, RoutedEventArgs e) {
-
+			NavigationService?.Navigate(new ForgotPasswordPage());
 		}
 	}
 }

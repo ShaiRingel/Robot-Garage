@@ -3,10 +3,11 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
        xmlns:local="clr-namespace:Robot_Garage"
        xmlns:controls="clr-namespace:Robot_Garage.Controls"
        mc:Ignorable="d"
-           Height="Auto" Width="Auto">
+           d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
@@ -15,15 +16,21 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15" 
+                Background="Transparent" BorderBrush="Transparent"
+                Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
+            <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
+        </Button>
+        
         <StackPanel Grid.Row="0" Margin="0,5,0,5" HorizontalAlignment="Center" Orientation="Vertical">
             <Grid Width="50" Height="50">
-                <Image Source="/assets/images/BestProgrammer.png" Stretch="Fill">
+                <Image Source="/assets/images/UserPicture.png" Stretch="Fill">
                     <Image.Clip>
                         <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
                     </Image.Clip>
                 </Image>
             </Grid>
-            <TextBlock Text="Gustavo Ringel" FontWeight="DemiBold" FontSize="12" Margin="0,5,0,0" 
+            <TextBlock x:Name="txtName" Text="User" FontWeight="DemiBold" FontSize="12" Margin="0,5,0,0" 
                       HorizontalAlignment="Center" />
         </StackPanel>
 

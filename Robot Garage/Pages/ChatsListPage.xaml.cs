@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,21 +14,69 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using View_Model;
 
 namespace Robot_Garage {
 	/// <summary>
 	/// Interaction logic for ChatsListWindow.xaml
 	/// </summary>
 	public partial class ChatsListPage : Page {
-		public ChatsListPage()
-		{
+		public ObservableCollection<ChatListItemViewModel> ChatItems { get; set; }
+
+		private User _loggedUser;
+
+		public ChatsListPage(User loggedUser) {
 			InitializeComponent();
+
+			this._loggedUser = loggedUser;
+
+			ChatItems = new ObservableCollection<ChatListItemViewModel>();
+
+			LoadChatUsersWithLastMessages();
+
+			DataContext = this;
 		}
 
-		private void ChatsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			if (ChatsList.SelectedItem != null) {
 
+		private void LoadChatUsersWithLastMessages() {
+			MessageDB messageDB = new MessageDB();
+
+			var chatUsers = messageDB.GetChatUsers(_loggedUser.ID);
+
+			foreach (var user in chatUsers) {
+				var lastMessage = messageDB.GetAllMessagesInChat(_loggedUser.ID, user.ID)
+										   .OrderByDescending(m => m.Timestamp)
+										   .FirstOrDefault();
+
+				ChatItems.Add(new ChatListItemViewModel {
+					User = user,
+					LastMessage = lastMessage?.Content ?? "No messages yet",
+					LastMessageTime = lastMessage?.Timestamp ?? DateTime.MinValue
+				});
 			}
 		}
+
+		private void BackButton_Click(object sender, RoutedEventArgs e) {
+			if (NavigationService != null && NavigationService.CanGoBack) {
+				NavigationService.GoBack();
+			}
+			else {
+				MessageBox.Show("No previous page to navigate to.");
+			}
+		}
+
+
+		private void ChatListItem_Click(object sender, MouseButtonEventArgs e) {
+			if (sender is FrameworkElement element && element.DataContext is ChatListItemViewModel chatItem) {
+				NavigationService?.Navigate(new ChatPage(this._loggedUser, chatItem.User));
+			}
+		}
+
+	}
+
+	public class ChatListItemViewModel {
+		public User User { get; set; }
+		public string LastMessage { get; set; }
+		public DateTime LastMessageTime { get; set; }
 	}
 }

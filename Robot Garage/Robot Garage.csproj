@@ -264,5 +264,8 @@
   <ItemGroup>
     <Resource Include="assets\images\Add.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\images\UserPicture.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

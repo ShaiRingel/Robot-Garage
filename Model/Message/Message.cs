@@ -32,5 +32,16 @@ namespace Model {
 			get => timestamp;
 			set => timestamp = value;
 		}
+
+		public override bool Equals(object obj) {
+			if (obj is Message otherMessage) {
+				return this.ID == otherMessage.ID;
+			}
+			return false;
+		}
+
+		public override int GetHashCode() {
+			return ID.GetHashCode();
+		}
 	}
 }

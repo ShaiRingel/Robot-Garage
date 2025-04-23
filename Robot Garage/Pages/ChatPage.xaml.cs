@@ -15,17 +15,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using View_Model;
 
 namespace Robot_Garage {
 	/// <summary>
-	/// Interaction logic for ChatWindow.xaml
+	/// Interaction logic for ChatPage.xaml
 	/// </summary>
 	public partial class ChatPage : Page {
-
 		private User _loggedUser;
 		private User _otherUser;
-		MessageDB messagesDB;
+		private MessageDB messagesDB;
+		private DispatcherTimer messagePollingTimer;
+		private MessageList currentMessages;
 
 		public ChatPage(User loggedUser, User otherUser) {
 			InitializeComponent();
@@ -33,42 +35,72 @@ namespace Robot_Garage {
 			_loggedUser = loggedUser;
 			_otherUser = otherUser;
 			messagesDB = new MessageDB();
+			currentMessages = new MessageList();
 
-			createAllMessages();
+			txtName.Text = _otherUser.Username;
+
+			messagePollingTimer = new DispatcherTimer();
+			messagePollingTimer.Interval = TimeSpan.FromSeconds(1);
+			messagePollingTimer.Tick += MessagePollingTimer_Tick;
+			messagePollingTimer.Start();
+
+			LoadMessages();
 		}
 
-		private void createAllMessages()
-		{ 
-			MessageList messages = messagesDB.GetAllMessagesInChat(1, 2);
+		private void LoadMessages() {
+			currentMessages = messagesDB.GetAllMessagesInChat(_loggedUser.ID, _otherUser.ID);
+			MessagesPanel.Children.Clear();
 
-			foreach (Message message in messages)
-			{
-				CreateMessage(message);
+			foreach (Message message in currentMessages) {
+				AddMessageToUI(message);
 			}
 		}
 
-		private void SendButton_Click(object sender, RoutedEventArgs e) {
-			string message = MessageInput.Text.Trim();
-			if (!string.IsNullOrEmpty(message)) {
-				messagesDB.Insert(new Message()
-				{
-					Product = null,
-					Sender = _loggedUser,
-					Receiver = _otherUser,
-					Content = message,
-					Timestamp = DateTime.Now
-				});
+		private void MessagePollingTimer_Tick(object sender, EventArgs e) {
+			var latestMessages = messagesDB.GetAllMessagesInChat(_loggedUser.ID, _otherUser.ID);
+
+			var newMessages = latestMessages.Except(currentMessages).ToList();
+
+			if (newMessages.Any()) {
+				foreach (var message in newMessages) {
+					AddMessageToUI(message);
+					currentMessages.Add(message);
+				}
 			}
 		}
 
-
-		private void CreateMessage(Message message)
-		{
+		private void AddMessageToUI(Message message) {
 			MessageBubble newMessage = new MessageBubble();
 			newMessage.SetValue(MessageBubble.MessageTextProperty, message.Content);
 			newMessage.SetValue(MessageBubble.IsSenderProperty, message.Sender.ID == _loggedUser.ID);
 			newMessage.SetValue(MessageBubble.BackgroundProperty, System.Windows.Media.Brushes.Transparent);
 			MessagesPanel.Children.Add(newMessage);
+		}
+
+		private void SendButton_Click(object sender, RoutedEventArgs e) {
+			string message = MessageInput.Text.Trim();
+			if (!string.IsNullOrEmpty(message)) {
+				var newMessage = new Message() {
+					Product = new Product() { ID = 1 },
+					Sender = _loggedUser,
+					Receiver = _otherUser,
+					Content = message,
+					Timestamp = DateTime.Now
+				};
+
+				messagesDB.Insert(newMessage);
+				MessageInput.Text = string.Empty;
+			}
+		}
+
+		private void BackButton_Click(object sender, RoutedEventArgs e) {
+			if (NavigationService != null && NavigationService.CanGoBack) {
+				messagePollingTimer.Stop();
+				NavigationService.GoBack();
+			}
+			else {
+				MessageBox.Show("No previous page to navigate to.");
+			}
 		}
 	}
 }

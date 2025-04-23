@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using View_Model;
+using Xceed.Wpf.Toolkit;
 
 namespace Robot_Garage
 {
@@ -33,7 +35,7 @@ namespace Robot_Garage
 		private void PopulateConditionList()
 		{
 			var conditions = Enum.GetValues(typeof(ItemCondition)).Cast<ItemCondition>();
-			
+
 			foreach (var condition in conditions)
 			{
 				ConditionListBox.Items.Add(new ListBoxItem
@@ -57,8 +59,8 @@ namespace Robot_Garage
 		{
 			if (ConditionListBox.SelectedItem != null)
 			{
-				txtCondition.Content = ConditionListBox.SelectedItem.ToString();
-				ConditionListBox.Visibility = Visibility.Collapsed; // Collapse the ListBox after selection
+				txtCondition.Content = ConditionListBox.SelectedItem.ToString().Split(' ')[1];
+				ConditionListBox.Visibility = Visibility.Collapsed;
 			}
 		}
 
@@ -68,11 +70,20 @@ namespace Robot_Garage
 			ImgButton.Visibility = Visibility.Collapsed;
 		}
 
+		private void BackButton_Click(object sender, RoutedEventArgs e) {
+			if (NavigationService != null && NavigationService.CanGoBack) {
+				NavigationService.GoBack();
+			}
+			else {
+				System.Windows.MessageBox.Show("No previous page to navigate to.");
+			}
+		}
+
 		private async void Upload_Click(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
 			{
-				MessageBox.Show("Please fill in all required fields.");
+				System.Windows.MessageBox.Show("Please fill in all required fields.");
 				return;
 			}
 
@@ -99,8 +110,37 @@ namespace Robot_Garage
 			}
 			else
 			{
-				MessageBox.Show("Please select a valid condition.");
+				System.Windows.MessageBox.Show("Please select a valid condition.");
 				return;
+			}
+		}
+
+		private void txtPrice_PreviewTextInput(object sender, TextCompositionEventArgs e) {
+			if (!(sender is IntegerUpDown control))
+				return;
+
+			if (!(control.Template.FindName("PART_TextBox", control) is TextBox textBox))
+				return;
+
+			int selectionStart = textBox.SelectionStart;
+			int selectionLength = textBox.SelectionLength;
+			string currentText = control.Text ?? string.Empty;
+
+			string newText = currentText.Remove(selectionStart, selectionLength)
+										.Insert(selectionStart, e.Text);
+
+			if (newText.Length > 1 && newText.StartsWith("0")) {
+				e.Handled = true;
+				return;
+			}
+
+			if (int.TryParse(newText, out int prospectiveValue)) {
+				if (prospectiveValue > control.Maximum) {
+					e.Handled = true;
+				}
+			}
+			else {
+				e.Handled = true;
 			}
 		}
 	}
