@@ -71,8 +71,8 @@
                         HorizontalAlignment="Center" Width="100"
                         Click="btnLogin_ClickAsync"/>
 
-                <TextBlock x:Name="lblStatus" Grid.Row="9"
-                   FontSize="14" Foreground="Green"
+                <TextBlock x:Name="lblStatus" Grid.Row="9" FontWeight="DemiBold" Text="Login Successful!"
+                   FontSize="14" Foreground="{StaticResource LightGreenBrush}" Visibility="Hidden"
                    HorizontalAlignment="Center" Margin="0,10,0,0"/>
             </Grid>
         </Grid>

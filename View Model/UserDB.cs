@@ -73,12 +73,23 @@ namespace View_Model {
 			return SelectUsers().FirstOrDefault();
 		}
 
-		public int Update(User user) {
+        public User GetByCode(string uniqueCode)
+        {
+            cmd.Parameters.Clear();
+
+            cmd.CommandText = "SELECT * FROM UserTbl WHERE unique_code=@UniqueCode";
+
+            cmd.Parameters.AddWithValue("@UniqueCode", uniqueCode);
+
+            return SelectUsers().FirstOrDefault();
+        }
+
+        public int Update(User user) {
 			int records = 0;
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "UPDATE UserTbl SET [username]=@Username, [password]=@Password, [group_number]=@GroupNumber, [unique_code]=@UniqueCode WHERE [ID]=@ID";
+			cmd.CommandText = "UPDATE UserTbl SET [username]=@Username, [password]=@Password, [group_number]=@GroupNumber, [unique_code]=@UniqueCode WHERE [user_id]=@ID";
 
 			cmd.Parameters.AddWithValue("@Username", user.Username);
 			cmd.Parameters.AddWithValue("@Password", user.Password);

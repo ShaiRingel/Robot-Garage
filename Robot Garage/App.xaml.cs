@@ -20,7 +20,6 @@ namespace Robot_Garage {
 			mainWindow.Left = 400;
 
 			mainWindow.Show();
-
 		}
 	}
 

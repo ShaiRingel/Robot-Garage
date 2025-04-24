@@ -40,9 +40,9 @@ namespace Robot_Garage {
 			}
 
 			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
-				lblStatus.Text = "Login Successful";
+				lblStatus.Visibility = Visibility.Visible;
 
-				await Task.Delay(250);
+				await Task.Delay(500);
 
 				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
