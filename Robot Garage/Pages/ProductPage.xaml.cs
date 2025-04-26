@@ -25,12 +25,13 @@ namespace Robot_Garage {
 		public ProductPage(Product product) {
 			InitializeComponent();
 			_product = product;
+			DataContext = _product; // Ensure DataContext is set
 		}
 
 		public string Name => _product.Name;
 		public string Description => _product.Description;
 		public ItemCondition Condition => _product.Condition;
-		public decimal Price => _product.Price;
+		public double Price => _product.Price;
 		public string ImageUrl => _product.ImageUrl;
 		public bool Availability => _product.Availability;
 

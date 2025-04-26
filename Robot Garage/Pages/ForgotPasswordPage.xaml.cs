@@ -42,7 +42,7 @@ namespace Robot_Garage {
 				}
 				else
 				{
-                    System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");
+                    System.Windows.MessageBox.Show("The unique code written is incorrect!");
                 }
             }
             else

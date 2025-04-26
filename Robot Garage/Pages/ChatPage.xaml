@@ -36,7 +36,7 @@
 
         <Border Grid.Row="1" Background="{StaticResource ControlBackgroundBrush}" 
                CornerRadius="5" Padding="5">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" >
+            <ScrollViewer x:Name="Chat" VerticalScrollBarVisibility="Auto" >
                 <StackPanel Name="MessagesPanel" >
                     
                 </StackPanel>

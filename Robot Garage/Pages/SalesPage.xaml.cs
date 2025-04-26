@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,14 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using View_Model;
 
 namespace Robot_Garage {
 	/// <summary>
 	/// Interaction logic for Window1.xaml
 	/// </summary>
 	public partial class SalesPage : Page {
+		public ObservableCollection<CardViewModel> Cards { get; set; }
 		private User _loggedUser;
 		private bool _isUpdatingSize = false;
 		private const double TargetAspectRatio = 16.0 / 9.0;
@@ -33,7 +36,26 @@ namespace Robot_Garage {
 
 			if (this.RenderTransform == null || !(this.RenderTransform is TranslateTransform))
                 this.RenderTransform = new TranslateTransform();
+
+			Cards = new ObservableCollection<CardViewModel>();
+
+			LoadCardsProducts();
+
+			DataContext = this;
 		}
+
+		private void LoadCardsProducts() {
+			ProductDB productDB = new ProductDB();
+
+			var products = productDB.GetAllProducts();
+
+			foreach (var product in products) {
+				Cards.Add(new CardViewModel {
+					Product = product
+				});
+			}
+		}
+
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
 			if (_isUpdatingSize)
@@ -90,4 +112,8 @@ namespace Robot_Garage {
 			NavigationService?.Navigate(new ProductUploadPage());
 		}
     }
+
+	public class CardViewModel {
+		public Product Product { get; set; }
+	}
 }

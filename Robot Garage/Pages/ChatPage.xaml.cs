@@ -45,6 +45,9 @@ namespace Robot_Garage {
 			messagePollingTimer.Start();
 
 			LoadMessages();
+
+
+			Chat.ScrollToEnd();
 		}
 
 		private void LoadMessages() {

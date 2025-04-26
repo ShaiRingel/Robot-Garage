@@ -8,32 +8,36 @@ using System.Threading.Tasks;
 namespace Model {
 
 	public enum ItemCondition {
-	New,        // Unopened, unused, in original packaging.
-	LikeNew,    // Appears new, minor signs of use.
-	VeryGood,   // Excellent condition, minimal wear.
-	Good,       // Functional, moderate signs of use.
-	Acceptable, // Worn but still works as intended.
-	Refurbished // Professionally restored to working order.
-}
+		New,        // Unopened, unused, in original packaging.
+		LikeNew,    // Appears new, minor signs of use.
+		VeryGood,   // Excellent condition, minimal wear.
+		Good,       // Functional, moderate signs of use.
+		Acceptable, // Worn but still works as intended.
+		Refurbished // Professionally restored to working order.
+	}
+
+	public enum ItemCategory {
+		Mechanics,
+		Electronics,
+		Programming,
+		Engines,
+		Manufacturing,
+	}
 
 	public class Product : BaseEntity {
 		private Vendor vendor;
-		private User renter;
 		private string name;
 		private string description;
+		private DateTime datePosted;
 		private ItemCondition condition;
-		private decimal price;
+		private ItemCategory category;
+		private double price;
 		private string imageUrl;
 		private bool availability;
 
 		public Vendor Vendor {
 			get => vendor;
 			set => vendor = value;
-		}
-
-		public User Renter {
-			get => renter;
-			set => renter = value;
 		}
 
 		public string Name {
@@ -46,12 +50,22 @@ namespace Model {
 			set => description = value;
 		}
 
+		public DateTime DatePosted {
+			get => datePosted;
+			set => datePosted = value;
+		}
+
 		public ItemCondition Condition {
 			get => condition;
 			set => condition = value;
 		}
 
-		public decimal Price {
+		public ItemCategory Category {
+			get => category;
+			set => category = value;
+		}
+
+		public double Price {
 			get => price;
 			set => price = value;
 		}

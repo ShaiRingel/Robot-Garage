@@ -93,7 +93,7 @@ namespace Robot_Garage
 				{
 					Vendor = new Vendor { ID = 1 },
 					Name = txtName.Text,
-					Price = decimal.Parse(txtPrice.Text),
+					Price = double.Parse(txtPrice.Text),
 					Description = txtDescription.Text,
 					ImageUrl = ImgPreview.Source.ToString(),
 					Condition = (ItemCondition)selectedCondition.Tag, // Use the Tag property of the selected ListBoxItem

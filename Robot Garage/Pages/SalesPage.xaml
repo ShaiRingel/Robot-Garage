@@ -112,14 +112,18 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
                     <StackPanel Orientation="Vertical">
                         <Label Content="Recently Added:" FontSize="24" FontWeight="Bold" Margin="0, 0, 0, 5"/>
                         <controls:Carousel x:Name="RecentlyAddedCsl">
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="99.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="89.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="79.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="69.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="59.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="50.00" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="49.99" Margin="5"/>
-                            <controls:Card ImageSource="/assets/images/Hammer.png" Price="39.99" Margin="5"/>
+                            <ItemsControl ItemsSource="{Binding Cards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </controls:Carousel>
                     </StackPanel>
                 </ScrollViewer>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -19,32 +20,17 @@ namespace Robot_Garage.Controls {
 	/// Interaction logic for Card.xaml
 	/// </summary>
 	public partial class Card : UserControl {
-		public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(
-			"ImageSource",
-			typeof(ImageSource),
-			typeof(Card),
-			new PropertyMetadata(null));
-
-
-		public static readonly DependencyProperty PriceProperty =
-	DependencyProperty.Register(
-		"Price",
-		typeof(double),
-		typeof(Card),
-		new PropertyMetadata(0.0));
-
-		public ImageSource ImageSource {
-			get { return (ImageSource)GetValue(ImageSourceProperty); }
-			set { SetValue(ImageSourceProperty, value); }
-		}
-
-		public double Price {
-			get { return (double)GetValue(PriceProperty); }
-			set { SetValue(PriceProperty, value); }
-		}
-
 		public Card() {
 			InitializeComponent();
+		}
+
+		private void ReadMoreButton_Click(object sender, RoutedEventArgs e) {
+			// Get the bound Product object from the DataContext
+			if (DataContext is Product product) {
+				// Navigate to ProductPage with the specific product
+				var productPage = new ProductPage(product);
+				NavigationService.GetNavigationService(this)?.Navigate(productPage);
+			}
 		}
 	}
 }

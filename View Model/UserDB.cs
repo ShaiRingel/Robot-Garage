@@ -89,7 +89,8 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "UPDATE UserTbl SET [username]=@Username, [password]=@Password, [group_number]=@GroupNumber, [unique_code]=@UniqueCode WHERE [user_id]=@ID";
+			cmd.CommandText = "UPDATE UserTbl SET [username]=@Username, [password]=@Password, [group_number]=@GroupNumber, " +
+				"[unique_code]=@UniqueCode WHERE [user_id]=@ID";
 
 			cmd.Parameters.AddWithValue("@Username", user.Username);
 			cmd.Parameters.AddWithValue("@Password", user.Password);
