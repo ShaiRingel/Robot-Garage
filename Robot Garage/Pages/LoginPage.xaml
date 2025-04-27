@@ -20,21 +20,21 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="125"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/assets/images/Logo Small BackGround Removed White Outline.png" Width="100"/>
+                    <Image Grid.Column="0" Source="/assets/images/Logo Small BackGround Removed White Outline.png" Width="100"/>
 
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Label Content="FRC Robotics" FontSize="36" FontWeight="Bold"
-                            HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <Label Content="Robots Garage" FontSize="28" FontWeight="Bold"
-                            HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                </StackPanel>
-            </Grid>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <Label Content="FRC Robotics" FontSize="36" FontWeight="Bold"
+                HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <Label Content="Robots Garage" FontSize="28" FontWeight="Bold"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </Grid>
 
             <Grid Grid.Row="1" VerticalAlignment="Center">
                 <Grid.RowDefinitions>

@@ -36,8 +36,18 @@ namespace Robot_Garage {
 		public bool Availability => _product.Availability;
 
 		public event PropertyChangedEventHandler PropertyChanged;
+
 		protected void OnPropertyChanged([CallerMemberName] string name = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+
+		private void BackButton_Click(object sender, RoutedEventArgs e) {
+			if (NavigationService != null && NavigationService.CanGoBack) {
+				NavigationService?.GoBack();
+			}
+			else {
+				MessageBox.Show("No previous page to navigate to.");
+			}
 		}
 	}
 }
