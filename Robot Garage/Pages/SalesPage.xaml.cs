@@ -22,10 +22,13 @@ namespace Robot_Garage {
 	/// Interaction logic for Window1.xaml
 	/// </summary>
 	public partial class SalesPage : Page {
-		public ObservableCollection<CardViewModel> Cards { get; set; }
+		public ObservableCollection<CardViewModel> RecentlyAddedCards { get; set; }
+		public ObservableCollection<CardViewModel> MechanicsCards { get; set; }
+		public ObservableCollection<CardViewModel> ElectronicsCards { get; set; }
+		public ObservableCollection<CardViewModel> ProgrammingCards { get; set; }
+		public ObservableCollection<CardViewModel> EnginesCards { get; set; }
+		public ObservableCollection<CardViewModel> ManufacturingCards { get; set; }
 		private User _loggedUser;
-		private bool _isUpdatingSize = false;
-		private const double TargetAspectRatio = 16.0 / 9.0;
 
 		public SalesPage(User loggedUser) {
 			InitializeComponent();
@@ -37,7 +40,12 @@ namespace Robot_Garage {
 			if (this.RenderTransform == null || !(this.RenderTransform is TranslateTransform))
                 this.RenderTransform = new TranslateTransform();
 
-			Cards = new ObservableCollection<CardViewModel>();
+			RecentlyAddedCards = new ObservableCollection<CardViewModel>();
+			MechanicsCards = new ObservableCollection<CardViewModel>();
+			ElectronicsCards = new ObservableCollection<CardViewModel>();
+			ProgrammingCards = new ObservableCollection<CardViewModel>();
+			EnginesCards = new ObservableCollection<CardViewModel>();
+			ManufacturingCards = new ObservableCollection<CardViewModel>();
 
 			LoadCardsProducts();
 
@@ -47,36 +55,61 @@ namespace Robot_Garage {
 		private void LoadCardsProducts() {
 			ProductDB productDB = new ProductDB();
 
-			var products = productDB.GetAllProducts();
+			// Load Recently Added Products
+			List<Product> recentlyAddedProducts = productDB.GetNLatestAvailableProducts(15);
+			foreach (Product product in recentlyAddedProducts) {
+				RecentlyAddedCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
+				});
+			}
 
-			foreach (var product in products) {
-				Cards.Add(new CardViewModel {
-					Product = product
+			// Load Mechanics Products
+			List<Product> mechanicsProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Mechanics);
+			foreach (Product product in mechanicsProducts) {
+				MechanicsCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
+				});
+			}
+
+			// Load Electronics Products
+			List<Product> electronicsProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Electronics);
+			foreach (Product product in electronicsProducts) {
+				ElectronicsCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
+				});
+			}
+
+			// Load Programming Products
+			List<Product> programmingProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Programming);
+			foreach (Product product in programmingProducts) {
+				ProgrammingCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
+				});
+			}
+
+			// Load Engines Products
+			List<Product> enginesProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Engines);
+			foreach (Product product in enginesProducts) {
+				EnginesCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
+				});
+			}
+
+			// Load Manufacturing Products
+			List<Product> manufacturingProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Manufacturing);
+			foreach (Product product in manufacturingProducts) {
+				ManufacturingCards.Add(new CardViewModel {
+					Product = product,
+					LoggedUser = _loggedUser // Pass the logged user
 				});
 			}
 		}
 
-
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
-			if (_isUpdatingSize)
-				return;
-
-			_isUpdatingSize = true;
-
-			double currentWidth = this.ActualWidth;
-			double currentHeight = this.ActualHeight;
-
-			double currentAspect = currentWidth / currentHeight;
-
-			if (currentAspect > TargetAspectRatio) {
-				this.Width = currentHeight * TargetAspectRatio;
-			}
-			else if (currentAspect < TargetAspectRatio) {
-				this.Height = currentWidth / TargetAspectRatio;
-			}
-
-			_isUpdatingSize = false;
-		}
 
 		private void btnSales_Click(object sender, RoutedEventArgs e) {
 			MessageBox.Show("Sales clicked");
@@ -109,11 +142,12 @@ namespace Robot_Garage {
 
 		private void btnAddProduct_Click(object sender, RoutedEventArgs e)
 		{
-			NavigationService?.Navigate(new ProductUploadPage());
+			NavigationService?.Navigate(new ProductUploadPage(_loggedUser));
 		}
     }
 
 	public class CardViewModel {
 		public Product Product { get; set; }
+		public User LoggedUser { get; set; }
 	}
 }

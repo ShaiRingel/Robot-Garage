@@ -21,10 +21,12 @@ namespace Robot_Garage {
 	/// </summary>
 	public partial class ProductPage : Page {
 		private readonly Product _product;
+		private User _loggedUser;
 
-		public ProductPage(Product product) {
+		public ProductPage(Product product, User loggedUser) {
 			InitializeComponent();
 			_product = product;
+			_loggedUser = loggedUser;
 			DataContext = _product; // Ensure DataContext is set
 		}
 
@@ -32,7 +34,7 @@ namespace Robot_Garage {
 		public string Description => _product.Description;
 		public ItemCondition Condition => _product.Condition;
 		public double Price => _product.Price;
-		public string ImageUrl => _product.ImageUrl;
+		public BitmapImage Image => _product.Image;
 		public bool Availability => _product.Availability;
 
 		public event PropertyChangedEventHandler PropertyChanged;

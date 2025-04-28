@@ -13,7 +13,7 @@
                    RadiusX="5" RadiusY="5"/>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"
                    Text="{Binding Price, StringFormat='Price: {0}₪'}" />
-        <Image Source="{Binding ImageUrl}"
+        <Image Source="{Binding Image}"
                VerticalAlignment="Top" HorizontalAlignment="Left" Width="95" Margin="2.5"/>
         <Button Content="Read more!" FontWeight="Bold" Margin="2.5" VerticalAlignment="Bottom"
                 Background="{DynamicResource DarkBlueBrush}" 

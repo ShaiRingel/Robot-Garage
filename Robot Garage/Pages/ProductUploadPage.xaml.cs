@@ -22,52 +22,68 @@ namespace Robot_Garage
 	/// <summary>
 	/// Interaction logic for ProductUploadPage.xaml
 	/// </summary>
-	public partial class ProductUploadPage : Page
-	{
+	public partial class ProductUploadPage : Page {
 		ProductDB productDB = new ProductDB();
+		private readonly User _loggedUser;
 
-		public ProductUploadPage()
-		{
+		public ProductUploadPage(User loggedUser) {
 			InitializeComponent();
-			PopulateConditionList();
+			PopulateList(typeof(ItemCondition), ConditionListBox);
+			PopulateList(typeof(ItemCategory), CategoryListBox);
+			_loggedUser = loggedUser;
 		}
 
-		private void PopulateConditionList()
-		{
-			var conditions = Enum.GetValues(typeof(ItemCondition)).Cast<ItemCondition>();
+		private void PopulateList(Type enumType, ListBox listBox) {
+			var items = Enum.GetValues(enumType).Cast<Enum>();
 
-			foreach (var condition in conditions)
-			{
-				ConditionListBox.Items.Add(new ListBoxItem
-				{
-					Content = condition.ToString(),
-					Tag = condition
+			foreach (var item in items) {
+				listBox.Items.Add(new ListBoxItem {
+					Content = item.ToString(),
+					Tag = item
 				});
 			}
 		}
 
-		private void txtCondition_Click(object sender, RoutedEventArgs e)
-		{
-			ConditionListBox.Visibility = ConditionListBox.Visibility == Visibility.Visible
+		private void txtCondition_Click(object sender, RoutedEventArgs e) {
+			ToggleListBoxVisibility(ConditionListBox);
+		}
+
+		private void txtCategory_Click(object sender, RoutedEventArgs e) {
+			ToggleListBoxVisibility(CategoryListBox);
+		}
+
+		private void ToggleListBoxVisibility(ListBox listBox) {
+			listBox.Visibility = listBox.Visibility == Visibility.Visible
 				? Visibility.Collapsed
 				: Visibility.Visible;
 
-			ConditionListBox.UpdateLayout();
+			listBox.UpdateLayout();
 		}
 
-		private void ConditionListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (ConditionListBox.SelectedItem != null)
-			{
-				txtCondition.Content = ConditionListBox.SelectedItem.ToString().Split(' ')[1];
-				ConditionListBox.Visibility = Visibility.Collapsed;
+		private void ConditionListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			UpdateSelectedItem(ConditionListBox, txtCondition);
+		}
+
+		private void CategoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			UpdateSelectedItem(CategoryListBox, txtCategory);
+		}
+
+		private void UpdateSelectedItem(ListBox listBox, ContentControl contentControl) {
+			if (listBox.SelectedItem is ListBoxItem selectedItem) {
+				contentControl.Content = selectedItem.Content.ToString();
+				listBox.Visibility = Visibility.Collapsed;
 			}
 		}
 
-		private void SelectImage_Click(object sender, RoutedEventArgs e)
-		{
-			ImgPreview.Visibility = Visibility.Visible;
-			ImgButton.Visibility = Visibility.Collapsed;
+		private void SelectImage_Click(object sender, RoutedEventArgs e) {
+			// Open file dialog to select an image
+			Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog {
+				Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
+			};
+			if (openFileDialog.ShowDialog() == true) {
+				// Set the selected image path to the button content
+				txtImagePath.Text = openFileDialog.FileName;
+			}
 		}
 
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
@@ -79,24 +95,22 @@ namespace Robot_Garage
 			}
 		}
 
-		private async void Upload_Click(object sender, RoutedEventArgs e)
-		{
-			if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
-			{
+		private async void Upload_Click(object sender, RoutedEventArgs e) {
+			if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text)) {
 				System.Windows.MessageBox.Show("Please fill in all required fields.");
 				return;
 			}
 
-			if (ConditionListBox.SelectedItem is ListBoxItem selectedCondition)
-			{
-				Product newProduct = new Product
-				{
-					Vendor = new Vendor { ID = 1 },
+			if (ConditionListBox.SelectedItem is ListBoxItem selectedCondition &&
+				CategoryListBox.SelectedItem is ListBoxItem selectedCategory) {
+				Product newProduct = new Product {
+					Owner = _loggedUser,
 					Name = txtName.Text,
 					Price = double.Parse(txtPrice.Text),
 					Description = txtDescription.Text,
-					ImageUrl = ImgPreview.Source.ToString(),
-					Condition = (ItemCondition)selectedCondition.Tag, // Use the Tag property of the selected ListBoxItem
+					Image = null,
+					Condition = (ItemCondition)selectedCondition.Tag,
+					Category = (ItemCategory)selectedCategory.Tag,
 					Availability = true
 				};
 
@@ -108,9 +122,8 @@ namespace Robot_Garage
 
 				NavigationService?.GoBack();
 			}
-			else
-			{
-				System.Windows.MessageBox.Show("Please select a valid condition.");
+			else {
+				System.Windows.MessageBox.Show("Please select a valid condition and category.");
 				return;
 			}
 		}

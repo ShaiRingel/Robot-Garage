@@ -110,9 +110,95 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
             <Grid Grid.Column="1" Margin="15, 15, 5, 15">
                 <ScrollViewer>
                     <StackPanel Orientation="Vertical">
+                        <!-- Recently Added Carousel -->
                         <Label Content="Recently Added:" FontSize="24" FontWeight="Bold" Margin="0, 0, 0, 5"/>
                         <controls:Carousel x:Name="RecentlyAddedCsl">
-                            <ItemsControl ItemsSource="{Binding Cards}">
+                            <ItemsControl ItemsSource="{Binding RecentlyAddedCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Mechanics Carousel -->
+                        <Label Content="Mechanics:" FontSize="24" FontWeight="Bold" Margin="0, 20, 0, 5"/>
+                        <controls:Carousel x:Name="MechanicsCsl">
+                            <ItemsControl ItemsSource="{Binding MechanicsCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Electronics Carousel -->
+                        <Label Content="Electronics:" FontSize="24" FontWeight="Bold" Margin="0, 20, 0, 5"/>
+                        <controls:Carousel x:Name="ElectronicsCsl">
+                            <ItemsControl ItemsSource="{Binding ElectronicsCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Programming Carousel -->
+                        <Label Content="Programming:" FontSize="24" FontWeight="Bold" Margin="0, 20, 0, 5"/>
+                        <controls:Carousel x:Name="ProgrammingCsl">
+                            <ItemsControl ItemsSource="{Binding ProgrammingCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Engines Carousel -->
+                        <Label Content="Engines:" FontSize="24" FontWeight="Bold" Margin="0, 20, 0, 5"/>
+                        <controls:Carousel x:Name="EnginesCsl">
+                            <ItemsControl ItemsSource="{Binding EnginesCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card DataContext="{Binding Product}" Margin="0, 0, 5, 0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Manufacturing Carousel -->
+                        <Label Content="Manufacturing:" FontSize="24" FontWeight="Bold" Margin="0, 20, 0, 5"/>
+                        <controls:Carousel x:Name="ManufacturingCsl">
+                            <ItemsControl ItemsSource="{Binding ManufacturingCards}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />

@@ -14,6 +14,7 @@
             <Setter Property="Background" Value="{StaticResource DarkBlueBrush}" />
             <Setter Property="Content" Value="Buy Now" />
             <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Opacity" Value="1" />
@@ -27,6 +28,7 @@
                     <Setter Property="Background" Value="{StaticResource DarkGrayBrush}" />
                     <Setter Property="Content" Value="Not Available" />
                     <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="FontSize" Value="18" />
                     <Setter Property="Cursor" Value="Arrow" />
                     <Setter Property="Opacity" Value="0.7" />
                     <Setter Property="Effect">
@@ -38,12 +40,11 @@
             </Style.Triggers>
         </Style>
     </Page.Resources>
-
     <Viewbox Stretch="Uniform" StretchDirection="Both">
         <Grid Width="800" Height="450">
             <Grid Margin="20">
                 <Border Background="{StaticResource ControlBackgroundBrush}" CornerRadius="16" Padding="20" Effect="{StaticResource CardShadow}"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="760" Height="410">
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -56,48 +57,67 @@
                             Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
                             <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
                         </Button>
-                        <Border x:Name="ImageContainer"
-                                BorderBrush="{StaticResource DarkBlueBrush}" BorderThickness="1"
-                                CornerRadius="12"
-                                Width="240" Height="240"
-                                RenderTransformOrigin="0.5,0.5">
-                            <Border.RenderTransform>
-                                <ScaleTransform x:Name="ImageScale" ScaleX="1" ScaleY="1"/>
-                            </Border.RenderTransform>
-                            <Grid>
-                                <Image Source="{Binding ImageUrl}" Stretch="UniformToFill">
-                                    <Image.Clip>
-                                        <RectangleGeometry Rect="0,0,240,240" RadiusX="12" RadiusY="12"/>
-                                    </Image.Clip>
-                                </Image>
-                            </Grid>
-                            <Border.Triggers>
-                                <EventTrigger RoutedEvent="MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="ImageScale"
-                                                             Storyboard.TargetProperty="ScaleX"
-                                                             To="1.05" Duration="0:0:0.2"/>
-                                            <DoubleAnimation Storyboard.TargetName="ImageScale"
-                                                             Storyboard.TargetProperty="ScaleY"
-                                                             To="1.05" Duration="0:0:0.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="ImageScale"
-                                                             Storyboard.TargetProperty="ScaleX"
-                                                             To="1" Duration="0:0:0.2"/>
-                                            <DoubleAnimation Storyboard.TargetName="ImageScale"
-                                                             Storyboard.TargetProperty="ScaleY"
-                                                             To="1" Duration="0:0:0.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Border.Triggers>
-                        </Border>
+                        <StackPanel>
+                            <Border x:Name="ImageContainer" Margin="0, 25, 0, 0"
+                                    BorderBrush="{StaticResource LightBlueBrush}" BorderThickness="2"
+                                    CornerRadius="12"
+                                    Width="240" Height="240"
+                                    RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform x:Name="ImageScale" ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+                                <Grid>
+                                    <Image Source="{Binding Image}" Stretch="UniformToFill">
+                                        <Image.Clip>
+                                            <RectangleGeometry Rect="0,0,240,240" RadiusX="12" RadiusY="12"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </Grid>
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ImageScale"
+                                                                 Storyboard.TargetProperty="ScaleX"
+                                                                 To="1.05" Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="ImageScale"
+                                                                 Storyboard.TargetProperty="ScaleY"
+                                                                 To="1.05" Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ImageScale"
+                                                                 Storyboard.TargetProperty="ScaleX"
+                                                                 To="1" Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="ImageScale"
+                                                                 Storyboard.TargetProperty="ScaleY"
+                                                                 To="1" Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+                            </Border>
+
+                            <!-- User Details Section -->
+                            <StackPanel Margin="0,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Seller Information" FontSize="18" FontWeight="Bold" Foreground="{StaticResource LightBlueBrush}" Margin="0,10,0,5"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Username: " FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Vendor.Username}" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Unique Code: " FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Vendor.UniqueCode}" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Group Number: " FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Vendor.GroupNumber}" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
 
                         <!-- Product Details -->
                         <StackPanel Grid.Column="1" Margin="30,0,0,0">
@@ -144,7 +164,7 @@
                             </StackPanel>
 
                             <!-- Buy Now Button -->
-                            <Button Style="{StaticResource BuyButtonStyle}" Margin="0, 110, 0, 0"
+                            <Button Style="{StaticResource BuyButtonStyle}" Margin="10"
                                     IsEnabled="{Binding Availability}" Width="150" Height="45"/>
                         </StackPanel>
                     </Grid>

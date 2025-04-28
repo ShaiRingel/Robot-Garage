@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Model {
 
@@ -25,19 +27,19 @@ namespace Model {
 	}
 
 	public class Product : BaseEntity {
-		private Vendor vendor;
+		private User owner;
 		private string name;
 		private string description;
 		private DateTime datePosted;
 		private ItemCondition condition;
 		private ItemCategory category;
 		private double price;
-		private string imageUrl;
+		private BitmapImage image;
 		private bool availability;
 
-		public Vendor Vendor {
-			get => vendor;
-			set => vendor = value;
+		public User Owner {
+			get => owner;
+			set => owner = value;
 		}
 
 		public string Name {
@@ -70,9 +72,9 @@ namespace Model {
 			set => price = value;
 		}
 
-		public string ImageUrl {
-			get => imageUrl;
-			set => imageUrl = value;
+		public BitmapImage Image {
+			get => image;
+			set => image = value;
 		}
 
 		public bool Availability {

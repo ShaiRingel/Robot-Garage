@@ -100,7 +100,8 @@
     <Compile Include="Controls\Carousel.xaml.cs">
       <DependentUpon>Carousel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Convertors\Class1.cs" />
+    <Compile Include="Convertors\BoolToAvailabilityConvertor.cs" />
+    <Compile Include="Convertors\ByteArrayToImageConverter.cs" />
     <Compile Include="Pages\ChatsListPage.xaml.cs">
       <DependentUpon>ChatsListPage.xaml</DependentUpon>
     </Compile>

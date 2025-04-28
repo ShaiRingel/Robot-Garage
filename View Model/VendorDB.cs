@@ -50,6 +50,13 @@ namespace View_Model {
 			return vendorList;
 		}
 
+		public List<Vendor> GetByID(int id) {
+			cmd.CommandText = "SELECT * FROM UserTbl WHERE [user_id]={id}";
+
+			List<Vendor> vendorList = SelectVendors();
+			return vendorList;
+		}
+
 		public int Update(Vendor vendor) {
 			int records = 0;
 			string sqlStr = $"UPDATE VendorTbl SET ID={vendor.ID} WHERE ID={vendor.ID}";

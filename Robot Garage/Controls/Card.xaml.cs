@@ -20,6 +20,8 @@ namespace Robot_Garage.Controls {
 	/// Interaction logic for Card.xaml
 	/// </summary>
 	public partial class Card : UserControl {
+		User _loggedUser;
+
 		public Card() {
 			InitializeComponent();
 		}
@@ -28,8 +30,13 @@ namespace Robot_Garage.Controls {
 			// Get the bound Product object from the DataContext
 			if (DataContext is Product product) {
 				// Navigate to ProductPage with the specific product
-				var productPage = new ProductPage(product);
-				NavigationService.GetNavigationService(this)?.Navigate(productPage);
+				if (_loggedUser != null) {
+					var productPage = new ProductPage(product, _loggedUser);
+					NavigationService.GetNavigationService(this)?.Navigate(productPage);
+				}
+				else {
+					MessageBox.Show("Logged user is not set.");
+				}
 			}
 		}
 	}

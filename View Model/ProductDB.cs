@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.IO;
+using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,17 +22,17 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "INSERT INTO ProductTbl ([vendor_id], [product_name], [description], [date_posted], [condition], [category], [price], [image_url], [availability]) " +
-								"VALUES (@Vendor, @ProductName, @Description, @DatePosted, @Condition, @Category, @Price, @ImageUrl, @Availability)";
+			cmd.CommandText = "INSERT INTO ProductTbl ([owner_id], [product_name], [description], [date_posted], [condition], [category], [price], [image], [availability]) " +
+								"VALUES (@Owner, @ProductName, @Description, @DatePosted, @Condition, @Category, @Price, @Image, @Availability)";
 
-			cmd.Parameters.AddWithValue("@Vendor", product.Vendor.ID);
+			cmd.Parameters.AddWithValue("@Owner", product.Owner.ID);
 			cmd.Parameters.AddWithValue("@ProductName", product.Name);
 			cmd.Parameters.AddWithValue("@Description", product.Description);
 			cmd.Parameters.AddWithValue("@DatePosted", product.DatePosted);
 			cmd.Parameters.AddWithValue("@Condition", (int)product.Condition);
 			cmd.Parameters.AddWithValue("@Category", (int)product.Category);
 			cmd.Parameters.AddWithValue("@Price", product.Price);
-			cmd.Parameters.AddWithValue("@ImageUrl", product.ImageUrl);
+			cmd.Parameters.AddWithValue("@Image", product.Image); // image can be null
 			cmd.Parameters.AddWithValue("@Availability", product.Availability);
 
 			try {
@@ -38,10 +40,10 @@ namespace View_Model {
 				records = cmd.ExecuteNonQuery();
 			}
 			catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
-				System.Diagnostics.Debug.WriteLine("SQL: " + cmd.CommandText);
+				Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
+				Debug.WriteLine("SQL: " + cmd.CommandText);
 				foreach (OleDbParameter param in cmd.Parameters) {
-					System.Diagnostics.Debug.WriteLine($"{param.ParameterName}: {param.Value}");
+					Debug.WriteLine($"{param.ParameterName}: {param.Value}");
 				}
 			}
 			finally {
@@ -67,8 +69,42 @@ namespace View_Model {
 			return productList;
 		}
 
-		public List<Product> GetNLatestProducts(int n) {
-			cmd.CommandText = "SELECT * FROM ProductTbl";
+		public List<Product> GetAllAvailableProductsByCategory(ItemCategory category) {
+			cmd.CommandText = $"SELECT * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int)category}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetAllAvailableProductsByCondition(ItemCondition condition) {
+			cmd.CommandText = $"SELECT * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [condition]={(int)condition}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetNLatestAvailableProducts(int n) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+							  $"WHERE [availability]={true} " +
+							  $"ORDER BY [date_posted] DESC";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetNLatestAvailableProductsByCategory(int n, ItemCategory category) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int) category}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetNLatestAvailableProductsByCondition(int n, ItemCondition condition) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [condition]={(int)condition}";
 
 			List<Product> productList = SelectProducts();
 			return productList;
@@ -79,19 +115,19 @@ namespace View_Model {
 
 			cmd.Parameters.Clear();
 
-			string sqlStr = $"UPDATE ProductTbl SET [vendor_id]=@Vendor, [product_name]=@ProductName, " +
-				$"[description]=@Description, [date_posted]=@DataPosted, [condition]=@Condition," +
-				$"[category]=@Category, [price]=@Price, [image_url]=@ImageURL, " +
+			string sqlStr = $"UPDATE ProductTbl SET [owner_id]=@Owner, [product_name]=@ProductName, " +
+				$"[description]=@Description, [date_posted]=@DatePosted, [condition]=@Condition," +
+				$"[category]=@Category, [price]=@Price, [image]=@Image, " +
 				$"[availability]=@Availability WHERE [product_id]=@ID";
 
-			cmd.Parameters.AddWithValue("@Vendor", product.Vendor.ID);
+			cmd.Parameters.AddWithValue("@Owner", product.Owner.ID);
 			cmd.Parameters.AddWithValue("@ProductName", product.Name);
 			cmd.Parameters.AddWithValue("@Description", product.Description);
 			cmd.Parameters.AddWithValue("@DatePosted", product.DatePosted);
 			cmd.Parameters.AddWithValue("@Condition", (int)product.Condition);
 			cmd.Parameters.AddWithValue("@Category", (int)product.Category);
 			cmd.Parameters.AddWithValue("@Price", product.Price);
-			cmd.Parameters.AddWithValue("@ImageUrl", product.ImageUrl);
+			cmd.Parameters.AddWithValue("@Image", product.Image);
 			cmd.Parameters.AddWithValue("@Availability", product.Availability);
 			cmd.Parameters.AddWithValue("@ID", product.ID);
 
@@ -101,7 +137,7 @@ namespace View_Model {
 				records = cmd.ExecuteNonQuery();
 			}
 			catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine(e.Message + "\nSQL:" + cmd.CommandText);
+				Debug.WriteLine(e.Message + "\nSQL:" + cmd.CommandText);
 			}
 			finally {
 				if (connection.State == System.Data.ConnectionState.Open)
@@ -122,16 +158,16 @@ namespace View_Model {
 
 		protected override BaseEntity CreateModel(BaseEntity entity) {
 			Product product = (Product)entity;
-			product.ID = (int) reader["product_id"];
-			product.Vendor = new Vendor { ID = (int)reader["vendor_id"] };
+			product.ID = (int)reader["product_id"];
+			product.Owner = new UserDB().GetByID((int)reader["owner_id"]);
 			product.Name = reader["product_name"].ToString();
 			product.Description = reader["description"].ToString();
 			product.DatePosted = (DateTime)reader["date_posted"];
-			product.Condition = (ItemCondition) reader["condition"];
-			product.Category = (ItemCategory) reader["category"];
+			product.Condition = (ItemCondition)reader["condition"];
+			product.Category = (ItemCategory)reader["category"];
 			product.Price = double.Parse(reader["price"].ToString());
-			product.ImageUrl = reader["image_url"].ToString();
-			product.Availability = (bool) reader["availability"];
+			product.Image = new BitmapImage(uriSource: new Uri("C:\\Users\\shair\\source\\repos\\Robot Garage\\Robot Garage\\assets\\images\\Hammer.png"));
+			product.Availability = (bool)reader["availability"];
 			return product;
 		}
 
@@ -147,7 +183,7 @@ namespace View_Model {
 				}
 			}
 			catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine(e.Message);
+				Debug.WriteLine(e.Message);
 			}
 			finally {
 				if (reader != null)

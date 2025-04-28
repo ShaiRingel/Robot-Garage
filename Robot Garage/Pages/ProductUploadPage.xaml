@@ -53,70 +53,81 @@
         </DockPanel>
 
         <!-- Content Card -->
-        <Border Grid.Row="1" Background="#2D2D30" CornerRadius="10" Padding="20" Effect="{StaticResource CardShadow}">
+        <Border Grid.Row="1" Background="{StaticResource ControlBackgroundBrush}" CornerRadius="10" Padding="10" Effect="{StaticResource CardShadow}">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <!-- For ScrollViewer -->
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <!-- For Upload Button -->
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <!-- Product Name -->
-                <Label Grid.Row="0" Grid.Column="0" Content="Name:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtName" Margin="0,0,0,10" FontSize="14" Padding="8" Background="#3E3E42" Foreground="White" BorderBrush="#555"/>
+                <!-- ScrollViewer containing the form -->
+                <ScrollViewer Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <!-- Description -->
-                <Label Grid.Row="1" Grid.Column="0" Content="Description:" FontSize="14" VerticalAlignment="Top" Margin="0,0,10,10" Foreground="White"/>
-                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtDescription" AcceptsReturn="True" TextWrapping="Wrap"
+                        <!-- Product Name -->
+                        <Label Grid.Row="0" Grid.Column="0" Content="Name:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtName" Margin="0,0,0,10" FontSize="14" Padding="8" Background="#3E3E42" Foreground="White" BorderBrush="#555"/>
+
+                        <!-- Description -->
+                        <Label Grid.Row="1" Grid.Column="0" Content="Description:" FontSize="14" VerticalAlignment="Top" Margin="0,0,10,10" Foreground="White"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtDescription" AcceptsReturn="True" TextWrapping="Wrap"
                          Height="100" Margin="0,0,0,10" FontSize="14" Padding="8" Background="#3E3E42" Foreground="White" BorderBrush="#555"/>
 
-                <!-- Price -->
-                <Label Grid.Row="2" Grid.Column="0" Content="Price (₪):" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" x:Name="txtPrice" Margin="0,0,0,10" FontSize="14" Padding="4"
-                                     Background="#3E3E42" Foreground="White" BorderBrush="#555" PreviewTextInput="txtPrice_PreviewTextInput"/>
+                        <!-- Price -->
+                        <Label Grid.Row="2" Grid.Column="0" Content="Price (₪):" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" x:Name="txtPrice" Margin="0,0,0,10" FontSize="14" Padding="4"
+                                    Background="#3E3E42" Foreground="White" BorderBrush="#555" PreviewTextInput="txtPrice_PreviewTextInput"/>
 
-                <!-- Condition -->
-                <Label Grid.Row="3" Grid.Column="0" Content="Condition:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                <xctk:DropDownButton Grid.Row="3" Grid.Column="1" x:Name="txtCondition" Margin="0,0,0,10"
+                        <!-- Condition -->
+                        <Label Grid.Row="3" Grid.Column="0" Content="Condition:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <xctk:DropDownButton Grid.Row="3" Grid.Column="1" x:Name="txtCondition" Margin="0,0,0,10"
                                      Content="Select Condition" Padding="8" Click="txtCondition_Click" Background="#3E3E42" Foreground="White">
-                    <xctk:DropDownButton.DropDownContent>
-                        <ListBox x:Name="ConditionListBox" Visibility="Collapsed" SelectionChanged="ConditionListBox_SelectionChanged">
-                            <!-- Items will be populated dynamically -->
-                        </ListBox>
-                    </xctk:DropDownButton.DropDownContent>
-                </xctk:DropDownButton>
+                            <xctk:DropDownButton.DropDownContent>
+                                <ListBox x:Name="ConditionListBox" Visibility="Collapsed" SelectionChanged="ConditionListBox_SelectionChanged">
+                                    <!-- Items will be populated dynamically -->
+                                </ListBox>
+                            </xctk:DropDownButton.DropDownContent>
+                        </xctk:DropDownButton>
 
-                <!-- Category -->
-                <Label Grid.Row="4" Grid.Column="0" Content="Category:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                <xctk:DropDownButton Grid.Row="4" Grid.Column="1" x:Name="txtCategory" Margin="0,0,0,10"
+                        <!-- Category -->
+                        <Label Grid.Row="4" Grid.Column="0" Content="Category:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <xctk:DropDownButton Grid.Row="4" Grid.Column="1" x:Name="txtCategory" Margin="0,0,0,10"
                                      Content="Select Category" Padding="8" Click="txtCategory_Click" Background="#3E3E42" Foreground="White">
-                    <xctk:DropDownButton.DropDownContent>
-                        <ListBox x:Name="CategoryListBox" Visibility="Collapsed" SelectionChanged="CategoryListBox_SelectionChanged">
-                            <!-- Items will be populated dynamically -->
-                        </ListBox>
-                    </xctk:DropDownButton.DropDownContent>
-                </xctk:DropDownButton>
+                            <xctk:DropDownButton.DropDownContent>
+                                <ListBox x:Name="CategoryListBox" Visibility="Collapsed" SelectionChanged="CategoryListBox_SelectionChanged">
+                                    <!-- Items will be populated dynamically -->
+                                </ListBox>
+                            </xctk:DropDownButton.DropDownContent>
+                        </xctk:DropDownButton>
 
-                <!-- Image Upload -->
-                <Label Grid.Row="5" Grid.Column="0" Content="Product Image:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button x:Name="ImgButton" Height="30" Content="Browse" Click="SelectImage_Click" Style="{StaticResource PrimaryButtonStyle}"/>
-                    <TextBlock x:Name="txtImagePath" Text="No file chosen" Foreground="Gray" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <!-- Image Upload -->
+                        <Label Grid.Row="5" Grid.Column="0" Content="Product Image:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button x:Name="ImgButton" Height="30" Content="Browse" Click="SelectImage_Click" Style="{StaticResource PrimaryButtonStyle}"/>
+                            <TextBlock x:Name="txtImagePath" Text="No file chosen" Foreground="Gray" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+
+                <!-- Upload Button -->
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <TextBlock x:Name="txtSuccess" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <Button Content="Upload" Click="Upload_Click" Style="{StaticResource PrimaryButtonStyle}" Width="100"/>
                 </StackPanel>
-
-                <!-- Submit Button -->
-                <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                    <TextBlock x:Name="txtSuccess" Foreground="LightGreen" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <Button Content="Upload" Click="Upload_Click" Style="{StaticResource PrimaryButtonStyle}"/>
-                </StackPanel>
-
             </Grid>
         </Border>
     </Grid>
