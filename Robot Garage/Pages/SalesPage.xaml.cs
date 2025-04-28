@@ -60,7 +60,7 @@ namespace Robot_Garage {
 			foreach (Product product in recentlyAddedProducts) {
 				RecentlyAddedCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 
@@ -69,7 +69,7 @@ namespace Robot_Garage {
 			foreach (Product product in mechanicsProducts) {
 				MechanicsCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 
@@ -78,7 +78,7 @@ namespace Robot_Garage {
 			foreach (Product product in electronicsProducts) {
 				ElectronicsCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 
@@ -87,7 +87,7 @@ namespace Robot_Garage {
 			foreach (Product product in programmingProducts) {
 				ProgrammingCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 
@@ -96,7 +96,7 @@ namespace Robot_Garage {
 			foreach (Product product in enginesProducts) {
 				EnginesCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 
@@ -105,7 +105,7 @@ namespace Robot_Garage {
 			foreach (Product product in manufacturingProducts) {
 				ManufacturingCards.Add(new CardViewModel {
 					Product = product,
-					LoggedUser = _loggedUser // Pass the logged user
+					LoggedUser = _loggedUser
 				});
 			}
 		}

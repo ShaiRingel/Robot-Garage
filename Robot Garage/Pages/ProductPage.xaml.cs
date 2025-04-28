@@ -21,7 +21,7 @@ namespace Robot_Garage {
 	/// </summary>
 	public partial class ProductPage : Page {
 		private readonly Product _product;
-		private User _loggedUser;
+		private readonly User _loggedUser;
 
 		public ProductPage(Product product, User loggedUser) {
 			InitializeComponent();

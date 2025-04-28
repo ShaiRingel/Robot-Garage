@@ -96,6 +96,11 @@ namespace Robot_Garage
 		}
 
 		private async void Upload_Click(object sender, RoutedEventArgs e) {
+			Debug.WriteLine($"Username: {_loggedUser.Username}" +
+				$"Group Name: {_loggedUser.GroupNumber}" +
+				$"Password: {_loggedUser.Password}" +
+				$"Unique Code: {_loggedUser.UniqueCode}");
+
 			if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text)) {
 				System.Windows.MessageBox.Show("Please fill in all required fields.");
 				return;

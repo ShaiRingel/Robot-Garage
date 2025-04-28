@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Robot_Garage"
              mc:Ignorable="d"
              d:DesignHeight="150" d:DesignWidth="100">
     <Grid Height="150" Width="100">
@@ -12,8 +11,8 @@
                    Width="100" Height="150" 
                    RadiusX="5" RadiusY="5"/>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"
-                   Text="{Binding Price, StringFormat='Price: {0}₪'}" />
-        <Image Source="{Binding Image}"
+                   Text="{Binding Product.Price, StringFormat='Price: {0}₪'}" />
+        <Image Source="{Binding Product.Image}"
                VerticalAlignment="Top" HorizontalAlignment="Left" Width="95" Margin="2.5"/>
         <Button Content="Read more!" FontWeight="Bold" Margin="2.5" VerticalAlignment="Bottom"
                 Background="{DynamicResource DarkBlueBrush}" 
