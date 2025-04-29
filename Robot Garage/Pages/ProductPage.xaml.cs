@@ -15,19 +15,25 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using View_Model;
 
 namespace Robot_Garage {
 	/// <summary>
 	/// Interaction logic for ProductWindow.xaml
 	/// </summary>
 	public partial class ProductPage : Page {
+		private readonly ProductDB productDB;
 		private readonly Product _product;
 		private readonly User _loggedUser;
 
 		public ProductPage(Product product, User loggedUser) {
 			InitializeComponent();
-			_product = product;
+
+			productDB = new ProductDB();
+			_product = productDB.GetProductByID(product.ID);
 			_loggedUser = loggedUser;
+
+
 			if (_product.Owner.ID == _loggedUser.ID)
 			{
 				btnBuy.IsEnabled = false;
@@ -55,6 +61,16 @@ namespace Robot_Garage {
 			else {
 				MessageBox.Show("No previous page to navigate to.");
 			}
+		}
+
+		private void btnBuy_Click(object sender, RoutedEventArgs e) {
+			if (!productDB.GetProductByID(_product.ID).Availability) {
+				MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
+			}
+		}
+
+		private void ChatButton_Click(object sender, RoutedEventArgs e) {
+			NavigationService?.Navigate(new ChatPage(_loggedUser, _product.Owner));
 		}
 	}
 }

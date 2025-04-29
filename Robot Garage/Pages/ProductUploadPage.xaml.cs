@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,7 +83,9 @@ namespace Robot_Garage
 			};
 			if (openFileDialog.ShowDialog() == true) {
 				// Set the selected image path to the button content
+				ImgPreview.Source = new BitmapImage(new Uri(openFileDialog.FileName));
 				txtImagePath.Text = openFileDialog.FileName;
+				Debug.WriteLine(File.ReadAllBytes(txtImagePath.Text));
 			}
 		}
 
@@ -105,7 +108,14 @@ namespace Robot_Garage
 				System.Windows.MessageBox.Show("Please fill in all required fields.");
 				return;
 			}
+			
+			if (!File.Exists(txtImagePath.Text)) {
+				System.Windows.MessageBox.Show("Image doesn't exist on computer, Try selecting another file!");
+				return;
+			}
 
+			byte[] imageBytes = File.ReadAllBytes(txtImagePath.Text);
+			
 			if (ConditionListBox.SelectedItem is ListBoxItem selectedCondition &&
 				CategoryListBox.SelectedItem is ListBoxItem selectedCategory) {
 				Product newProduct = new Product {
@@ -113,7 +123,8 @@ namespace Robot_Garage
 					Name = txtName.Text,
 					Price = double.Parse(txtPrice.Text),
 					Description = txtDescription.Text,
-					Image = null,
+					DatePosted = DateTime.Now,
+					Image = imageBytes,
 					Condition = (ItemCondition)selectedCondition.Tag,
 					Category = (ItemCategory)selectedCategory.Tag,
 					Availability = true
@@ -125,7 +136,7 @@ namespace Robot_Garage
 
 				await Task.Delay(500);
 
-				NavigationService?.GoBack();
+				NavigationService?.Navigate(new SalesPage(_loggedUser));
 			}
 			else {
 				System.Windows.MessageBox.Show("Please select a valid condition and category.");

@@ -36,17 +36,16 @@ namespace View_Model
         public int Insert(Product product)
         {
             int records = 0;
-            int newId = -1;
 
-            // 1) Insert all the non-image fields
             cmd.Parameters.Clear();
             cmd.CommandText = @"
-        INSERT INTO ProductTbl
-            ([owner_id], [product_name], [description], [date_posted],
-             [condition], [category], [price], [availability])
-        VALUES
-            (@Owner, @ProductName, @Description, @DatePosted,
-             @Condition, @Category, @Price, @Availability)";
+                INSERT INTO ProductTbl
+                    ([owner_id], [product_name], [description], [date_posted],
+                     [condition], [category], [price], [image], [availability])
+                VALUES
+                    (@Owner, @ProductName, @Description, @DatePosted,
+                     @Condition, @Category, @Price, @Image, @Availability)";
+
             cmd.Parameters.AddWithValue("@Owner", product.Owner.ID);
             cmd.Parameters.AddWithValue("@ProductName", product.Name);
             cmd.Parameters.AddWithValue("@Description", product.Description);
@@ -54,63 +53,20 @@ namespace View_Model
             cmd.Parameters.AddWithValue("@Condition", (int)product.Condition);
             cmd.Parameters.AddWithValue("@Category", (int)product.Category);
             cmd.Parameters.AddWithValue("@Price", product.Price);
+            cmd.Parameters.AddWithValue("@Image", product.Image);
             cmd.Parameters.AddWithValue("@Availability", product.Availability);
 
             try
             {
                 connection.Open();
                 records = cmd.ExecuteNonQuery();
-
-                // 2) Grab the auto-generated key
-                cmd.CommandText = "SELECT @@IDENTITY";
-                object idObj = cmd.ExecuteScalar();
-                if (idObj != null && int.TryParse(idObj.ToString(), out int id))
-                    newId = id;
-
-                // 3) If there's image data, use DAO to append it to the Attachment field
-                if (newId > 0 && product.Image != null)
-                {
-                    // --- get the .accdb path from your connection string ---
-                    var builder = new OleDbConnectionStringBuilder(_connectionString);
-                    string dbPath = builder.DataSource;
-
-                    // --- open with DAO ---
-                    var engine = new DBEngine();
-                    Database daoDb = engine.OpenDatabase(dbPath, false, false, null);
-
-                    // --- open the single record we just inserted ---
-                    var rs = daoDb.OpenRecordset(
-                        $"SELECT * FROM ProductTbl WHERE product_id={newId}",
-                        RecordsetTypeEnum.dbOpenDynaset,
-                        LockTypeEnum.dbPessimistic);
-
-                    rs.MoveFirst();
-
-                    // --- get the attachment‐field recordset ---
-                    var attachFld = (Field2)rs.Fields["image"];
-                    var rsAttach = (Recordset2)attachFld.Value;
-
-                    // --- write your byte[] out to a temp file ---
-                    string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.img");
-                    File.WriteAllBytes(tempFile, product.Image);
-
-                    // --- add a new attachment row ----
-                    rsAttach.AddNew();
-                    rsAttach.Fields["FileData"].LoadFromFile(tempFile);
-                    rsAttach.Fields["FileName"].Value = Path.GetFileName(tempFile);
-                    rsAttach.Update();
-
-                    // --- commit the parent record & cleanup ---
-                    rs.Update();
-                    rsAttach.Close();
-                    rs.Close();
-                    daoDb.Close();
-                    File.Delete(tempFile);
-                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("Error during INSERT+attachment: " + ex.Message);
+                Debug.WriteLine("Error during INSERT: " + e.Message);
+                Debug.WriteLine("SQL: " + cmd.CommandText);
+                foreach (OleDbParameter param in cmd.Parameters)
+                    Debug.WriteLine($"{param.ParameterName}: {param.Value}");
             }
             finally
             {
@@ -122,13 +78,24 @@ namespace View_Model
         }
 
 
+
         public List<Product> GetAllProducts()
         {
             cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl";
             return SelectProducts();
         }
 
-        public List<Product> GetAllAvailableProducts()
+		public Product GetProductByID(int id) {
+			cmd.Parameters.Clear();
+
+			cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl WHERE [product_id]=@ID";
+
+            cmd.Parameters.AddWithValue("@ID", id);
+
+			return SelectProducts().First();
+		}
+
+		public List<Product> GetAllAvailableProducts()
         {
             cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl WHERE [availability]=True";
             return SelectProducts();
@@ -294,21 +261,6 @@ namespace View_Model
 
             return oleBytes;
         }
-
-        private BitmapImage BytesToBitmapImage(byte[] bytes)
-        {
-            using (var ms = new MemoryStream(bytes))
-            {
-                var img = new BitmapImage();
-                img.BeginInit();
-                img.CacheOption = BitmapCacheOption.OnLoad;
-                img.StreamSource = ms;
-                img.EndInit();
-                img.Freeze();
-                return img;
-            }
-        }
-
 
 
         private List<Product> SelectProducts()

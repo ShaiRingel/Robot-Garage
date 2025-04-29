@@ -71,9 +71,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="RobotGarageDB.accdb">
+    <Resource Include="RobotGarageDB.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

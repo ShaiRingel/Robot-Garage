@@ -49,7 +49,7 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
                 Click="btnMessages_Click"
                 VerticalAlignment="Center"
                 Cursor="Hand" Margin="15, 0">
-                <svgc:SvgViewbox Source="/assets/images/Messages.svg" Height="20" VerticalAlignment="Center"/>
+                <svgc:SvgViewbox Source="/assets/images/Messanger.svg" Height="20" VerticalAlignment="Center"/>
             </Button>
             <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
                     Style="{StaticResource NoHighlightButtonStyle}"

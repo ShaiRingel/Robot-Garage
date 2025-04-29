@@ -106,6 +106,9 @@
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                 <TextBlock Text="Username: " FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Owner.Username}" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                <Button Background="Transparent" BorderBrush="Transparent" Click="ChatButton_Click" Margin="5, 0, 0, 0" Style="{StaticResource NoHighlightButtonStyle}">
+                                    <svgc:SvgViewbox Source="/assets/images/chat.svg" Width="15" Height="15"/>
+                                </Button>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                 <TextBlock Text="Group Number: " FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
@@ -160,7 +163,7 @@
                         </StackPanel>
                         <!-- Buy Now Button -->
                         <Button x:Name="btnBuy" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BuyButtonStyle}"
-                                IsEnabled="{Binding Availability}" Width="150" Height="45"/>
+                                IsEnabled="{Binding Availability}" Width="150" Height="45" Click="btnBuy_Click"/>
                     </Grid>
                 </Border>
             </Grid>
