@@ -161,5 +161,10 @@ namespace Robot_Garage
 				e.Handled = true;
 			}
 		}
-	}
+
+        private void txtDescription_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txtDescriptionCounter.Text = $"{txtDescription.Text.Length}/250";
+        }
+    }
 }

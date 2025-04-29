@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using Microsoft.Office.Interop.Access.Dao;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -166,8 +167,8 @@ namespace View_Model {
 			product.Condition = (ItemCondition)reader["condition"];
 			product.Category = (ItemCategory)reader["category"];
 			product.Price = double.Parse(reader["price"].ToString());
-			product.Image = new BitmapImage(uriSource: new Uri("C:\\Users\\shair\\source\\repos\\Robot Garage\\Robot Garage\\assets\\images\\Hammer.png"));
-			product.Availability = (bool)reader["availability"];
+			product.Image = GetAttachmentImage(product.ID, "image");
+            product.Availability = (bool)reader["availability"];
 			return product;
 		}
 
@@ -194,5 +195,65 @@ namespace View_Model {
 			}
 			return productList;
 		}
-	}
+
+        private BitmapImage GetAttachmentImage(int productId, string attachmentField)
+        {
+            string dbPath = _connectionString.Replace("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=", "").TrimEnd(';');
+            DBEngine dbEngine = new DBEngine();
+            Database db = dbEngine.OpenDatabase(dbPath);
+
+            // Open the recordset containing the product data
+            Recordset rs = db.OpenRecordset($"SELECT * FROM ProductTbl WHERE product_id = {productId}",
+                RecordsetTypeEnum.dbOpenSnapshot);
+
+            BitmapImage bitmap = null;
+
+            if (!rs.EOF)
+            {
+                // Fetch the binary image data directly from the attachment field
+                object attachmentData = rs.Fields[attachmentField].Value;
+
+                // If attachment data exists and is of type byte[], we proceed
+                if (attachmentData != null && attachmentData is byte[])
+                {
+                    byte[] fileData = (byte[])attachmentData;
+
+                    // Debug log: Check the size of the file data
+                    Debug.WriteLine($"File data size: {fileData.Length} bytes");
+
+                    // Check if the data size is valid
+                    if (fileData.Length > 0)
+                    {
+                        // Use MemoryStream to load the byte array into a BitmapImage
+                        using (MemoryStream stream = new MemoryStream(fileData))
+                        {
+                            bitmap = new BitmapImage();
+                            bitmap.BeginInit();
+                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmap.StreamSource = stream;
+                            bitmap.EndInit();
+                            bitmap.Freeze(); // Optional: makes the image cross-thread accessible
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("No valid image data found.");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Attachment data is not of type byte[].");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("No records found for product ID.");
+            }
+
+            rs.Close();
+            db.Close();
+
+            return bitmap;
+        }
+    }
 }

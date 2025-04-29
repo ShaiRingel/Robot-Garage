@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -27,7 +28,11 @@ namespace Robot_Garage {
 			InitializeComponent();
 			_product = product;
 			_loggedUser = loggedUser;
-			DataContext = _product; // Ensure DataContext is set
+			if (_product.Owner.ID == _loggedUser.ID)
+			{
+				btnBuy.IsEnabled = false;
+            }
+			DataContext = _product;
 		}
 
 		public string Name => _product.Name;
@@ -45,7 +50,7 @@ namespace Robot_Garage {
 
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
-				NavigationService?.GoBack();
+				NavigationService?.Navigate(new SalesPage(_loggedUser));
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

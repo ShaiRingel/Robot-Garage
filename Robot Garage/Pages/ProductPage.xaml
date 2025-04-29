@@ -26,7 +26,7 @@
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Background" Value="{StaticResource DarkGrayBrush}" />
-                    <Setter Property="Content" Value="Not Available" />
+                    <Setter Property="Content" Value="Can't Buy" />
                     <Setter Property="Foreground" Value="Black" />
                     <Setter Property="FontSize" Value="18" />
                     <Setter Property="Cursor" Value="Arrow" />
@@ -159,7 +159,7 @@
 
                         </StackPanel>
                         <!-- Buy Now Button -->
-                        <Button Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BuyButtonStyle}"
+                        <Button x:Name="btnBuy" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BuyButtonStyle}"
                                 IsEnabled="{Binding Availability}" Width="150" Height="45"/>
                     </Grid>
                 </Border>

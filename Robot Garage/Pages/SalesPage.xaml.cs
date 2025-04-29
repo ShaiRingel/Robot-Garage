@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,8 @@ namespace Robot_Garage {
 
 		private void LoadCardsProducts() {
 			ProductDB productDB = new ProductDB();
+
+			Debug.WriteLine(productDB.GetAllProducts().Count);
 
 			// Load Recently Added Products
 			List<Product> recentlyAddedProducts = productDB.GetNLatestAvailableProducts(15);
