@@ -59,7 +59,7 @@ namespace Robot_Garage {
 			Debug.WriteLine(productDB.GetAllProducts().Count);
 
 			// Load Recently Added Products
-			List<Product> recentlyAddedProducts = productDB.GetNLatestAvailableProducts(15);
+			List<Product> recentlyAddedProducts = productDB.GetAllProducts();
 			foreach (Product product in recentlyAddedProducts) {
 				RecentlyAddedCards.Add(new CardViewModel {
 					Product = product,

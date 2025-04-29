@@ -101,7 +101,7 @@
       <DependentUpon>Carousel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Convertors\BoolToAvailabilityConvertor.cs" />
-    <Compile Include="Convertors\ByteArrayToImageConverter.cs" />
+    <Compile Include="Convertors\ByteArrayToImageConvertor.cs" />
     <Compile Include="Pages\ChatsListPage.xaml.cs">
       <DependentUpon>ChatsListPage.xaml</DependentUpon>
     </Compile>

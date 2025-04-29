@@ -10,10 +10,13 @@
                    Fill="{DynamicResource ControlBackgroundBrush}" 
                    Width="100" Height="150" 
                    RadiusX="5" RadiusY="5"/>
+        <Border BorderBrush="#FF1D1D1F" CornerRadius="5" BorderThickness="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2.5, 2.5, 2.5, 40">
+            <Border.Background>
+                <ImageBrush ImageSource="{Binding Product.Image,Converter={StaticResource ByteArrayToImageConverter}}" />
+            </Border.Background>
+        </Border>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"
                    Text="{Binding Product.Price, StringFormat='Price: {0}₪'}" />
-        <Image Source="{Binding Product.Image}"
-               VerticalAlignment="Top" HorizontalAlignment="Left" Width="95" Margin="2.5"/>
         <Button Content="Read more!" FontWeight="Bold" Margin="2.5" VerticalAlignment="Bottom"
                 Background="{DynamicResource DarkBlueBrush}" 
                 Template="{StaticResource roundbutton}"

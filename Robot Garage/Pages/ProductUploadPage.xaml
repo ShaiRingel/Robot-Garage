@@ -72,6 +72,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -124,6 +125,10 @@
                             <Button x:Name="ImgButton" Height="30" Content="Browse" Click="SelectImage_Click" Style="{StaticResource PrimaryButtonStyle}"/>
                             <TextBlock x:Name="txtImagePath" Text="No file chosen" Foreground="Gray" VerticalAlignment="Center" Margin="10,0,0,0"/>
                         </StackPanel>
+
+                        <!-- Request -->
+                        <Label Grid.Row="6" Grid.Column="0" Content="Requesting?" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
+                        <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" ></CheckBox>
                     </Grid>
                 </ScrollViewer>
 

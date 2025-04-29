@@ -21,7 +21,7 @@
         Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
                 <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
             </Button>
-            <TextBlock Text="My Chats:" FontSize="36" FontWeight="Bold"/>
+            <TextBlock Text="My Chats" FontSize="36" FontWeight="Bold"/>
         </StackPanel>
         
         <ScrollViewer Grid.Row="1">

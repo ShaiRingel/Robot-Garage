@@ -34,7 +34,7 @@ namespace Model {
 		private ItemCondition condition;
 		private ItemCategory category;
 		private double price;
-		private BitmapImage image;
+		private byte[] image;
 		private bool availability;
 
 		public User Owner {
@@ -72,7 +72,7 @@ namespace Model {
 			set => price = value;
 		}
 
-		public BitmapImage Image {
+		public byte[] Image {
 			get => image;
 			set => image = value;
 		}

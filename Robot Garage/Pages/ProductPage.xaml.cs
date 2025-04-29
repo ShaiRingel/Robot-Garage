@@ -39,7 +39,7 @@ namespace Robot_Garage {
 		public string Description => _product.Description;
 		public ItemCondition Condition => _product.Condition;
 		public double Price => _product.Price;
-		public BitmapImage Image => _product.Image;
+		public byte[] Image => _product.Image;
 		public bool Availability => _product.Availability;
 
 		public event PropertyChangedEventHandler PropertyChanged;
