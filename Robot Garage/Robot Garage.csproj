@@ -126,8 +126,8 @@
     <Compile Include="Pages\ProductUploadPage.xaml.cs">
       <DependentUpon>ProductUploadPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SalesPage.xaml.cs">
-      <DependentUpon>SalesPage.xaml</DependentUpon>
+    <Compile Include="Pages\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Card.xaml.cs">
       <DependentUpon>Card.xaml</DependentUpon>
@@ -184,7 +184,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SalesPage.xaml">
+    <Page Include="Pages\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

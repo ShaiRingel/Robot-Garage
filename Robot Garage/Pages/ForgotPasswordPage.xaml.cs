@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using View_Model;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Pages {
 	/// <summary>
 	/// Interaction logic for ForgotPasswordWindow.xaml
 	/// </summary>

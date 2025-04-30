@@ -10,7 +10,7 @@
                    Fill="{DynamicResource ControlBackgroundBrush}" 
                    Width="100" Height="150" 
                    RadiusX="5" RadiusY="5"/>
-        <Border BorderBrush="#FF1D1D1F" CornerRadius="5" BorderThickness="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2.5, 2.5, 2.5, 40">
+        <Border BorderBrush="#FF1D1D1F" CornerRadius="5" BorderThickness="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2.5, 2.5, 2.5, 40">
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Product.Image,Converter={StaticResource ByteArrayToImageConverter}}" />
             </Border.Background>

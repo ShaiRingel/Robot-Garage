@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 using View_Model;
 using Xceed.Wpf.Toolkit;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Pages {
 	/// <summary>
 	/// Interaction logic for LoginWindow.xaml
 	/// </summary>
@@ -46,7 +46,7 @@ namespace Robot_Garage {
 
 				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
-				NavigationService?.Navigate(new SalesPage(user));
+				NavigationService?.Navigate(new MainPage(user));
 			}
 			else {
 				System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");	

@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 using View_Model;
 using Xceed.Wpf.Toolkit;
 
-namespace Robot_Garage
+namespace Robot_Garage.Pages
 {
 	/// <summary>
 	/// Interaction logic for ProductUploadPage.xaml
@@ -136,7 +136,7 @@ namespace Robot_Garage
 
 				await Task.Delay(500);
 
-				NavigationService?.Navigate(new SalesPage(_loggedUser));
+				NavigationService?.Navigate(new MainPage(_loggedUser));
 			}
 			else {
 				System.Windows.MessageBox.Show("Please select a valid condition and category.");

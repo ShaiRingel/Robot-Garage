@@ -1,4 +1,4 @@
-﻿<Page x:Class="Robot_Garage.ChatsListPage"
+﻿<Page x:Class="Robot_Garage.Pages.ChatsListPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,17 +11,19 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="45" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5">
-            <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 15, 20, 15" 
-        Background="Transparent" BorderBrush="Transparent"
+        <Rectangle Grid.Column="0" Fill="{StaticResource DarkBlueBrush}"/>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 0, 5, 0" 
+        Background="Transparent" BorderBrush="Transparent" Height="25" Width="25"
         Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
-                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
+                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="18" />
             </Button>
-            <TextBlock Text="My Chats" FontSize="36" FontWeight="Bold"/>
+            <Label Content="My Chats" FontSize="24" FontWeight="ExtraBold" VerticalAlignment="Center"/>
         </StackPanel>
         
         <ScrollViewer Grid.Row="1">

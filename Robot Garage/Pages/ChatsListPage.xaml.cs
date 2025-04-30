@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using View_Model;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Pages {
 	/// <summary>
 	/// Interaction logic for ChatsListWindow.xaml
 	/// </summary>
@@ -58,7 +58,7 @@ namespace Robot_Garage {
 
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
-				NavigationService?.Navigate(new SalesPage(_loggedUser));
+				NavigationService?.Navigate(new MainPage(_loggedUser));
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

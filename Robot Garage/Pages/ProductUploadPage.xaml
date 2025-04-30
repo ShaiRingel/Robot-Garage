@@ -1,4 +1,4 @@
-﻿<Page x:Class="Robot_Garage.ProductUploadPage"
+﻿<Page x:Class="Robot_Garage.Pages.ProductUploadPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -46,8 +46,8 @@
         <!-- Header -->
         <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,10">
             <Button DockPanel.Dock="Left" Click="BackButton_Click" Background="Transparent" BorderBrush="Transparent"
-                    Padding="8" ToolTip="Back" Cursor="Hand">
-                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="20"/>
+                    ToolTip="Back" Cursor="Hand">
+                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="18"/>
             </Button>
             <TextBlock Text="Upload Product" FontSize="32" FontWeight="Bold" VerticalAlignment="Center" Foreground="White"/>
         </DockPanel>

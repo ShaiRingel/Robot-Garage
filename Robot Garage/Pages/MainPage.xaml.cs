@@ -18,11 +18,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using View_Model;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Pages {
 	/// <summary>
 	/// Interaction logic for Window1.xaml
 	/// </summary>
-	public partial class SalesPage : Page {
+	public partial class MainPage : Page {
 		public ObservableCollection<CardViewModel> RecentlyAddedCards { get; set; }
 		public ObservableCollection<CardViewModel> MechanicsCards { get; set; }
 		public ObservableCollection<CardViewModel> ElectronicsCards { get; set; }
@@ -30,10 +30,12 @@ namespace Robot_Garage {
 		public ObservableCollection<CardViewModel> EnginesCards { get; set; }
 		public ObservableCollection<CardViewModel> ManufacturingCards { get; set; }
 		private User _loggedUser;
+		private string _currentPage;
 
-		public SalesPage(User loggedUser) {
+		public MainPage(User loggedUser) {
 			InitializeComponent();
 
+			this._currentPage = "Sales";
 			this._loggedUser = loggedUser;
 			
 			Loaded += SalesPage_Loaded;
@@ -59,7 +61,7 @@ namespace Robot_Garage {
 			Debug.WriteLine(productDB.GetAllProducts().Count);
 
 			// Load Recently Added Products
-			List<Product> recentlyAddedProducts = productDB.GetAllProducts();
+			List<Product> recentlyAddedProducts = productDB.GetNLatestAvailableProducts(15);
 			foreach (Product product in recentlyAddedProducts) {
 				RecentlyAddedCards.Add(new CardViewModel {
 					Product = product,
@@ -115,15 +117,30 @@ namespace Robot_Garage {
 
 
 		private void btnSales_Click(object sender, RoutedEventArgs e) {
+			if (_currentPage == "Sales") {
+				return;
+			}
+
+			_currentPage = "Sales";
 			MessageBox.Show("Sales clicked");
 		}
 
 		private void btnRequests_Click(object sender, RoutedEventArgs e) {
+			if (_currentPage == "Requests") {
+				return;
+			}
+
+			_currentPage = "Requests";
 			MessageBox.Show("Requests clicked");
 		}
 
 		private void btnMyItems_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("MyItems clicked");
+			if (_currentPage == "My Items") {
+				return;
+			}
+
+			_currentPage = "My Items";
+			MessageBox.Show("My Items clicked");
 		}
 
 		private void btnNotifications_Click(object sender, RoutedEventArgs e) {

@@ -1,4 +1,4 @@
-﻿<Page x:Class="Robot_Garage.SalesPage"
+﻿<Page x:Class="Robot_Garage.Pages.MainPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,7 +20,7 @@
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <Image Source="/assets/images/Logo Small BackGround Removed.png" ToolTip="Robots Garage" Width="30" Margin="10, 0, 10, 0" />
 
-            <Label Content="Robots Garage" FontSize="18" FontWeight="ExtraBold" Margin="0, 0, 0, 0" VerticalAlignment="Center"/>
+            <Label Content="Robots Garage" FontSize="24" FontWeight="ExtraBold" Margin="0, 0, 0, 0" VerticalAlignment="Center"/>
 
             <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
         Style="{StaticResource NoHighlightButtonStyle}" Click="btnSales_Click" Cursor="Hand" Margin="10, 0, 0, 0">
@@ -49,7 +49,7 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
                 Click="btnMessages_Click"
                 VerticalAlignment="Center"
                 Cursor="Hand" Margin="15, 0">
-                <svgc:SvgViewbox Source="/assets/images/Messanger.svg" Height="20" VerticalAlignment="Center"/>
+                <svgc:SvgViewbox Source="/assets/images/Messages.svg" Height="20" VerticalAlignment="Center"/>
             </Button>
             <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
                     Style="{StaticResource NoHighlightButtonStyle}"
@@ -61,9 +61,9 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
             
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="pageSales">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -214,6 +214,37 @@ Style="{StaticResource NoHighlightButtonStyle}" Click="btnMyItems_Click" Cursor=
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
+        </Grid>
+        
+        
+        <Grid Grid.Row="1" x:Name="pageMyItems" Visibility="Collapsed">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="20">
+                <ItemsControl ItemsSource="{Binding MyProducts}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="10" Margin="10" Padding="10">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Gray" BlurRadius="8" ShadowDepth="2" Opacity="0.3"/>
+                                </Border.Effect>
+                                <StackPanel Width="200" VerticalAlignment="Top">
+                                    <Image Source="{Binding Image}" Height="120" Stretch="UniformToFill" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Description}" FontSize="12" TextWrapping="Wrap" MaxHeight="60" Margin="0,4,0,0"/>
+                                    <TextBlock Text="{Binding Price, StringFormat=C}" FontSize="14" FontWeight="SemiBold" Foreground="Green" Margin="0,6,0,0"/>
+                                    <Button Content="Edit" Width="60" HorizontalAlignment="Right" Margin="0,10,0,0"
+                                    Command="{Binding DataContext.EditProductCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                    CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

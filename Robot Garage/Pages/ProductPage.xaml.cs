@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using View_Model;
 
-namespace Robot_Garage {
+namespace Robot_Garage.Pages {
 	/// <summary>
 	/// Interaction logic for ProductWindow.xaml
 	/// </summary>
@@ -36,6 +36,7 @@ namespace Robot_Garage {
 
 			if (_product.Owner.ID == _loggedUser.ID)
 			{
+				btnContant.Visibility = Visibility.Hidden;
 				btnBuy.IsEnabled = false;
             }
 			DataContext = _product;
@@ -56,7 +57,7 @@ namespace Robot_Garage {
 
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
-				NavigationService?.Navigate(new SalesPage(_loggedUser));
+				NavigationService?.Navigate(new MainPage(_loggedUser));
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

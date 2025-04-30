@@ -10,283 +10,230 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace View_Model
-{
-    public class ProductDB : BaseEntityDB
-    {
-        private const string ColumnList = @"
-            product_id,
-            owner_id,
-            product_name,
-            description,
-            date_posted,
-            [condition],
-            [category],
-            price,
-            availability,
-            [image].FileData AS ImageData";
+namespace View_Model {
+	public class ProductDB : BaseEntityDB {
 
-        public ProductDB() : base()
-        {
-            this.connection = new OleDbConnection(_connectionString);
-            this.cmd = new OleDbCommand();
-            this.cmd.Connection = connection;
-        }
+		public ProductDB() : base() {
+			this.connection = new OleDbConnection(_connectionString);
+			this.cmd = new OleDbCommand();
+			this.cmd.Connection = connection;
+		}
 
-        public int Insert(Product product)
-        {
-            int records = 0;
+		public int Insert(Product product) {
+			int records = 0;
+			cmd.Parameters.Clear();
 
-            cmd.Parameters.Clear();
-            cmd.CommandText = @"
-                INSERT INTO ProductTbl
-                    ([owner_id], [product_name], [description], [date_posted],
-                     [condition], [category], [price], [image], [availability])
-                VALUES
-                    (@Owner, @ProductName, @Description, @DatePosted,
-                     @Condition, @Category, @Price, @Image, @Availability)";
+			cmd.CommandText = "INSERT INTO ProductTbl ([owner_id], [product_name], [description], [date_posted], [condition], [category], [price], [image], [availability]) " +
+							  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            cmd.Parameters.AddWithValue("@Owner", product.Owner.ID);
-            cmd.Parameters.AddWithValue("@ProductName", product.Name);
-            cmd.Parameters.AddWithValue("@Description", product.Description);
-            cmd.Parameters.AddWithValue("@DatePosted", product.DatePosted);
-            cmd.Parameters.AddWithValue("@Condition", (int)product.Condition);
-            cmd.Parameters.AddWithValue("@Category", (int)product.Category);
-            cmd.Parameters.AddWithValue("@Price", product.Price);
-            cmd.Parameters.AddWithValue("@Image", product.Image);
-            cmd.Parameters.AddWithValue("@Availability", product.Availability);
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.Owner.ID;
+			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = product.Name;
+			cmd.Parameters.Add("?", OleDbType.LongVarWChar).Value = product.Description;
+			cmd.Parameters.Add("?", OleDbType.Date).Value = product.DatePosted;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Condition;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Category;
+			cmd.Parameters.Add("?", OleDbType.Double).Value = product.Price;
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error during INSERT: " + e.Message);
-                Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                    Debug.WriteLine($"{param.ParameterName}: {param.Value}");
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
+			if (product.Image != null && product.Image.Length > 0) {
+				cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = product.Image;
+			}
+			else {
+				cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = DBNull.Value;
+			}
 
-            return records;
-        }
+			cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Availability;
+
+			try {
+				connection.Open();
+				records = cmd.ExecuteNonQuery();
+			}
+			catch (Exception e) {
+				Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
+				Debug.WriteLine("SQL: " + cmd.CommandText);
+				foreach (OleDbParameter param in cmd.Parameters) {
+					Debug.WriteLine($"{param.Value} ({param.OleDbType})");
+				}
+			}
+			finally {
+				if (connection.State == System.Data.ConnectionState.Open)
+					connection.Close();
+			}
+
+			return records;
+		}
 
 
+		public List<Product> GetAllProducts() {
+			cmd.CommandText = "SELECT * FROM ProductTbl";
 
-        public List<Product> GetAllProducts()
-        {
-            cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl";
-            return SelectProducts();
-        }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
 		public Product GetProductByID(int id) {
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl WHERE [product_id]=@ID";
+			cmd.CommandText = "SELECT * FROM ProductTbl WHERE [product_id]=@ID";
 
-            cmd.Parameters.AddWithValue("@ID", id);
+			cmd.Parameters.AddWithValue("@ID", id);
 
-			return SelectProducts().First();
+			List<Product> productList = SelectProducts();
+			return productList.First();
 		}
 
-		public List<Product> GetAllAvailableProducts()
-        {
-            cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl WHERE [availability]=True";
-            return SelectProducts();
-        }
+		public List<Product> GetAllAvailableProducts() {
+			cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true}";
 
-        public List<Product> GetAllAvailableProductsByCategory(ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl " +
-                              $"WHERE [availability]=True AND [category]={(int)category}";
-            return SelectProducts();
-        }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-        public List<Product> GetAllAvailableProductsByCondition(ItemCondition condition)
-        {
-            cmd.CommandText = $"SELECT {ColumnList} FROM ProductTbl " +
-                              $"WHERE [availability]=True AND [condition]={(int)condition}";
-            return SelectProducts();
-        }
+		public List<Product> GetAllAvailableProductsByCategory(ItemCategory category) {
+			cmd.CommandText = $"SELECT * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int)category}";
 
-        public List<Product> GetNLatestAvailableProducts(int n)
-        {
-            cmd.CommandText = $"SELECT TOP {n} {ColumnList} FROM ProductTbl " +
-                              $"WHERE [availability]=True " +
-                              $"ORDER BY [date_posted] DESC";
-            return SelectProducts();
-        }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-        public List<Product> GetNLatestAvailableProductsByCategory(int n, ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT TOP {n} {ColumnList} FROM ProductTbl " +
-                              $"WHERE [availability]=True AND [category]={(int)category} " +
-                              $"ORDER BY [date_posted] DESC";
-            return SelectProducts();
-        }
+		public List<Product> GetAllAvailableProductsByCondition(ItemCondition condition) {
+			cmd.CommandText = $"SELECT * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [condition]={(int)condition}";
 
-        public List<Product> GetNLatestAvailableProductsByCondition(int n, ItemCondition condition)
-        {
-            cmd.CommandText = $"SELECT TOP {n} {ColumnList} FROM ProductTbl " +
-                              $"WHERE [availability]=True AND [condition]={(int)condition} " +
-                              $"ORDER BY [date_posted] DESC";
-            return SelectProducts();
-        }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-        public int Update(Product product)
-        {
-            int records = 0;
-            cmd.Parameters.Clear();
+		public List<Product> GetNLatestAvailableProducts(int n) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+							  $"WHERE [availability]={true} " +
+							  $"ORDER BY [date_posted] DESC";
 
-            cmd.CommandText = @"
-                UPDATE ProductTbl SET
-                    [owner_id]=@Owner,
-                    [product_name]=@ProductName,
-                    [description]=@Description,
-                    [date_posted]=@DatePosted,
-                    [condition]=@Condition,
-                    [category]=@Category,
-                    [price]=@Price,
-                    [image]=@Image,
-                    [availability]=@Availability
-                WHERE [product_id]=@ID";
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-            cmd.Parameters.AddWithValue("@Owner", product.Owner.ID);
-            cmd.Parameters.AddWithValue("@ProductName", product.Name);
-            cmd.Parameters.AddWithValue("@Description", product.Description);
-            cmd.Parameters.AddWithValue("@DatePosted", product.DatePosted);
-            cmd.Parameters.AddWithValue("@Condition", (int)product.Condition);
-            cmd.Parameters.AddWithValue("@Category", (int)product.Category);
-            cmd.Parameters.AddWithValue("@Price", product.Price);
-            cmd.Parameters.AddWithValue("@Image", product.Image);
-            cmd.Parameters.AddWithValue("@Availability", product.Availability);
-            cmd.Parameters.AddWithValue("@ID", product.ID);
+		public List<Product> GetNLatestAvailableProductsByCategory(int n, ItemCategory category) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int)category}";
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error during UPDATE: " + e.Message);
-                Debug.WriteLine("SQL: " + cmd.CommandText);
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-            return records;
-        }
+		public List<Product> GetNLatestAvailableProductsByCondition(int n, ItemCondition condition) {
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [condition]={(int)condition}";
 
-        public int Delete(Product product)
-        {
-            var sql = $"DELETE FROM ProductTbl WHERE [product_id]={product.ID}";
-            return SaveChanges(sql);
-        }
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
 
-        protected override BaseEntity newEntity()
-        {
-            return new Product();
-        }
+		public int Update(Product product) {
+			int records = 0;
+			cmd.Parameters.Clear();
 
-        protected override BaseEntity CreateModel(BaseEntity entity)
-        {
-            var product = (Product)entity;
-            product.ID = (int)reader["product_id"];
-            product.Owner = new UserDB().GetByID((int)reader["owner_id"]);
-            product.Name = reader["product_name"].ToString();
-            product.Description = reader["description"].ToString();
-            product.DatePosted = (DateTime)reader["date_posted"];
-            product.Condition = (ItemCondition)reader["condition"];
-            product.Category = (ItemCategory)reader["category"];
-            product.Price = double.Parse(reader["price"].ToString());
-            product.Availability = (bool)reader["availability"];
+			string sqlStr = "UPDATE ProductTbl SET " +
+				"[owner_id] = ?, " +
+				"[product_name] = ?, " +
+				"[description] = ?, " +
+				"[date_posted] = ?, " +
+				"[condition] = ?, " +
+				"[category] = ?, " +
+				"[price] = ?, " +
+				"[image2] = ?, " +
+				"[availability] = ? " +
+				"WHERE [product_id] = ?";
 
-            if (reader["ImageData"] != DBNull.Value)
-            {
-                var rawBytes = (byte[])reader["ImageData"];
-                var imageBytes = StripOleHeader(rawBytes);
-                product.Image = imageBytes;
-            }
-            else
-            {
-                product.Image = null;
-            }
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.Owner.ID;
+			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = product.Name;
+			cmd.Parameters.Add("?", OleDbType.LongVarWChar).Value = product.Description;
+			cmd.Parameters.Add("?", OleDbType.Date).Value = product.DatePosted;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Condition;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Category;
+			cmd.Parameters.Add("?", OleDbType.Double).Value = product.Price;
 
-            return product;
-        }
+			if (product.Image != null && product.Image.Length > 0) {
+				cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = product.Image;
+			}
+			else {
+				cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = DBNull.Value;
+			}
 
-        private byte[] StripOleHeader(byte[] oleBytes)
-        {
-            // full signatures
-            var sigs = new List<byte[]>
-            {
-                new byte[]{ 0xFF,0xD8,0xFF },                           // JPEG start
-                new byte[]{ 0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A },   // PNG
-                new byte[]{ 0x47,0x49,0x46,0x38,0x37,0x61 },             // GIF87a
-                new byte[]{ 0x47,0x49,0x46,0x38,0x39,0x61 },             // GIF89a
-                new byte[]{ 0x42,0x4D }                                  // BMP
-            };
+			cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Availability;
 
-            foreach (var sig in sigs)
-            {
-                for (int i = 0; i + sig.Length < oleBytes.Length; i++)
-                {
-                    bool match = true;
-                    for (int j = 0; j < sig.Length; j++)
-                    {
-                        if (oleBytes[i + j] != sig[j])
-                        {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if (match)
-                    {
-                        var clean = new byte[oleBytes.Length - i];
-                        Array.Copy(oleBytes, i, clean, 0, clean.Length);
-                        return clean;
-                    }
-                }
-            }
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.ID;
 
-            return oleBytes;
-        }
+			try {
+				cmd.CommandText = sqlStr;
+				connection.Open();
+				records = cmd.ExecuteNonQuery();
+			}
+			catch (Exception e) {
+				Debug.WriteLine("Error occurred during UPDATE operation: " + e.Message);
+				Debug.WriteLine("SQL: " + cmd.CommandText);
+				foreach (OleDbParameter param in cmd.Parameters) {
+					Debug.WriteLine($"{param.Value} ({param.OleDbType})");
+				}
+			}
+			finally {
+				if (connection.State == System.Data.ConnectionState.Open)
+					connection.Close();
+			}
+
+			return records;
+		}
 
 
-        private List<Product> SelectProducts()
-        {
-            var productList = new List<Product>();
-            try
-            {
-                cmd.Connection = connection;
-                connection.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    productList.Add((Product)CreateModel(newEntity()));
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("SelectProducts error: " + e.Message);
-            }
-            finally
-            {
-                reader?.Close();
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return productList;
-        }
-    }
+		public int Delete(Product product) {
+			StringBuilder sql_builder = new StringBuilder();
+			sql_builder.AppendFormat($"DELETE FROM ProductTbl WHERE [product_id]={product.ID}");
+			return SaveChanges(sql_builder.ToString());
+		}
+
+		protected override BaseEntity newEntity() {
+			return new Product();
+		}
+
+		protected override BaseEntity CreateModel(BaseEntity entity) {
+			Product product = (Product)entity;
+
+			product.ID = (int)reader["product_id"];
+			product.Owner = new UserDB().GetByID((int)reader["owner_id"]);
+			product.Name = reader["product_name"].ToString();
+			product.Description = reader["description"].ToString();
+			product.DatePosted = (DateTime)reader["date_posted"];
+			product.Condition = (ItemCondition)reader["condition"];
+			product.Category = (ItemCategory)reader["category"];
+			product.Price = double.Parse(reader["price"].ToString());
+			product.Availability = (bool)reader["availability"];
+			product.Image = reader["image"] as byte[];
+
+			return product;
+		}
+
+		private List<Product> SelectProducts() {
+			List<Product> productList = new List<Product>();
+			try {
+				cmd.Connection = connection;
+				connection.Open();
+				reader = cmd.ExecuteReader();
+				while (reader.Read()) {
+					Product product = (Product)newEntity();
+					productList.Add((Product)CreateModel(product));
+				}
+			}
+			catch (Exception e) {
+				Debug.WriteLine(e.Message);
+			}
+			finally {
+				if (reader != null)
+					reader.Close();
+
+				if (connection.State == System.Data.ConnectionState.Open)
+					connection.Close();
+			}
+			return productList;
+		}
+	}
 }
