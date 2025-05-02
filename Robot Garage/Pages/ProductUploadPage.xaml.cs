@@ -110,7 +110,7 @@ namespace Robot_Garage.Pages
 			}
 			
 			if (!File.Exists(txtImagePath.Text)) {
-				System.Windows.MessageBox.Show("Image doesn't exist on computer, Try selecting another file!");
+				System.Windows.MessageBox.Show("Image either was not uploaded, or doesn't exist on computer, Try selecting another file!");
 				return;
 			}
 
@@ -173,9 +173,22 @@ namespace Robot_Garage.Pages
 			}
 		}
 
+		private void txtName_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			txtNameCounter.Text = $"{txtName.Text.Length}/30";
+		}
+
         private void txtDescription_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtDescriptionCounter.Text = $"{txtDescription.Text.Length}/250";
+            txtDescriptionCounter.Text = $"{txtDescription.Text.Length}/350";
         }
-    }
+
+		private void txtDescription_PreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter || e.Key == Key.Return)
+			{
+				e.Handled = true; // Prevents the Enter key from being processed
+			}
+		}
+	}
 }

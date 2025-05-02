@@ -42,7 +42,7 @@ namespace Robot_Garage.Pages {
 				}
 				else
 				{
-                    System.Windows.MessageBox.Show("The unique code written is incorrect!");
+                    System.Windows.MessageBox.Show("unique code not found!");
                 }
             }
             else
@@ -55,7 +55,7 @@ namespace Robot_Garage.Pages {
 
 					await Task.Delay(750);
 
-					NavigationService?.Navigate(new LoginPage());
+					NavigationService?.GoBack();
                 }
 				else
 				{

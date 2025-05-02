@@ -70,6 +70,46 @@ namespace View_Model {
 			return productList;
 		}
 
+		public List<Product> GetAllAvailableProducts() {
+			cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetAllRequestedAvailableProducts()
+		{
+			cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true} AND [requesting]={true}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetNLatestRequestedAvailableProducts(int n)
+		{
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl WHERE [availability]={true} AND [requesting]={true}";
+
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+		public List<Product> GetAllRequestedAvailableProductsByCategory(ItemCategory category)
+		{
+			cmd.CommandText = $"SELECT * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int)category} AND [requesting]={true}";
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
+
+		public List<Product> GetNLatestRequestedAvailableProductsByCategory(int n, ItemCategory category)
+		{
+			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
+				$"WHERE [availability]={true} AND [category]={(int)category} AND [requesting]={true}";
+			List<Product> productList = SelectProducts();
+			return productList;
+		}
+
 		public Product GetProductByID(int id) {
 			cmd.Parameters.Clear();
 
@@ -81,16 +121,10 @@ namespace View_Model {
 			return productList.First();
 		}
 
-		public List<Product> GetAllAvailableProducts() {
-			cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true}";
-
-			List<Product> productList = SelectProducts();
-			return productList;
-		}
 
 		public List<Product> GetAllAvailableProductsByCategory(ItemCategory category) {
 			cmd.CommandText = $"SELECT * FROM ProductTbl " +
-				$"WHERE [availability]={true} AND [category]={(int)category}";
+				$"WHERE [availability]={true} AND [category]={(int)category} AND [requesting]={false}";
 
 			List<Product> productList = SelectProducts();
 			return productList;
@@ -98,7 +132,7 @@ namespace View_Model {
 
 		public List<Product> GetAllAvailableProductsByCondition(ItemCondition condition) {
 			cmd.CommandText = $"SELECT * FROM ProductTbl " +
-				$"WHERE [availability]={true} AND [condition]={(int)condition}";
+				$"WHERE [availability]={true} AND [condition]={(int)condition} AND [requesting]={false}";
 
 			List<Product> productList = SelectProducts();
 			return productList;
@@ -106,7 +140,7 @@ namespace View_Model {
 
 		public List<Product> GetNLatestAvailableProducts(int n) {
 			cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
-							  $"WHERE [availability]={true} " +
+							  $"WHERE [availability]={true} AND [requesting]={false} " +
 							  $"ORDER BY [date_posted] DESC";
 
 			List<Product> productList = SelectProducts();

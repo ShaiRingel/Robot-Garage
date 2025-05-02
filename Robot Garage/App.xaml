@@ -11,6 +11,7 @@
         <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#FF1F1F1F"/>
         <SolidColorBrush x:Key="DarkForegroundBrush" Color="White"/>
         <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="ControlBackgroundBrush2" Color="#3E3E42"/>
         <SolidColorBrush x:Key="DarkBlueBrush" Color="#FF032E61"/>
         <SolidColorBrush x:Key="DarkGreenBrush" Color="#1B5E20"/>
         <SolidColorBrush x:Key="DarkRedBrush" Color="#8B0000"/>
@@ -33,19 +34,23 @@
         <SolidColorBrush x:Key="LightBrownBrush" Color="#8D6E63"/>
         <SolidColorBrush x:Key="LightGrayBrush" Color="#9E9E9E"/>
 
+        <!-- Converters -->
         <convertors:BoolToAvailabilityConverter x:Key="BoolToAvailabilityConverter" />
         <convertors:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
 
+        <!-- Merged dictionaries -->
         <ResourceDictionary x:Key="Animations">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Animations.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
+        <!-- Reusable Templates and Styles -->
         <ControlTemplate x:Key="roundbutton" TargetType="Button">
             <Grid>
-                <Rectangle Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Fill="{TemplateBinding Background}" 
-                           Stroke="{TemplateBinding Foreground}" RadiusX="2.5" RadiusY="2.5" />
+                <Rectangle Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" 
+                           Fill="{TemplateBinding Background}" Stroke="{TemplateBinding Foreground}" 
+                           RadiusX="2.5" RadiusY="2.5" />
                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Grid>
         </ControlTemplate>
@@ -58,9 +63,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -77,12 +82,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <Border x:Name="Overlay"
-                    Background="White"
-                    Opacity="0"
-                    CornerRadius="3"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                              VerticalAlignment="Center"/>
+                            <Border x:Name="Overlay" Background="White" Opacity="0" CornerRadius="3"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -100,70 +101,147 @@
             </Setter>
         </Style>
 
-        <Style TargetType="{x:Type Window}">
+        <!-- Global Control Styles -->
+        <Style TargetType="Window">
             <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
             <Setter Property="Title" Value="Robot Garage"/>
             <Setter Property="Icon" Value="/assets/images/Logo Small BackGround Removed.png"/>
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}">
+        <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="FontFamily" Value="Rubik"/>
         </Style>
-        
-        <Style TargetType="{x:Type Label}">
+
+        <Style TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="FontFamily" Value="Rubik"/>
         </Style>
-        
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontFamily" Value="Rubik"/>
-            <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
-        </Style>
-        
-        <Style TargetType="{x:Type PasswordBox}">
+
+        <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.25"/>
         </Style>
-        
-        <Style TargetType="{x:Type Button}">
+
+        <Style TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="Rubik"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.25"/>
+        </Style>
+
+        <Style TargetType="Button">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource ControlBackgroundBrush}"/>
+
             <Setter Property="Padding" Value="5,2"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
-        <Style TargetType="{x:Type xctk:IntegerUpDown}">
+        <Style TargetType="xctk:IntegerUpDown">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Rubik"/>
             <Setter Property="BorderBrush" Value="{StaticResource DarkForegroundBrush}"/>
-            <Setter Property="BorderThickness" Value="0, 0, 0, 1.25"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.25"/>
         </Style>
 
-        <Style TargetType="{x:Type xctk:DropDownButton}">
-            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}" />
+        <Style TargetType="xctk:DropDownButton">
+            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}"/>
+            <Setter Property="FontFamily" Value="Rubik"/>
+        </Style>
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}"/>
+            <Setter Property="FontFamily" Value="Rubik"/>
+        </Style>
+
+        <!-- Dark ComboBox Styles -->
+        <!-- ComboBoxItem style for the dropdown items -->
+        <Style x:Key="DarkComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush2}"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush2}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Full ComboBox style including template overrides -->
+        <Style x:Key="DarkComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}" />
-            <Setter Property="FontFamily" Value="Rubik" />
+            <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="ItemContainerStyle" Value="{StaticResource DarkComboBoxItemStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                          Grid.Column="2"
+                                          Focusable="False"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press"/>
+                            <ContentPresenter Name="ContentSite"
+                                              IsHitTestVisible="False"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="3,3,23,3"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                      Background="{StaticResource ControlBackgroundBrush}">
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDown" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="DarkGray"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="LightGray"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="LightGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-
-
-        <Style TargetType="{x:Type ListBox}">
-            <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource DarkGrayBrush}" />
-            <Setter Property="FontFamily" Value="Rubik" />
-        </Style>
-
-
     </Application.Resources>
 </Application>

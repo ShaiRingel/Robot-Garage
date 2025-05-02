@@ -11,31 +11,35 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Rectangle Grid.Column="0" Fill="{StaticResource DarkBlueBrush}"/>
+        <Viewbox Stretch="UniformToFill">
+            <DockPanel Background="{StaticResource DarkBlueBrush}" Width="800" Height="45">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 0, 5, 0" 
+    Background="Transparent" BorderBrush="Transparent" Height="25" Width="25"
+    Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
+                        <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="18" />
+                    </Button>
+                    <Label Content="My Chats" FontSize="24" FontWeight="ExtraBold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Viewbox>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 0, 5, 0" 
-        Background="Transparent" BorderBrush="Transparent" Height="25" Width="25"
-        Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
-                <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="18" />
-            </Button>
-            <Label Content="My Chats" FontSize="24" FontWeight="ExtraBold" VerticalAlignment="Center"/>
-        </StackPanel>
-        
         <ScrollViewer Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding ChatItems}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <controls:ChatListItem 
-                DataContext="{Binding}" 
-                MouseLeftButtonUp="ChatListItem_Click" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Viewbox Stretch="Uniform" VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding ChatItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:ChatListItem Width="800" Height="75"
+        DataContext="{Binding}" 
+        MouseLeftButtonUp="ChatListItem_Click" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Viewbox>
         </ScrollViewer>
     </Grid>
 </Page>

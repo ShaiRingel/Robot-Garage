@@ -52,10 +52,10 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Enhanced Product Image -->
-                        <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 0, 20, 15" 
-                            Background="Transparent" BorderBrush="Transparent" Height="20" Width="20"
+                        <Button Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            Background="Transparent" BorderBrush="Transparent" Height="25" Width="25"
                             Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
-                            <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="15" />
+                            <svgc:SvgViewbox Source="/assets/images/LeftArrow.svg" Height="18" />
                         </Button>
                         <Border x:Name="ImageContainer"
                             Margin="0,40,0,0"

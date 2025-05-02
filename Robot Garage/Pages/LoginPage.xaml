@@ -14,68 +14,70 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Margin="10, 0, 10, 0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Viewbox>
+            <Grid Grid.Column="0" Width="443" Height="430">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/assets/images/Logo Small BackGround Removed White Outline.png" Width="100"/>
+                    <Image Margin="12.5, 0"  Grid.Column="0" Source="/assets/images/Logo Small BackGround Removed White Outline.png" Width="100"/>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <Label Content="FRC Robotics" FontSize="36" FontWeight="Bold"
-                HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         <Label Content="Robots Garage" FontSize="28" FontWeight="Bold"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </Grid>
 
-            <Grid Grid.Row="1" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Label Content="Login" Grid.Row="0" FontSize="32" FontWeight="Bold" Margin="0,-20,0,0"/>
+                    <Label Content="Login" Grid.Row="0" FontSize="32" FontWeight="Bold" Margin="0,-20,0,0"/>
 
-                <Label Content="Username:" Grid.Row="1"/>
-                <TextBox x:Name="txtUsername" Grid.Row="2" Margin="5"/>
+                    <Label Content="Username:" Grid.Row="1"/>
+                    <TextBox x:Name="txtUsername" Grid.Row="2" Margin="5"/>
 
-                <Label Content="Team Number:" Grid.Row="3" VerticalAlignment="Center"/>
-                <xctk:IntegerUpDown x:Name="txtNumber" FormatString="G"  Grid.Row="4" Margin="5" Width="80" HorizontalAlignment="Left"
-                                    Minimum="0" Maximum="99999" Text="0" PreviewTextInput="IntegerUpDown_PreviewTextInput" />
+                    <Label Content="Team Number:" Grid.Row="3" VerticalAlignment="Center"/>
+                    <xctk:IntegerUpDown x:Name="txtNumber" FormatString="G"  Grid.Row="4" Margin="5" Width="80" HorizontalAlignment="Left"
+                            Minimum="0" Maximum="99999" Text="0" PreviewTextInput="IntegerUpDown_PreviewTextInput" />
 
-                <Label Content="Password:" Grid.Row="5"/>
-                <PasswordBox x:Name="txtPassword" Grid.Row="6" Margin="5"/>
+                    <Label Content="Password:" Grid.Row="5"/>
+                    <PasswordBox x:Name="txtPassword" Grid.Row="6" Margin="5"/>
 
-                <Button Grid.Row="7" HorizontalAlignment="Right" BorderBrush="Transparent" Background="{x:Null}" 
-                        Style="{StaticResource NoHighlightButtonStyle}" Click="btnForgotPassword_Clicked" Cursor="Hand">
-                    <TextBlock Text="Forgot Password?" Foreground="#FF3232FF" FontStyle="Italic"/>
-                </Button>
+                    <Button Grid.Row="7" HorizontalAlignment="Right" BorderBrush="Transparent" Background="{x:Null}" 
+                Style="{StaticResource NoHighlightButtonStyle}" Click="btnForgotPassword_Clicked" Cursor="Hand">
+                        <TextBlock Text="Forgot Password?" Foreground="#FF3232FF" FontStyle="Italic"/>
+                    </Button>
 
-                <Button Content="Login" Grid.Row="8" Margin="5"
-                        HorizontalAlignment="Center" Width="100"
-                        Click="btnLogin_ClickAsync"/>
+                    <Button Content="Login" Grid.Row="8" Margin="5"
+                HorizontalAlignment="Center" Width="100"
+                Click="btnLogin_ClickAsync"/>
 
-                <TextBlock x:Name="lblStatus" Grid.Row="9" FontWeight="DemiBold" Text="Login Successful!"
-                   FontSize="14" Foreground="{StaticResource LightGreenBrush}" Visibility="Hidden"
-                   HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                    <TextBlock x:Name="lblStatus" Grid.Row="9" FontWeight="DemiBold" Text="Login Successful!"
+           FontSize="14" Foreground="{StaticResource LightGreenBrush}" Visibility="Hidden"
+           HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </Grid>
             </Grid>
-        </Grid>
+        </Viewbox>
 
         <Grid Grid.Column="1">
             <Image Source="/assets/images/RobotScoringL4.png" Stretch="UniformToFill"/>

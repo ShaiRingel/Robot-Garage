@@ -76,7 +76,7 @@ namespace Robot_Garage.Pages {
 			MessageBubble newMessage = new MessageBubble();
 			newMessage.SetValue(MessageBubble.MessageTextProperty, message.Content);
 			newMessage.SetValue(MessageBubble.IsSenderProperty, message.Sender.ID == _loggedUser.ID);
-			newMessage.SetValue(MessageBubble.BackgroundProperty, System.Windows.Media.Brushes.Transparent);
+			newMessage.SetValue(BackgroundProperty, System.Windows.Media.Brushes.Transparent);
 			MessagesPanel.Children.Add(newMessage);
 		}
 
@@ -99,7 +99,7 @@ namespace Robot_Garage.Pages {
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
 				messagePollingTimer.Stop();
-				NavigationService?.Navigate(new ChatsListPage(_loggedUser));
+				NavigationService?.GoBack();
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

@@ -57,7 +57,8 @@ namespace Robot_Garage.Pages {
 
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
-				NavigationService?.Navigate(new MainPage(_loggedUser));
+				NavigationService?.GoBack();
+				// NavigationService?.Navigate(new MainPage(_loggedUser));
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

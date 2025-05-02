@@ -29,89 +29,172 @@ namespace Robot_Garage.Pages {
 		public ObservableCollection<CardViewModel> ProgrammingCards { get; set; }
 		public ObservableCollection<CardViewModel> EnginesCards { get; set; }
 		public ObservableCollection<CardViewModel> ManufacturingCards { get; set; }
+		public ObservableCollection<CardViewModel> SelectedCategoryCards { get; set; }
+		ProductDB productDB;
 		private User _loggedUser;
 		private string _currentPage;
 
-		public MainPage(User loggedUser) {
+		public MainPage(User loggedUser)
+		{
 			InitializeComponent();
 
-			this._currentPage = "Sales";
-			this._loggedUser = loggedUser;
-			
+			_currentPage = "Sales";
+			_loggedUser = loggedUser;
 			Loaded += SalesPage_Loaded;
 
-			if (this.RenderTransform == null || !(this.RenderTransform is TranslateTransform))
-                this.RenderTransform = new TranslateTransform();
+			productDB = new ProductDB();
 
+			// Initialize collections
 			RecentlyAddedCards = new ObservableCollection<CardViewModel>();
 			MechanicsCards = new ObservableCollection<CardViewModel>();
 			ElectronicsCards = new ObservableCollection<CardViewModel>();
 			ProgrammingCards = new ObservableCollection<CardViewModel>();
 			EnginesCards = new ObservableCollection<CardViewModel>();
 			ManufacturingCards = new ObservableCollection<CardViewModel>();
+			SelectedCategoryCards = new ObservableCollection<CardViewModel>();
 
+			// Load data
 			LoadCardsProducts();
 
+			// Default view: General panel
+			GeneralPanel.Visibility = Visibility.Visible;
+			CategoryPanel.Visibility = Visibility.Collapsed;
+
+			SortByComboBox.SelectedIndex = 0;
+
+			// Bind DataContext
 			DataContext = this;
 		}
 
-		private void LoadCardsProducts() {
-			ProductDB productDB = new ProductDB();
+		private void LoadCardsProducts()
+		{
+			if (_currentPage == "Sales")
+			{
+				foreach (var p in productDB.GetNLatestAvailableProducts(15))
+					RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+				
+				LoadNCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
+				LoadNCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
+				LoadNCardsByCat(ItemCategory.Programming, ProgrammingCards, 15);
+				LoadNCardsByCat(ItemCategory.Engines, EnginesCards, 15);
+				LoadNCardsByCat(ItemCategory.Manufacturing, ManufacturingCards, 15);
+			}
+			else
+			{
+				foreach (var p in productDB.GetNLatestRequestedAvailableProducts(15))
+					RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
 
-			Debug.WriteLine(productDB.GetAllProducts().Count);
+				LoadNRequestingCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
+				LoadNRequestingCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
+				LoadNRequestingCardsByCat(ItemCategory.Programming, ProgrammingCards, 15);
+				LoadNRequestingCardsByCat(ItemCategory.Engines, EnginesCards, 15);
+				LoadNRequestingCardsByCat(ItemCategory.Manufacturing, ManufacturingCards, 15);
+			}
+		}
 
-			// Load Recently Added Products
-			List<Product> recentlyAddedProducts = productDB.GetNLatestAvailableProducts(15);
-			foreach (Product product in recentlyAddedProducts) {
-				RecentlyAddedCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
+		private void LoadCatrgoryCardsProducts(string category)
+		{
+			ObservableCollection<CardViewModel> source = new ObservableCollection<CardViewModel>();
+
+			if (_currentPage == "Sales")
+			{
+				switch (category)
+				{
+					case "Mechanics":
+						LoadCardsByCat(ItemCategory.Mechanics, source);
+						break;
+					case "Electronics":
+						LoadCardsByCat(ItemCategory.Electronics, source);
+						break;
+					case "Programming":
+						LoadCardsByCat(ItemCategory.Programming, source);
+						break;
+					case "Engines":
+						LoadCardsByCat(ItemCategory.Engines, source);
+						break;
+					case "Manufacturing":
+						LoadCardsByCat(ItemCategory.Manufacturing, source);
+						break;
+					default:
+						source = RecentlyAddedCards;
+						break;
+				}
+			}
+			else
+			{
+				switch (category)
+				{
+					case "Mechanics":
+						LoadRequestingCardsByCat(ItemCategory.Mechanics, source);
+						break;
+					case "Electronics":
+						LoadRequestingCardsByCat(ItemCategory.Electronics, source);
+						break;
+					case "Programming":
+						LoadRequestingCardsByCat(ItemCategory.Programming, source);
+						break;
+					case "Engines":
+						LoadRequestingCardsByCat(ItemCategory.Engines, source);
+						break;
+					case "Manufacturing":
+						LoadRequestingCardsByCat(ItemCategory.Manufacturing, source);
+						break;
+					default:
+						source = RecentlyAddedCards;
+						break;
+				}
 			}
 
-			// Load Mechanics Products
-			List<Product> mechanicsProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Mechanics);
-			foreach (Product product in mechanicsProducts) {
-				MechanicsCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
-			}
+			SelectedCategoryCards.Clear();
+			foreach (var card in source)
+				SelectedCategoryCards.Add(card);
+		}
 
-			// Load Electronics Products
-			List<Product> electronicsProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Electronics);
-			foreach (Product product in electronicsProducts) {
-				ElectronicsCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
-			}
+		void LoadCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col)
+		{
+			var list = productDB.GetAllAvailableProductsByCategory(cat);
+			foreach (var p in list)
+				col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+		}
 
-			// Load Programming Products
-			List<Product> programmingProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Programming);
-			foreach (Product product in programmingProducts) {
-				ProgrammingCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
-			}
+		void LoadNCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
+		{
+			var list = productDB.GetNLatestAvailableProductsByCategory(n, cat);
+			foreach (var p in list)
+				col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+		}
 
-			// Load Engines Products
-			List<Product> enginesProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Engines);
-			foreach (Product product in enginesProducts) {
-				EnginesCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
-			}
+		void LoadRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col)
+		{
+			var list = productDB.GetAllRequestedAvailableProductsByCategory(cat);
+			foreach (var p in list)
+				col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+		}
 
-			// Load Manufacturing Products
-			List<Product> manufacturingProducts = productDB.GetAllAvailableProductsByCategory(ItemCategory.Manufacturing);
-			foreach (Product product in manufacturingProducts) {
-				ManufacturingCards.Add(new CardViewModel {
-					Product = product,
-					LoggedUser = _loggedUser
-				});
+		void LoadNRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
+		{
+			var list = productDB.GetNLatestRequestedAvailableProductsByCategory(n, cat);
+			foreach (var p in list)
+				col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+		}
+
+		void RefreshCards()
+		{
+			RecentlyAddedCards.Clear();
+			MechanicsCards.Clear();
+			ElectronicsCards.Clear();
+			ProgrammingCards.Clear();
+			EnginesCards.Clear();
+			ManufacturingCards.Clear();
+			SelectedCategoryCards.Clear();
+
+			if (CategoryPanel.Visibility == Visibility.Visible)
+			{
+				LoadCatrgoryCardsProducts(SelectedCategoryTitle.Content.ToString());
+			}
+			else
+			{
+				LoadCardsProducts();
 			}
 		}
 
@@ -122,7 +205,8 @@ namespace Robot_Garage.Pages {
 			}
 
 			_currentPage = "Sales";
-			MessageBox.Show("Sales clicked");
+
+			RefreshCards();
 		}
 
 		private void btnRequests_Click(object sender, RoutedEventArgs e) {
@@ -131,7 +215,8 @@ namespace Robot_Garage.Pages {
 			}
 
 			_currentPage = "Requests";
-			MessageBox.Show("Requests clicked");
+
+			RefreshCards();
 		}
 
 		private void btnMyItems_Click(object sender, RoutedEventArgs e) {
@@ -151,20 +236,76 @@ namespace Robot_Garage.Pages {
 			NavigationService?.Navigate(new ChatsListPage(_loggedUser));
 		}
 
-		private void SalesPage_Loaded(object sender, RoutedEventArgs e) {
-			TranslateTransform trans = (TranslateTransform)this.RenderTransform;
+		private void SalesPage_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (!(RenderTransform is TranslateTransform trans))
+				RenderTransform = trans = new TranslateTransform();
 
-			trans.X = this.ActualWidth;
+			trans.X = ActualWidth;
+			var anim = new DoubleAnimation(ActualWidth, 0, TimeSpan.FromMilliseconds(250));
+			trans.BeginAnimation(TranslateTransform.XProperty, anim);
+		}
 
-			DoubleAnimation slideIn = new DoubleAnimation(this.ActualWidth, 0, new Duration(TimeSpan.FromMilliseconds(250)));
-			trans.BeginAnimation(TranslateTransform.XProperty, slideIn);
+		private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			// Determine selected sort criteria
+			var selected = SortByComboBox.SelectedItem as ComboBoxItem;
+			if (selected == null) return;
+			var criteria = selected.Tag.ToString();
+
+			// Assuming SelectedCategoryCards is an ObservableCollection<CardViewModel>
+			var items = SelectedCategoryCards.ToList();
+			switch (criteria)
+			{
+				case "ReleaseDate":
+					items = items.OrderByDescending(i => i.Product.DatePosted).ToList();
+					break;
+				case "Condition":
+					items = items.OrderBy(i => i.Product.Condition).ToList();
+					break;
+				case "PriceAsc":
+					items = items.OrderBy(i => i.Product.Price).ToList();
+					break;
+				case "PriceDesc":
+					items = items.OrderByDescending(i => i.Product.Price).ToList();
+					break;
+			}
+
+			// Refresh the bound collection
+			SelectedCategoryCards.Clear();
+			foreach (var item in items)
+				SelectedCategoryCards.Add(item);
 		}
 
 		private void btnAddProduct_Click(object sender, RoutedEventArgs e)
 		{
 			NavigationService?.Navigate(new ProductUploadPage(_loggedUser));
 		}
-    }
+
+		private void CatagoryButton_Click(object sender, RoutedEventArgs e)
+		{
+			var btn = (Button)sender;
+			var panel = btn.Content as StackPanel;
+			var label = panel.Children.OfType<Label>().FirstOrDefault();
+			var category = label?.Content.ToString();
+
+			if (category == "General")
+			{
+				// Show all carousels
+				GeneralPanel.Visibility = Visibility.Visible;
+				CategoryPanel.Visibility = Visibility.Collapsed;
+				RefreshCards();
+				return;
+			}
+
+			// Switch to single-category view
+			GeneralPanel.Visibility = Visibility.Collapsed;
+			CategoryPanel.Visibility = Visibility.Visible;
+			SelectedCategoryTitle.Content = category;
+
+			RefreshCards();
+		}
+	}
 
 	public class CardViewModel {
 		public Product Product { get; set; }
