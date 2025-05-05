@@ -15,7 +15,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using View_Model;
+using View_Model.DB;
 using Xceed.Wpf.Toolkit;
 
 namespace Robot_Garage.Pages {
@@ -32,7 +32,7 @@ namespace Robot_Garage.Pages {
 
 		private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e) {
 			User user = new UserDB().GetByName(txtUsername.Text);
-			UserList users = new UserDB().GetAll();
+			UserList users = new UserDB().GetAllUsers();
 			Debug.WriteLine(users.Count);
 			if (user == null) {
 				Debug.WriteLine("No user found with that name!");

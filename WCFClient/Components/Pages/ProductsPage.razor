@@ -1,0 +1,239 @@
+﻿@page "/products"
+@using GarageServiceProxy
+@inject ProductServiceClient Client
+@rendermode InteractiveServer
+
+<h3>Product Management</h3>
+<div class="row">
+    <div class="col-3">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Products</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Product by ID</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Insert ? "active" : "")" @onclick="() => SelectOperation(Operation.Insert)">Insert Product</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Update ? "active" : "")" @onclick="() => SelectOperation(Operation.Update)">Update Product</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Delete ? "active" : "")" @onclick="() => SelectOperation(Operation.Delete)">Delete Product</button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-9">
+        @RenderOperation()
+    </div>
+</div>
+
+@code {
+    enum Operation { List, GetById, Insert, Update, Delete }
+    private Operation selectedOperation = Operation.List;
+
+    private List<Product> products = new();
+    private Product currentProduct = new();
+    private int searchId;
+    private string message;
+    private bool isLoading;
+    private bool initialLoadRequested;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender && !initialLoadRequested) {
+            initialLoadRequested = true;
+            await Task.Delay(10);
+            await LoadAllAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAllAsync() {
+        try {
+            isLoading = true;
+            StateHasChanged();
+            products = (await Client.GetAllProductsAsync())?.ToList() ?? new List<Product>();
+        }
+        catch (Exception ex) {
+            message = $"Error loading products: {ex.Message}";
+        }
+        finally {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SelectOperation(Operation op) {
+        selectedOperation = op;
+        message = string.Empty;
+        currentProduct = new Product();
+        searchId = 0;
+
+        if (op == Operation.List) {
+            _ = LoadAllAsync();
+        }
+    }
+
+    private RenderFragment RenderOperation() => selectedOperation switch {
+        Operation.List => @<div>
+        <h4>All Products</h4>
+        @if (isLoading)
+    {
+        <p>Loading products...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+ }
+        <table class="table table-striped">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var p in products)
+            {
+                <tr>
+                    <td>@p.ID</td>
+                    <td>@p.Name</td>
+                    <td>@p.Description</td>
+                    <td>@p.Price</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>,
+
+        Operation.GetById => @<div>
+        <h4>Find Product by ID</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-primary" @onclick="LoadProductByIdAsync">Search</button>
+        </div>
+        @if (currentProduct?.ID > 0)
+    {
+        <div>
+            <p><strong>ID:</strong> @currentProduct.ID</p>
+            <p><strong>Name:</strong> @currentProduct.Name</p>
+            <p><strong>Description:</strong> @currentProduct.Description</p>
+            <p><strong>Price:</strong> @currentProduct.Price</p>
+        </div>
+    }
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+ }
+    </div>,
+
+        Operation.Insert => @<div>
+        <h4>Insert New Product</h4>
+        <EditForm Model="currentProduct" OnValidSubmit="InsertProductAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <InputText @bind-Value="currentProduct.Name" class="form-control mb-2" placeholder="Name" />
+            <InputTextArea @bind-Value="currentProduct.Description" class="form-control mb-2" placeholder="Description" />
+            <InputNumber @bind-Value="currentProduct.Price" class="form-control mb-2" placeholder="Price" />
+            <button type="submit" class="btn btn-success">Insert</button>
+        </EditForm>
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="mt-2 alert alert-info">@message</div>
+ }
+    </div>,
+
+        Operation.Update => @<div>
+        <h4>Update Product</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-secondary" @onclick="LoadProductByIdAsync">Load</button>
+        </div>
+        @if (currentProduct?.ID > 0)
+    {
+        <EditForm Model="currentProduct" OnValidSubmit="UpdateProductAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <InputText @bind-Value="currentProduct.Name" class="form-control mb-2" />
+            <InputTextArea @bind-Value="currentProduct.Description" class="form-control mb-2" />
+            <InputNumber @bind-Value="currentProduct.Price" class="form-control mb-2" />
+            <button type="submit" class="btn btn-primary">Update</button>
+        </EditForm>
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="mt-2 alert alert-info">@message</div>
+ }
+    }
+        @if (!string.IsNullOrEmpty(message) && currentProduct.ID == 0) {
+        <div class="alert alert-danger">@message</div>
+ }
+    </div>,
+
+        Operation.Delete => @<div>
+        <h4>Delete Product</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-danger" @onclick="DeleteByIdAsync">Delete</button>
+        </div>
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="mt-2 alert alert-warning">@message</div>
+ }
+    </div>,
+
+        _ => @<div>Select an operation.</div>
+    };
+
+    private async Task LoadProductByIdAsync() {
+        try {
+            message = string.Empty;
+            var product = await Client.GetProductByIDAsync(searchId);
+            if (product == null) {
+                message = "Product not found";
+                currentProduct = new Product();
+            }
+            else {
+                currentProduct = product;
+            }
+        }
+        catch {
+            message = "Product not found";
+            currentProduct = new Product();
+        }
+    }
+
+    private async Task InsertProductAsync() {
+        try {
+            await Client.InsertProductAsync(currentProduct);
+            message = "Inserted successfully.";
+            await LoadAllAsync();
+        }
+        catch (Exception ex) {
+            message = $"Insert failed: {ex.Message}";
+        }
+    }
+
+    private async Task UpdateProductAsync() {
+        try {
+            await Client.UpdateProductAsync(currentProduct);
+            message = "Updated successfully.";
+            await LoadAllAsync();
+        }
+        catch (Exception ex) {
+            message = $"Update failed: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteByIdAsync() {
+        try {
+            var product = await Client.GetProductByIDAsync(searchId);
+            if (product != null) {
+                await Client.DeleteProductAsync(product);
+                message = $"Deleted ID {searchId}.";
+                await LoadAllAsync();
+            }
+            else {
+                message = "Product not found";
+            }
+        }
+        catch {
+            message = "Product not found";
+        }
+    }
+}

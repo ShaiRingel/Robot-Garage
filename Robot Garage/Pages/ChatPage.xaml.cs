@@ -14,9 +14,10 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using View_Model;
+using View_Model.DB;
 
 namespace Robot_Garage.Pages {
 	/// <summary>
@@ -36,6 +37,8 @@ namespace Robot_Garage.Pages {
 			_otherUser = otherUser;
 			messagesDB = new MessageDB();
 			currentMessages = new MessageList();
+
+
 
 			txtName.Text = _otherUser.Username;
 
@@ -99,7 +102,8 @@ namespace Robot_Garage.Pages {
 		private void BackButton_Click(object sender, RoutedEventArgs e) {
 			if (NavigationService != null && NavigationService.CanGoBack) {
 				messagePollingTimer.Stop();
-				NavigationService?.GoBack();
+				NavigationService.Refresh();
+				NavigationService.GoBack();
 			}
 			else {
 				MessageBox.Show("No previous page to navigate to.");

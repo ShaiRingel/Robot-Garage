@@ -139,7 +139,7 @@
                             <!-- Price -->
                             <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                                 <TextBlock Text="Price: " FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Price, StringFormat='{}{0}₪'}" FontSize="16" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Price, StringFormat='{}₪{0}'}" FontSize="16" Foreground="#CCCCCC" VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <!-- Availability Indicator -->

@@ -16,18 +16,18 @@ namespace Model
 	}
 
 	public class Transaction : BaseEntity {
-		private int product;
-		private Renter renter;
+		private Product product;
+		private User renter;
 		private DateTime startDate;
 		private DateTime endDate;
 		private OrderStatus status;
 
-		public int Product {
+		public Product Product {
 			get => product;
 			set => product = value;
 		}
 
-		public Renter Renter {
+		public User Renter {
 			get => renter;
 			set => renter = value;
 		}

@@ -18,16 +18,16 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
-        
-        <Button x:Name="BtnLeft" Width="30" Height="150"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
+
+        <Button x:Name="BtnLeft" Width="30" VerticalAlignment="Stretch"
+                HorizontalAlignment="Left"
                 Style="{StaticResource ArrowButtonStyle}"
                 Click="OnLeftClick" Visibility="Collapsed">
             <svgc:SvgViewbox Source="\assets\images\LeftArrow.svg" Width="15" VerticalAlignment="Center"/>
         </Button>
 
-        <Button x:Name="BtnRight" Width="30" Height="150"
-                HorizontalAlignment="Right" VerticalAlignment="Center"
+        <Button x:Name="BtnRight" Width="30" VerticalAlignment="Stretch"
+                HorizontalAlignment="Right"
                 Style="{StaticResource ArrowButtonStyle}"
                 Click="OnRightClick" Visibility="Visible">
             <svgc:SvgViewbox Source="\assets\images\RightArrow.svg" Width="15" VerticalAlignment="Center"/>

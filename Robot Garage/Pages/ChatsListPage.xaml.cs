@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using View_Model;
+using View_Model.DB;
 
 namespace Robot_Garage.Pages {
 	/// <summary>
@@ -36,12 +36,13 @@ namespace Robot_Garage.Pages {
 
 			DataContext = this;
 		}
-
-
+		
 		private void LoadChatUsersWithLastMessages() {
 			MessageDB messageDB = new MessageDB();
 
 			var chatUsers = messageDB.GetChatUsers(_loggedUser.ID);
+
+			ChatItems.Clear();
 
 			foreach (var user in chatUsers) {
 				var lastMessage = messageDB.GetAllMessagesInChat(_loggedUser.ID, user.ID)
@@ -65,14 +66,17 @@ namespace Robot_Garage.Pages {
 			}
 		}
 
+		private void btnRefresh_Click(object sender, RoutedEventArgs e) {
+			LoadChatUsersWithLastMessages();
+		}
 
 		private void ChatListItem_Click(object sender, MouseButtonEventArgs e) {
 			if (sender is FrameworkElement element && element.DataContext is ChatListItemViewModel chatItem) {
 				NavigationService?.Navigate(new ChatPage(this._loggedUser, chatItem.User));
 			}
 		}
-
 	}
+
 
 	public class ChatListItemViewModel {
 		public User User { get; set; }

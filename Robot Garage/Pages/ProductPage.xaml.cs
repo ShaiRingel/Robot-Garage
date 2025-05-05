@@ -15,7 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using View_Model;
+using View_Model.DB;
 
 namespace Robot_Garage.Pages {
 	/// <summary>
@@ -39,6 +39,7 @@ namespace Robot_Garage.Pages {
 				btnContant.Visibility = Visibility.Hidden;
 				btnBuy.IsEnabled = false;
             }
+
 			DataContext = _product;
 		}
 
@@ -68,7 +69,10 @@ namespace Robot_Garage.Pages {
 		private void btnBuy_Click(object sender, RoutedEventArgs e) {
 			if (!productDB.GetProductByID(_product.ID).Availability) {
 				MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
+				return;
 			}
+
+			NavigationService?.Navigate(new PaymentPage(_loggedUser, _product));
 		}
 
 		private void ChatButton_Click(object sender, RoutedEventArgs e) {

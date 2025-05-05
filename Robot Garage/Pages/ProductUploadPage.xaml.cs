@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using View_Model;
+using View_Model.DB;
 using Xceed.Wpf.Toolkit;
 
 namespace Robot_Garage.Pages
@@ -175,7 +175,7 @@ namespace Robot_Garage.Pages
 
 		private void txtName_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			txtNameCounter.Text = $"{txtName.Text.Length}/30";
+			txtNameCounter.Text = $"{txtName.Text.Length}/20";
 		}
 
         private void txtDescription_TextChanged(object sender, TextChangedEventArgs e)

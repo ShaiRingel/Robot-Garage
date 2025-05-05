@@ -39,10 +39,10 @@
                 <StackPanel HorizontalAlignment="Right" Margin="0, 0, 15, 0" Orientation="Horizontal">
                     <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
                 Style="{StaticResource NoHighlightButtonStyle}"
-                Click="btnNotifications_Click"
+                Click="btnRefresh_Click"
                 VerticalAlignment="Center"
                 Cursor="Hand">
-                        <svgc:SvgViewbox Source="/assets/images/Notification.svg" Height="20" VerticalAlignment="Center"/>
+                        <svgc:SvgViewbox Source="/assets/images/Refresh.svg" Height="20" VerticalAlignment="Center"/>
                     </Button>
                     <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
             Style="{StaticResource NoHighlightButtonStyle}"
@@ -110,9 +110,9 @@ Margin="5, 0, 5, 0"/>
                 </StackPanel>
             </Viewbox>
 
-            <ScrollViewer VerticalAlignment="Top" Grid.Column="1" x:Name="GeneralPanel" Margin="15,5,5, 0">
-                <Viewbox>
-                    <StackPanel Orientation="Vertical" Width="560">
+            <ScrollViewer VerticalAlignment="Top" Grid.Column="1" x:Name="GeneralPanel" Margin="15,5,5,10">
+                <Viewbox Stretch="UniformToFill">
+                    <StackPanel Orientation="Vertical" Width="560" Margin="5,0,0,0">
                         <!-- Recently Added Carousel -->
                         <Label Content="Recently Added:" FontSize="24" FontWeight="Bold" Margin="0, 0, 0, 5"/>
                         <controls:Carousel x:Name="RecentlyAddedCsl">
@@ -231,10 +231,10 @@ Margin="5, 0, 5, 0"/>
                           Foreground="White"
                           ItemContainerStyle="{StaticResource DarkComboBoxItemStyle}"
                           SelectionChanged="SortByComboBox_SelectionChanged">
+                                <ComboBoxItem Content="Release Date" Tag="ReleaseDate"/>
                                 <ComboBoxItem Content="Condition" Tag="Condition"/>
                                 <ComboBoxItem Content="Price: Low to High" Tag="PriceAsc"/>
                                 <ComboBoxItem Content="Price: High to Low" Tag="PriceDesc"/>
-                                <ComboBoxItem Content="Release Date" Tag="ReleaseDate"/>
                             </ComboBox>
                         </StackPanel>
 

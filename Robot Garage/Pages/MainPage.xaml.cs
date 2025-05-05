@@ -16,7 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using View_Model;
+using View_Model.DB;
 
 namespace Robot_Garage.Pages {
 	/// <summary>
@@ -206,6 +206,8 @@ namespace Robot_Garage.Pages {
 
 			_currentPage = "Sales";
 
+			SortByComboBox.SelectedIndex = 0;
+
 			RefreshCards();
 		}
 
@@ -215,6 +217,8 @@ namespace Robot_Garage.Pages {
 			}
 
 			_currentPage = "Requests";
+
+			SortByComboBox.SelectedIndex = 0;
 
 			RefreshCards();
 		}
@@ -228,8 +232,8 @@ namespace Robot_Garage.Pages {
 			MessageBox.Show("My Items clicked");
 		}
 
-		private void btnNotifications_Click(object sender, RoutedEventArgs e) {
-			MessageBox.Show("Notifications clicked");
+		private void btnRefresh_Click(object sender, RoutedEventArgs e) {
+			RefreshCards();
 		}
 
 		private void btnMessages_Click(object sender, RoutedEventArgs e) {
@@ -299,6 +303,7 @@ namespace Robot_Garage.Pages {
 			}
 
 			// Switch to single-category view
+			SortByComboBox.SelectedIndex = 0;
 			GeneralPanel.Visibility = Visibility.Collapsed;
 			CategoryPanel.Visibility = Visibility.Visible;
 			SelectedCategoryTitle.Content = category;

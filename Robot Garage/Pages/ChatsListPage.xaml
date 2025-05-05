@@ -25,6 +25,14 @@
                     </Button>
                     <Label Content="My Chats" FontSize="24" FontWeight="ExtraBold" VerticalAlignment="Center"/>
                 </StackPanel>
+                <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
+                    Style="{StaticResource NoHighlightButtonStyle}"
+                    Click="btnRefresh_Click"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right" Margin="0, 0, 12, 0" Width="25" Height="25"
+                    Cursor="Hand">
+                    <svgc:SvgViewbox Source="/assets/images/Refresh.svg" Height="20" VerticalAlignment="Center"/>
+                </Button>
             </DockPanel>
         </Viewbox>
 
