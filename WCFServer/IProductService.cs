@@ -10,28 +10,13 @@ namespace WCFServer {
 		[OperationContract]
 		Product GetProductByID(int id);
 
-		[OperationContract]
+		/*[OperationContract]
 		void InsertProduct(Product item);
 
 		[OperationContract]
 		void UpdateProduct(Product item);
 
 		[OperationContract]
-		void DeleteProduct(Product item);
+		void DeleteProduct(Product item);*/
 	}
 }
-
-/*
-using CoreWCF;
-
-namespace VWS {
-	[ServiceContract]
-	public interface IVisionService {
-		[OperationContract]
-		string Status();
-
-		[OperationContract]
-		bool Login(string Uname, string Upass, int T);
-	}
-}
-*/

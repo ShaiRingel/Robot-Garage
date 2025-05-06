@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,8 +147,10 @@ namespace View_Model.DB {
 		protected override BaseEntity CreateModel(BaseEntity entity) {
 			Message message = (Message)entity;
 			message.ID = (int)reader["message_id"];
-			message.Sender = new User { ID = (int)reader["sender_id"] };
-			message.Receiver = new User { ID = (int)reader["receiver_id"] };
+			message.Sender = new UserDB().GetUserByID((int)reader["sender_id"]);
+			Debug.WriteLine(message.Sender.Username);
+			message.Receiver = new UserDB().GetUserByID((int)reader["receiver_id"]);
+			Debug.WriteLine(message.Receiver.Username);
 			message.Product = new Product { ID = (int)reader["product_id"] };
 			message.Content = reader["message"].ToString();
 			message.Timestamp = (DateTime)reader["timestamp"];

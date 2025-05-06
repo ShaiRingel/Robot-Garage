@@ -1,0 +1,204 @@
+﻿@page "/messages"
+@using GarageServiceProxy
+@inject GarageServiceClient Client
+@rendermode InteractiveServer
+
+<h3>Message Management</h3>
+<div class="row">
+    <div class="col-3">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Messages</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Messages by ID</button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-9">
+        @RenderOperation()
+    </div>
+</div>
+
+@code {
+    enum Operation { List, GetById }
+    private Operation selectedOperation = Operation.List;
+
+    private List<Message> messages = new();
+    private Message currentMessage = new();
+    private int searchId;
+    private string message;
+    private bool isLoading;
+    private bool initialLoadRequested;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !initialLoadRequested)
+        {
+            initialLoadRequested = true;
+            await Task.Delay(10);
+            await LoadAllAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAllAsync()
+    {
+        try
+        {
+            isLoading = true;
+            StateHasChanged();
+            messages = (await Client.GetAllMessagesAsync())?.ToList() ?? new List<Message>();
+        }
+        catch (Exception ex)
+        {
+            message = $"Error loading messages: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SelectOperation(Operation op)
+    {
+        selectedOperation = op;
+        message = string.Empty;
+        currentMessage = new Message();
+        searchId = 0;
+
+        if (op == Operation.List)
+        {
+            _ = LoadAllAsync();
+        }
+    }
+
+    private RenderFragment RenderOperation() => selectedOperation switch
+    {
+        Operation.List => @<div>
+        <h4>All Messages</h4>
+        @if (isLoading)
+    {
+        <p>Loading messages...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+        <table class="table table-striped">
+            <thead>
+                <tr><th>ID</th><th>Sender</th><th>Reciever</th><th>Content</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var message in messages)
+            {
+                <tr>
+                    <td>@message.ID</td>
+                    <td>@message.Sender.Username</td>
+                    <td>@message.Receiver.Username</td>
+                    <td>@message.Content</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>,
+
+        Operation.GetById => @<div>
+        <h4>Find Messages by ID</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-primary" @onclick="LoadMessageByIdAsync">Search</button>
+        </div>
+        @if (currentMessage?.ID > 0)
+    {
+        <div>
+            <p><strong>ID:</strong> @currentMessage.ID</p>
+            <p><strong>Sender:</strong> @currentMessage.Sender.Username</p>
+            <p><strong>Reciever:</strong> @currentMessage.Receiver.Username</p>
+            <p><strong>Content:</strong> @currentMessage.Content</p>
+        </div>
+    }
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+    </div>,
+
+        _ => @<div>Select an operation.</div>
+    };
+
+    private async Task LoadMessageByIdAsync()
+    {
+        try
+        {
+            message = string.Empty;
+            var _message = await Client.GetMessageByIDAsync(searchId);
+            if (_message == null)
+            {
+                message = "Message not found";
+                currentMessage = new Message();
+            }
+            else
+            {
+                currentMessage = _message;
+            }
+        }
+        catch
+        {
+            message = "Message not found";
+            currentMessage = new Message();
+        }
+    }
+
+        /*private async Task InsertUserAsync()
+                            {
+                                try
+                                {
+                                    await Client.InsertUserAsync(currentUser);
+    message = "Inserted successfully.";
+                                    await LoadAllAsync();
+    }
+                                catch (Exception ex)
+                                {
+                                    message = $"Insert failed: {ex.Message}";
+                                }
+                            }
+
+                            private async Task UpdateUserAsync()
+                            {
+                                try
+                                {
+    await Client.UpdateUserAsync(currentUser);
+    message = "Updated successfully.";
+    await LoadAllAsync();
+    }
+                                catch (Exception ex)
+                                {
+    message = $"Update failed: {ex.Message}";
+    }
+                            }
+
+                            private async Task DeleteByIdAsync()
+                            {
+                                try
+                                {
+    var product = await Client.GetUserByIDAsync(searchId);
+    if (product != null)
+    {
+        await Client.DeleteUserAsync(product);
+        message = $"Deleted ID {searchId}.";
+        await LoadAllAsync();
+        }
+    else
+    {
+        message = "Messages not found";
+        }
+    }
+                                catch
+                                {
+    message = "Messages not found";
+    }
+                            }*/
+}

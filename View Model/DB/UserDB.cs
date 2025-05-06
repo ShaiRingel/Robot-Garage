@@ -63,12 +63,15 @@ namespace View_Model.DB {
 			return SelectUsers().FirstOrDefault();
 		}
 
-		public User GetByName(string username) {
+		public User Login(string username, int groupNumber, string password) {
 			cmd.Parameters.Clear();
 
-			cmd.CommandText = "SELECT * FROM UserTbl WHERE username=@Username";
+			cmd.CommandText = "SELECT * FROM UserTbl " +
+				"WHERE username=@Username AND group_number=@GroupNumber AND password=@Password";
 
 			cmd.Parameters.AddWithValue("@Username", username);
+			cmd.Parameters.AddWithValue("@GroupNumber", groupNumber);
+			cmd.Parameters.AddWithValue("@Password", password);
 
 			return SelectUsers().FirstOrDefault();
 		}

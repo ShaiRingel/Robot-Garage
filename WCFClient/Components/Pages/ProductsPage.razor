@@ -1,6 +1,6 @@
 ﻿@page "/products"
 @using GarageServiceProxy
-@inject ProductServiceClient Client
+@inject GarageServiceClient Client
 @rendermode InteractiveServer
 
 <h3>Product Management</h3>
@@ -13,15 +13,6 @@
             <li class="nav-item mb-1">
                 <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Product by ID</button>
             </li>
-            <li class="nav-item mb-1">
-                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Insert ? "active" : "")" @onclick="() => SelectOperation(Operation.Insert)">Insert Product</button>
-            </li>
-            <li class="nav-item mb-1">
-                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Update ? "active" : "")" @onclick="() => SelectOperation(Operation.Update)">Update Product</button>
-            </li>
-            <li class="nav-item mb-1">
-                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.Delete ? "active" : "")" @onclick="() => SelectOperation(Operation.Delete)">Delete Product</button>
-            </li>
         </ul>
     </div>
     <div class="col-9">
@@ -30,7 +21,7 @@
 </div>
 
 @code {
-    enum Operation { List, GetById, Insert, Update, Delete }
+    enum Operation { List, GetById }
     private Operation selectedOperation = Operation.List;
 
     private List<Product> products = new();
@@ -126,57 +117,6 @@
  }
     </div>,
 
-        Operation.Insert => @<div>
-        <h4>Insert New Product</h4>
-        <EditForm Model="currentProduct" OnValidSubmit="InsertProductAsync">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <InputText @bind-Value="currentProduct.Name" class="form-control mb-2" placeholder="Name" />
-            <InputTextArea @bind-Value="currentProduct.Description" class="form-control mb-2" placeholder="Description" />
-            <InputNumber @bind-Value="currentProduct.Price" class="form-control mb-2" placeholder="Price" />
-            <button type="submit" class="btn btn-success">Insert</button>
-        </EditForm>
-        @if (!string.IsNullOrEmpty(message)) {
-        <div class="mt-2 alert alert-info">@message</div>
- }
-    </div>,
-
-        Operation.Update => @<div>
-        <h4>Update Product</h4>
-        <div class="input-group mb-2" style="max-width: 300px;">
-            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
-            <button class="btn btn-secondary" @onclick="LoadProductByIdAsync">Load</button>
-        </div>
-        @if (currentProduct?.ID > 0)
-    {
-        <EditForm Model="currentProduct" OnValidSubmit="UpdateProductAsync">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <InputText @bind-Value="currentProduct.Name" class="form-control mb-2" />
-            <InputTextArea @bind-Value="currentProduct.Description" class="form-control mb-2" />
-            <InputNumber @bind-Value="currentProduct.Price" class="form-control mb-2" />
-            <button type="submit" class="btn btn-primary">Update</button>
-        </EditForm>
-        @if (!string.IsNullOrEmpty(message)) {
-        <div class="mt-2 alert alert-info">@message</div>
- }
-    }
-        @if (!string.IsNullOrEmpty(message) && currentProduct.ID == 0) {
-        <div class="alert alert-danger">@message</div>
- }
-    </div>,
-
-        Operation.Delete => @<div>
-        <h4>Delete Product</h4>
-        <div class="input-group mb-2" style="max-width: 300px;">
-            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
-            <button class="btn btn-danger" @onclick="DeleteByIdAsync">Delete</button>
-        </div>
-        @if (!string.IsNullOrEmpty(message)) {
-        <div class="mt-2 alert alert-warning">@message</div>
- }
-    </div>,
-
         _ => @<div>Select an operation.</div>
     };
 
@@ -198,7 +138,7 @@
         }
     }
 
-    private async Task InsertProductAsync() {
+    /*private async Task InsertProductAsync() {
         try {
             await Client.InsertProductAsync(currentProduct);
             message = "Inserted successfully.";
@@ -235,5 +175,5 @@
         catch {
             message = "Product not found";
         }
-    }
+    }*/
 }

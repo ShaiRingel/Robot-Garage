@@ -31,26 +31,20 @@ namespace Robot_Garage.Pages {
 		}
 
 		private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e) {
-			User user = new UserDB().GetByName(txtUsername.Text);
-			UserList users = new UserDB().GetAllUsers();
-			Debug.WriteLine(users.Count);
+			User user = new UserDB().Login(txtUsername.Text, int.Parse(txtNumber.Text), txtPassword.Password);
+
 			if (user == null) {
-				Debug.WriteLine("No user found with that name!");
-				return;
+                System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");
+                return;
 			}
 
-			if (user.Password == txtPassword.Password && user.GroupNumber.ToString() == txtNumber.Text) {
-				lblStatus.Visibility = Visibility.Visible;
+			lblStatus.Visibility = Visibility.Visible;
 
-				await Task.Delay(500);
+			await Task.Delay(500);
 
-				AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
+			AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
-				NavigationService?.Navigate(new MainPage(user));
-			}
-			else {
-				System.Windows.MessageBox.Show("Invalid account, at least one of the fields are incorrect!");	
-			}
+			NavigationService?.Navigate(new MainPage(user));
 		}
 
 		private void IntegerUpDown_PreviewTextInput(object sender, TextCompositionEventArgs e) {

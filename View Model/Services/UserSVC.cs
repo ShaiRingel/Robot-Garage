@@ -18,7 +18,12 @@ namespace View_Model.Services {
 			return userDB.GetUserByID(id);
 		}
 
-		public void InsertUser(User user) {
+        public User Login(string name, int groupnumber, string password)
+        {
+            return userDB.Login(name, groupnumber, password);
+        }
+
+        public void InsertUser(User user) {
 			userDB.Insert(user);
 		}
 

@@ -21,13 +21,13 @@ public class Host {
 		app.UseServiceModel(builder =>
 		{
 			builder.AddService<GarageService>((serviceOptions) => { })
-			.AddServiceEndpoint<GarageService, 
-			IProductService>(new BasicHttpBinding(),
-			"/GarageService/product/basichttp")
-			.AddServiceEndpoint<GarageService, 
-			IProductService>(myWSHttpBinding,
-			"/GarageService/product/WSHttps");
-		});
+			.AddServiceEndpoint<GarageService,
+                IGarageService>(new BasicHttpBinding(),
+				"/GarageService/basichttp")
+			.AddServiceEndpoint<GarageService,
+                IGarageService>(myWSHttpBinding,
+				"/GarageService/WSHttps");
+        });
 
 		var serviceMetadataBehavior = app.Services.GetRequiredService<CoreWCF.Description.ServiceMetadataBehavior>();
 		serviceMetadataBehavior.HttpGetEnabled = true;

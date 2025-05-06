@@ -6,17 +6,18 @@ internal class Program {
 	private static void Main(string[] args) {
 		var builder = WebApplication.CreateBuilder(args);
 
-		builder.Services
+
+        builder.Services
 			.AddRazorComponents()
 			.AddInteractiveServerComponents();
 
 		builder.Services.AddSingleton(sp => {
-			return new ProductServiceClient(
-				ProductServiceClient.EndpointConfiguration.WSHttpBinding_IProductService,
-				"https://localhost:5001/GarageService/product/WSHttps");
+			return new GarageServiceClient(
+                GarageServiceClient.EndpointConfiguration.WSHttpBinding_IGarageService,
+				"https://localhost:5001/GarageService/WSHttps");
 		});
 
-		var app = builder.Build();
+        var app = builder.Build();
 
 		if (!app.Environment.IsDevelopment()) {
 			app.UseExceptionHandler("/Error", createScopeForErrors: true);

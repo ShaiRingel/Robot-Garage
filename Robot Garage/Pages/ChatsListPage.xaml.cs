@@ -32,12 +32,29 @@ namespace Robot_Garage.Pages {
 
 			ChatItems = new ObservableCollection<ChatListItemViewModel>();
 
-			LoadChatUsersWithLastMessages();
+            LoadChatUsersWithLastMessages();
+
+            this.Loaded += (s, e) => {
+                if (this.NavigationService != null)
+                    this.NavigationService.Navigated += Frame_Navigated;
+            };
+
+            this.Unloaded += (s, e) => {
+                if (this.NavigationService != null)
+                    this.NavigationService.Navigated -= Frame_Navigated;
+            };
 
 			DataContext = this;
 		}
-		
-		private void LoadChatUsersWithLastMessages() {
+        private void Frame_Navigated(object sender, NavigationEventArgs e)
+        {
+            // if this page is now the active content, refresh
+            if (e.Content == this)
+            {
+                LoadChatUsersWithLastMessages();
+            }
+        }
+        private void LoadChatUsersWithLastMessages() {
 			MessageDB messageDB = new MessageDB();
 
 			var chatUsers = messageDB.GetChatUsers(_loggedUser.ID);
@@ -66,7 +83,7 @@ namespace Robot_Garage.Pages {
 			}
 		}
 
-		private void btnRefresh_Click(object sender, RoutedEventArgs e) {
+        private void btnRefresh_Click(object sender, RoutedEventArgs e) {
 			LoadChatUsersWithLastMessages();
 		}
 

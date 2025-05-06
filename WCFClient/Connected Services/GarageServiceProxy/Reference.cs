@@ -158,6 +158,7 @@ namespace GarageServiceProxy
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="BaseEntity", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.User))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Message))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Product))]
     public partial class BaseEntity : object
     {
@@ -245,6 +246,88 @@ namespace GarageServiceProxy
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public partial class Message : GarageServiceProxy.BaseEntity
+    {
+        
+        private string ContentField;
+        
+        private GarageServiceProxy.Product ProductField;
+        
+        private GarageServiceProxy.User ReceiverField;
+        
+        private GarageServiceProxy.User SenderField;
+        
+        private System.DateTime TimestampField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Content
+        {
+            get
+            {
+                return this.ContentField;
+            }
+            set
+            {
+                this.ContentField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.Product Product
+        {
+            get
+            {
+                return this.ProductField;
+            }
+            set
+            {
+                this.ProductField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.User Receiver
+        {
+            get
+            {
+                return this.ReceiverField;
+            }
+            set
+            {
+                this.ReceiverField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.User Sender
+        {
+            get
+            {
+                return this.SenderField;
+            }
+            set
+            {
+                this.SenderField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Timestamp
+        {
+            get
+            {
+                return this.TimestampField;
+            }
+            set
+            {
+                this.TimestampField = value;
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ItemCategory", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     public enum ItemCategory : int
@@ -291,8 +374,8 @@ namespace GarageServiceProxy
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GarageServiceProxy.IProductService")]
-    public interface IProductService
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GarageServiceProxy.IGarageService")]
+    public interface IGarageService
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/GetAllProducts", ReplyAction="http://tempuri.org/IProductService/GetAllProductsResponse")]
@@ -301,24 +384,30 @@ namespace GarageServiceProxy
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/GetProductByID", ReplyAction="http://tempuri.org/IProductService/GetProductByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.Product> GetProductByIDAsync(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/InsertProduct", ReplyAction="http://tempuri.org/IProductService/InsertProductResponse")]
-        System.Threading.Tasks.Task InsertProductAsync(GarageServiceProxy.Product item);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/Login", ReplyAction="http://tempuri.org/IUserService/LoginResponse")]
+        System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/UpdateProduct", ReplyAction="http://tempuri.org/IProductService/UpdateProductResponse")]
-        System.Threading.Tasks.Task UpdateProductAsync(GarageServiceProxy.Product item);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/GetAllUsers", ReplyAction="http://tempuri.org/IUserService/GetAllUsersResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> GetAllUsersAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/DeleteProduct", ReplyAction="http://tempuri.org/IProductService/DeleteProductResponse")]
-        System.Threading.Tasks.Task DeleteProductAsync(GarageServiceProxy.Product item);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/GetUserByID", ReplyAction="http://tempuri.org/IUserService/GetUserByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.User> GetUserByIDAsync(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetAllMessages", ReplyAction="http://tempuri.org/IMessageService/GetAllMessagesResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> GetAllMessagesAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetMessageByID", ReplyAction="http://tempuri.org/IMessageService/GetMessageByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.Message> GetMessageByIDAsync(int id);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    public interface IProductServiceChannel : GarageServiceProxy.IProductService, System.ServiceModel.IClientChannel
+    public interface IGarageServiceChannel : GarageServiceProxy.IGarageService, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    public partial class ProductServiceClient : System.ServiceModel.ClientBase<GarageServiceProxy.IProductService>, GarageServiceProxy.IProductService
+    public partial class GarageServiceClient : System.ServiceModel.ClientBase<GarageServiceProxy.IGarageService>, GarageServiceProxy.IGarageService
     {
         
         /// <summary>
@@ -328,28 +417,28 @@ namespace GarageServiceProxy
         /// <param name="clientCredentials">The client credentials</param>
         static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
         
-        public ProductServiceClient(EndpointConfiguration endpointConfiguration) : 
-                base(ProductServiceClient.GetBindingForEndpoint(endpointConfiguration), ProductServiceClient.GetEndpointAddress(endpointConfiguration))
+        public GarageServiceClient(EndpointConfiguration endpointConfiguration) : 
+                base(GarageServiceClient.GetBindingForEndpoint(endpointConfiguration), GarageServiceClient.GetEndpointAddress(endpointConfiguration))
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public ProductServiceClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
-                base(ProductServiceClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
+        public GarageServiceClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
+                base(GarageServiceClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public ProductServiceClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(ProductServiceClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
+        public GarageServiceClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(GarageServiceClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public ProductServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public GarageServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress)
         {
         }
@@ -364,19 +453,29 @@ namespace GarageServiceProxy
             return base.Channel.GetProductByIDAsync(id);
         }
         
-        public System.Threading.Tasks.Task InsertProductAsync(GarageServiceProxy.Product item)
+        public System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password)
         {
-            return base.Channel.InsertProductAsync(item);
+            return base.Channel.LoginAsync(username, groupnumber, password);
         }
         
-        public System.Threading.Tasks.Task UpdateProductAsync(GarageServiceProxy.Product item)
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> GetAllUsersAsync()
         {
-            return base.Channel.UpdateProductAsync(item);
+            return base.Channel.GetAllUsersAsync();
         }
         
-        public System.Threading.Tasks.Task DeleteProductAsync(GarageServiceProxy.Product item)
+        public System.Threading.Tasks.Task<GarageServiceProxy.User> GetUserByIDAsync(int id)
         {
-            return base.Channel.DeleteProductAsync(item);
+            return base.Channel.GetUserByIDAsync(id);
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> GetAllMessagesAsync()
+        {
+            return base.Channel.GetAllMessagesAsync();
+        }
+        
+        public System.Threading.Tasks.Task<GarageServiceProxy.Message> GetMessageByIDAsync(int id)
+        {
+            return base.Channel.GetMessageByIDAsync(id);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
@@ -386,7 +485,7 @@ namespace GarageServiceProxy
         
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IProductService))
+            if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IGarageService))
             {
                 System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
                 result.MaxBufferSize = int.MaxValue;
@@ -395,7 +494,7 @@ namespace GarageServiceProxy
                 result.AllowCookies = true;
                 return result;
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IProductService))
+            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IGarageService))
             {
                 System.ServiceModel.WSHttpBinding result = new System.ServiceModel.WSHttpBinding();
                 result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
@@ -410,11 +509,11 @@ namespace GarageServiceProxy
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IProductService))
+            if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IGarageService))
             {
                 return new System.ServiceModel.EndpointAddress("http://localhost:5000/GarageService/basichttp");
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IProductService))
+            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IGarageService))
             {
                 return new System.ServiceModel.EndpointAddress("https://localhost:5001/GarageService/WSHttps");
             }
@@ -424,9 +523,9 @@ namespace GarageServiceProxy
         public enum EndpointConfiguration
         {
             
-            BasicHttpBinding_IProductService,
+            BasicHttpBinding_IGarageService,
             
-            WSHttpBinding_IProductService,
+            WSHttpBinding_IGarageService,
         }
     }
 }
