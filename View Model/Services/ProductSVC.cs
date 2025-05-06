@@ -1,35 +1,37 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using View_Model.DB;
 
-namespace View_Model.Services {
-	public class ProductSVC {
-		ProductDB productDB = new ProductDB();
+namespace View_Model.Services
+{
+    public class ProductSVC
+    {
+        ProductDB productDB = new ProductDB();
 
-		public List<Product> GetAll() {
-			return productDB.GetAllProducts();
-		}
+        public List<Product> GetAll()
+        {
+            return productDB.GetAllProducts();
+        }
 
-		public Product GetByID(int id) {
-			return productDB.GetProductByID(id);
-		}
+        public Product GetByID(int id)
+        {
+            return productDB.GetProductByID(id);
+        }
 
-        public void InsertProduct(Product product) {
-			productDB.Insert(product);
-		}
+        public void InsertProduct(Product product)
+        {
+            productDB.Insert(product);
+        }
 
-		public void UpdateProduct(Product product) {
-			productDB.Update(product);
-		}
+        public void UpdateProduct(Product product)
+        {
+            productDB.Update(product);
+        }
 
-        public void DeleteProduct(Product product) {
-			productDB.Delete(product);
-		}
-	}
+        public void DeleteProduct(Product product)
+        {
+            productDB.Delete(product);
+        }
+    }
 }
 
 /*

@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Model;
+﻿using Model;
 using View_Model.Services;
 
-namespace WCFServer {
-	public class GarageService : IGarageService {
-		ProductSVC productSVC = new ProductSVC();
-		UserSVC userSVC = new UserSVC();
+namespace WCFServer
+{
+    public class GarageService : IGarageService
+    {
+        ProductSVC productSVC = new ProductSVC();
+        UserSVC userSVC = new UserSVC();
         MessageSVC messageSVC = new MessageSVC();
-        public List<Product> GetAllProducts() {
-			return productSVC.GetAll();
-		}
+        public List<Product> GetAllProducts()
+        {
+            return productSVC.GetAll();
+        }
 
-		public Product GetProductByID(int id) {
-			return productSVC.GetByID(id);
-		}
+        public Product GetProductByID(int id)
+        {
+            return productSVC.GetByID(id);
+        }
 
         public List<User> GetAllUsers()
         {
@@ -27,8 +30,8 @@ namespace WCFServer {
 
         public bool Login(string username, int groupnumber, string password)
         {
-            if (string.IsNullOrWhiteSpace(username) || 
-                groupnumber <= 0 || 
+            if (string.IsNullOrWhiteSpace(username) ||
+                groupnumber <= 0 ||
                 string.IsNullOrWhiteSpace(password))
                 return false;
 

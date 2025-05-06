@@ -1,16 +1,18 @@
 ﻿using CoreWCF;
 using Model;
 
-namespace WCFServer {
-	[ServiceContract]
-	public interface IProductService {
-		[OperationContract]
-		List<Product> GetAllProducts();
+namespace WCFServer
+{
+    [ServiceContract]
+    public interface IProductService
+    {
+        [OperationContract]
+        List<Product> GetAllProducts();
 
-		[OperationContract]
-		Product GetProductByID(int id);
+        [OperationContract]
+        Product GetProductByID(int id);
 
-		/*[OperationContract]
+        /*[OperationContract]
 		void InsertProduct(Product item);
 
 		[OperationContract]
@@ -18,5 +20,5 @@ namespace WCFServer {
 
 		[OperationContract]
 		void DeleteProduct(Product item);*/
-	}
+    }
 }
