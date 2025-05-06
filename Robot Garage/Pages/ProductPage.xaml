@@ -164,6 +164,8 @@
                         <!-- Buy Now Button -->
                         <Button x:Name="btnBuy" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BuyButtonStyle}"
                                 IsEnabled="{Binding Availability}" Width="125" Height="35" Click="btnBuy_Click"/>
+                        <Button x:Name="btnRequest" Visibility="Hidden"  Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BuyButtonStyle}"
+                                IsEnabled="{Binding Availability}" Content="Accept Request" Width="160" Height="35" Click="btnRequest_Click"/>
                     </Grid>
                 </Border>
             </Grid>

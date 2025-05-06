@@ -40,7 +40,14 @@ namespace Robot_Garage.Pages
                 }
             }
 
-            OrderItem = new OrderItem
+			Loaded += (s, e) =>
+			{
+				var win = Window.GetWindow(this);
+				if (win != null)
+					win.Closing += Window_Closing;
+			};
+
+			OrderItem = new OrderItem
             {
                 Name = product.Name,
                 Price = (decimal)product.Price,
@@ -116,10 +123,6 @@ namespace Robot_Garage.Pages
 
             if (success)
             {
-                ProductDB productDB = new ProductDB();
-
-                productDB.UpdateAvailabilityByID(_selectedProduct.ID, false);
-
                 TransactionDB transactionDB = new TransactionDB();
 
                 Transaction newTransaction = new Transaction
@@ -145,12 +148,19 @@ namespace Robot_Garage.Pages
             return true;
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.EventArgs e) {
+			ProductDB productDB = new ProductDB();
+			productDB.UpdateAvailabilityByID(_selectedProduct.ID, true);
+		}
+
+		private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (NavigationService != null && NavigationService.CanGoBack)
             {
-                NavigationService?.GoBack();
-            }
+				NavigationService?.GoBack();
+				ProductDB productDB = new ProductDB();
+				productDB.UpdateAvailabilityByID(_selectedProduct.ID, true);
+			}
             else
             {
                 System.Windows.MessageBox.Show("No previous page to navigate to.");

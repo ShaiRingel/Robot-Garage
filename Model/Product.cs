@@ -31,6 +31,7 @@
         private double price;
         private byte[] image;
         private bool availability;
+        private bool request;
 
         public User Owner
         {
@@ -85,5 +86,10 @@
             get => availability;
             set => availability = value;
         }
-    }
+
+        public bool Request {
+			get => request;
+			set => request = value;
+		}
+	}
 }

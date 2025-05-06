@@ -24,6 +24,10 @@ namespace Robot_Garage.Pages
             _product = productDB.GetProductByID(product.ID);
             _loggedUser = loggedUser;
 
+            if (_product.Request) {
+                btnBuy.Visibility = Visibility.Hidden;
+                btnRequest.Visibility = Visibility.Visible;
+			}
 
             if (_product.Owner.ID == _loggedUser.ID)
             {
@@ -69,7 +73,20 @@ namespace Robot_Garage.Pages
                 return;
             }
 
+            productDB.UpdateAvailabilityByID(_product.ID, false);
+
             NavigationService?.Navigate(new PaymentPage(_loggedUser, _product));
+        }
+
+        private void btnRequest_Click(object sender, RoutedEventArgs e)
+        {
+            if (!productDB.GetProductByID(_product.ID).Availability)
+            {
+                MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
+                return;
+            }
+
+
         }
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)
