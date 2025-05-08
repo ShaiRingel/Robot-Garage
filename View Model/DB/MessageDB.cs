@@ -1,209 +1,119 @@
 ﻿using Model;
+using System;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace View_Model.DB
-{
-    public class MessageDB : BaseEntityDB
-    {
-        public MessageDB() : base()
-        {
-            connection = new OleDbConnection(_connectionString);
-            cmd = new OleDbCommand();
-            cmd.Connection = connection;
-        }
+namespace View_Model.DB {
+	public class MessageDB : BaseEntityDB {
 
-        public int Insert(Message message)
-        {
-            int records = 0;
+		#region Model Mapping
+		protected override BaseEntity NewEntity() {
+			return new Message();
+		}
 
-            cmd.Parameters.Clear();
+		protected override void CreateModel(BaseEntity entity) {
+			Message message = (Message)entity;
+			//UserDB userDB = new UserDB();
+			ProductDB productDB = new ProductDB();
 
-            cmd.CommandText = "INSERT INTO MessageTbl ([product_id], [sender_id], [receiver_id], [message], [timestamp]) " +
-                                "VALUES (@Product, @Sender, @Receiver, @Message, @Timestamp)";
+			message.ID = (int)reader["message_id"];
+			//message.Sender = userDB.GetUserByID((int)reader["sender_id"]);
+			Debug.WriteLine(message.Sender.Username);
+			//message.Receiver = userDB.GetUserByID((int)reader["receiver_id"]);
+			Debug.WriteLine(message.Receiver.Username);
+			message.Product = new Product { ID = (int)reader["product_id"] };
+			message.Content = reader["message"].ToString();
+			message.Timestamp = (DateTime)reader["timestamp"];
+		}
 
-            cmd.Parameters.AddWithValue("@Product", message.Product.ID);
-            cmd.Parameters.AddWithValue("@Sender", message.Sender.ID);
-            cmd.Parameters.AddWithValue("@Receiver", message.Receiver.ID);
-            cmd.Parameters.AddWithValue("@Message", message.Content);
-            cmd.Parameters.AddWithValue("@Timestamp", message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+		#endregion
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
-                System.Diagnostics.Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                {
-                    System.Diagnostics.Debug.WriteLine($"{param.ParameterName}: {param.Value}");
-                }
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
+		#region CRUD
+		public override void Insert(BaseEntity entity) {
+			Message message = (Message)entity;
 
-            return records;
-        }
+			base.Insert(message);
+		}
 
-        public MessageList GetAll()
-        {
-            cmd.CommandText = "SELECT * FROM MessageTbl";
+		public override void Update(BaseEntity entity) {
+			Message message = (Message)entity;
 
-            MessageList messageList = SelectMessages();
-            return messageList;
-        }
+			base.Update(message);
+		}
 
-        public Message GetMessageByID(int id)
-        {
-            cmd.Parameters.Clear();
+		public override void Delete(BaseEntity entity) {
+			Message message = (Message)entity;
 
-            cmd.CommandText = "SELECT * FROM MessageTbl WHERE message_id=@ID";
+			base.Delete(message);
+		}
 
-            cmd.Parameters.AddWithValue("@ID", id);
+		#endregion
 
-            return SelectMessages().FirstOrDefault();
-        }
+		#region Selectors
+		public MessageList SelectAll() {
+			this.command.CommandText = "SELECT * FROM MessageTbl";
 
-        public MessageList GetAllMessagesInChat(int sender, int receiver)
-        {
-            cmd.Parameters.Clear();
+			return new MessageList(base.Select());
+		}
 
-            cmd.CommandText = @"SELECT * FROM MessageTbl WHERE (sender_id = @SenderID AND receiver_id = @ReceiverID)
-					   OR (sender_id = @ReceiverID AND receiver_id = @SenderID) ORDER BY [timestamp] ASC";
+		public Message SelectByID(int id) {
+			this.command.Parameters.Clear();
 
-            cmd.Parameters.AddWithValue("@SenderID", sender);
-            cmd.Parameters.AddWithValue("@ReceiverID", receiver);
+			this.command.CommandText =
+				"SELECT * FROM MessageTbl WHERE message_id = ?";
 
-            MessageList messageList = SelectMessages();
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = id
+			});
 
-            return messageList;
-        }
+			var list = base.Select();
 
+			return list.Cast<Message>().FirstOrDefault();
+		}
 
-        public UserList GetChatUsers(int currentUserId)
-        {
-            UserList users = new UserList();
-            cmd.Parameters.Clear();
+		#endregion
 
-            cmd.CommandText = @"
-        SELECT DISTINCT sender_id AS user_id FROM MessageTbl WHERE receiver_id = @CurrentUserID
-        UNION
-        SELECT DISTINCT receiver_id AS user_id FROM MessageTbl WHERE sender_id = @CurrentUserID";
+		#region CreateSQL
+		public override string CreateInsertSQL(BaseEntity entity)
+			=> "INSERT INTO MessageTbl ([product_id],[sender_id],[receiver_id],[message],[timestamp]) " +
+			   "VALUES (?, ?, ?, ?, ?)";
 
-            cmd.Parameters.AddWithValue("@CurrentUserID", currentUserId);
+		public override string CreateUpdateSQL(BaseEntity entity)
+			=> "UPDATE MessageTbl " +
+			   "SET [product_id]=?, [sender_id]=?, [receiver_id]=?, [message]=?, [timestamp]=? " +
+			   "WHERE message_id = ?";
 
-            try
-            {
-                connection.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    users.Add(new UserDB().GetUserByID((int)reader["user_id"]));
-                }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Error in GetChatUsers: " + e.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
+		public override string CreateDeleteSQL(BaseEntity entity)
+			=> "DELETE FROM MessageTbl WHERE message_id = ?";
+		
+		#endregion
 
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
+		#region Parameter Binders
+		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity entity) {
+			Message message = (Message)entity;
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Product.ID });
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Sender.ID });
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Receiver.ID });
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarWChar, Value = message.Content });
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Date, Value = message.Timestamp });
+		}
 
-            return users;
-        }
+		protected override void AddUpdateParameters(OleDbCommand cmd, BaseEntity entity) {
+			AddInsertParameters(cmd, entity);
+			Message message = (Message)entity;
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.ID });
+		}
 
+		protected override void AddDeleteParameters(OleDbCommand cmd, BaseEntity entity) {
+			Message m = (Message)entity;
+			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = m.ID });
+		}
+	}
 
-        public int Update(Message message)
-        {
-            int records = 0;
-            string sqlStr = $"UPDATE MessageTbl SET [product_id]={message.Product.ID}, [sender_id]={message.Sender.ID}, " +
-                $"[receiver_id]={message.Receiver.ID}, [message]='{message.Content}', [timestamp]='{message.Timestamp}' " +
-                $"WHERE [message_id]={message.ID}";
-            try
-            {
-                cmd.CommandText = sqlStr;
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message + "\nSQL:" + cmd.CommandText);
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return records;
-        }
-
-        public int Delete(Message message)
-        {
-            StringBuilder sql_builder = new StringBuilder();
-            sql_builder.AppendFormat($"DELETE FROM MessageTbl WHERE [message_id]={message.ID}");
-            return SaveChanges(sql_builder.ToString());
-        }
-
-        protected override BaseEntity newEntity()
-        {
-            return new Message();
-        }
-
-        protected override BaseEntity CreateModel(BaseEntity entity)
-        {
-            Message message = (Message)entity;
-            message.ID = (int)reader["message_id"];
-            message.Sender = new UserDB().GetUserByID((int)reader["sender_id"]);
-            Debug.WriteLine(message.Sender.Username);
-            message.Receiver = new UserDB().GetUserByID((int)reader["receiver_id"]);
-            Debug.WriteLine(message.Receiver.Username);
-            message.Product = new Product { ID = (int)reader["product_id"] };
-            message.Content = reader["message"].ToString();
-            message.Timestamp = (DateTime)reader["timestamp"];
-            return message;
-        }
-
-        private MessageList SelectMessages()
-        {
-            MessageList messageList = new MessageList();
-            try
-            {
-                cmd.Connection = connection;
-                connection.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Message message = (Message)newEntity();
-                    messageList.Add((Message)CreateModel(message));
-                }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return messageList;
-        }
-    }
+	#endregion
 }

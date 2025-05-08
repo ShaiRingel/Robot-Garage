@@ -5,7 +5,7 @@ namespace View_Model.Services
 {
     public class MessageSVC
     {
-        MessageDB messageDB = new MessageDB();
+        /*MessageDB messageDB = new MessageDB();
 
         public List<Message> GetAll()
         {
@@ -35,6 +35,6 @@ namespace View_Model.Services
         public void DeleteProduct(Message message)
         {
             messageDB.Delete(message);
-        }
+        }*/
     }
 }

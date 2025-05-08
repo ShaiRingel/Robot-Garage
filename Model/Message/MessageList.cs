@@ -8,18 +8,6 @@ namespace Model
         public MessageList(IEnumerable<Message> list) : base(list) { }
         public MessageList(IEnumerable<BaseEntity> list) : base(list.Cast<Message>().ToList()) { }
 
-        public MessageList sortByTime()
-        {
-            MessageList sorted = new MessageList();
-
-            foreach (Message m in this)
-            {
-                sorted.Add(m);
-            }
-
-            return sorted;
-        }
-
         public override string ToString()
         {
             string output = "";
@@ -31,7 +19,7 @@ namespace Model
             return output;
         }
 
-        public void PrintMessages()
+        public void Print()
         {
             for (int i = 0; i < this.Count; i++)
             {

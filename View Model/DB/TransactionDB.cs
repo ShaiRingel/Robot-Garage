@@ -1,149 +1,116 @@
 ﻿using Model;
+using System;
+using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using View_Model.DB;
 
-namespace View_Model.DB
-{
-    public class TransactionDB : BaseEntityDB
-    {
-        public TransactionDB() : base()
-        {
-            connection = new OleDbConnection(_connectionString);
-            cmd = new OleDbCommand();
-            cmd.Connection = connection;
-        }
+namespace View_Model.DB {
+	public class TransactionDB : BaseEntityDB {
 
-        public int Insert(Transaction transaction)
-        {
-            int records = 0;
+		#region Model Mapping
+		protected override BaseEntity NewEntity() {
+			return new Transaction();
+		}
 
-            cmd.Parameters.Clear();
+		protected override void CreateModel(BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
+			// UserDB userDB = new UserDB();
+			ProductDB productDB = new ProductDB();
 
-            cmd.CommandText = "INSERT INTO TransactionTbl ([product_id], [renter_id], [start_date], [end_date], [status]) " +
-                                "VALUES (@Product, @Renter, @StartDate, @EndDate, @Status)";
+			transaction.ID = (int)reader["transaction_id"];
+			// transaction.Product = productDB.GetProductByID((int)reader["product_id"]);
+			// transaction.Renter = userDB.GetUserByID((int)reader["renter_id"]);
+			transaction.StartDate = (DateTime)reader["start_date"];
+			transaction.EndDate = (DateTime)reader["end_date"];
+			transaction.Status = (OrderStatus)reader["status"];
+		}
+		#endregion
 
-            cmd.Parameters.AddWithValue("@Product", transaction.Product.ID);
-            cmd.Parameters.AddWithValue("@Renter", transaction.Renter.ID);
-            cmd.Parameters.AddWithValue("@StartDate", transaction.StartDate);
-            cmd.Parameters.AddWithValue("@EndDate", transaction.EndDate);
-            cmd.Parameters.AddWithValue("@Status", (int)transaction.Status);
+		#region Selectors
+		public TransactionList SelectAll() {
+			this.command.CommandText = "SELECT * FROM TransactionTbl";
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
-                System.Diagnostics.Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                {
-                    System.Diagnostics.Debug.WriteLine($"{param.ParameterName}: {param.Value}");
-                }
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
+			return new TransactionList(base.Select());
+		}
 
-            return records;
-        }
+		public Transaction SelectByID(int id) {
+			this.command.Parameters.Clear();
 
-        public List<Transaction> GetAll()
-        {
-            cmd.CommandText = "SELECT * FROM TransactionTbl";
+			this.command.CommandText =
+				"SELECT * FROM TransactionTbl WHERE [transaction_id] = ?";
 
-            List<Transaction> transactionList = SelectTransactions();
-            return transactionList;
-        }
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = id
+			});
 
-        public int Update(Transaction transaction)
-        {
-            int records = 0;
+			var list = base.Select();
 
-            cmd.CommandText = $"UPDATE TransactionTbl SET [product_id]=@Product, [renter_id]=@Renter, " +
-                $"[start_date]=@StartDate, [end_date]=@EndDate, " +
-                $"[status]=@Status WHERE [transaction_id]=@ID";
+			return list.Cast<Transaction>().FirstOrDefault();
+		}
+		#endregion
 
-            cmd.Parameters.AddWithValue("@ID", transaction.ID);
-            cmd.Parameters.AddWithValue("@Product", transaction.Product.ID);
-            cmd.Parameters.AddWithValue("@Renter", transaction.Renter.ID);
-            cmd.Parameters.AddWithValue("@StartDate", transaction.StartDate);
-            cmd.Parameters.AddWithValue("@EndDate", transaction.EndDate);
-            cmd.Parameters.AddWithValue("@Status", (int)transaction.Status);
+		#region CRUD
+		public override void Insert(BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message + "\nSQL:" + cmd.CommandText);
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return records;
-        }
+			base.Insert(transaction);
+		}
 
-        public int Delete(Transaction transaction)
-        {
-            StringBuilder sql_builder = new StringBuilder();
-            sql_builder.AppendFormat($"DELETE FROM TransactionTbl WHERE [transaction_id]={transaction.ID}");
-            return SaveChanges(sql_builder.ToString());
-        }
+		public override void Update(BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
 
-        protected override BaseEntity newEntity()
-        {
-            return new Transaction();
-        }
+			base.Update(transaction);
+		}
 
-        protected override BaseEntity CreateModel(BaseEntity entity)
-        {
-            Transaction transaction = (Transaction)entity;
-            transaction.ID = (int)reader["transaction_id"];
-            transaction.Product = new ProductDB().GetProductByID((int)reader["product_id"]);
-            transaction.Renter = new UserDB().GetUserByID((int)reader["renter_id"]);
-            transaction.StartDate = (DateTime)reader["start_date"];
-            transaction.EndDate = (DateTime)reader["end_date"];
-            transaction.Status = (OrderStatus)reader["status"];
-            return transaction;
-        }
+		public override void Delete(BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
 
-        private List<Transaction> SelectTransactions()
-        {
-            List<Transaction> transactionList = new List<Transaction>();
-            try
-            {
-                cmd.Connection = connection;
-                connection.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Transaction transaction = (Transaction)newEntity();
-                    transactionList.Add((Transaction)CreateModel(transaction));
-                }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
+			base.Delete(transaction);
+		}
+		#endregion
 
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return transactionList;
-        }
-    }
+		#region Create SQL
+		public override string CreateInsertSQL(BaseEntity entity)
+			=> "INSERT INTO TransactionTbl " +
+			   "([product_id], [renter_id], [start_date], [end_date], [status]) " +
+			   "VALUES (?, ?, ?, ?, ?)";
+
+		public override string CreateUpdateSQL(BaseEntity entity)
+			=> "UPDATE TransactionTbl SET " +
+			   "[product_id]=?, [renter_id]=?, [start_date]=?, [end_date]=?, [status]=? " +
+			   "WHERE [transaction_id]=?";
+
+		public override string CreateDeleteSQL(BaseEntity entity)
+			=> "DELETE FROM TransactionTbl WHERE [transaction_id]=?";
+
+
+		#endregion
+
+		#region Parameter Binders
+		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.Product.ID;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.Buyer.ID;
+			cmd.Parameters.Add("?", OleDbType.Date).Value = transaction.StartDate;
+			cmd.Parameters.Add("?", OleDbType.Date).Value = transaction.EndDate;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)transaction.Status;
+		}
+
+		protected override void AddUpdateParameters(OleDbCommand cmd, BaseEntity entity) {
+			AddInsertParameters(cmd, entity);
+			Transaction transaction = (Transaction)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.ID;
+		}
+
+		protected override void AddDeleteParameters(OleDbCommand cmd, BaseEntity entity) {
+			Transaction transaction = (Transaction)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.ID;
+		}
+
+		#endregion
+	}
 }

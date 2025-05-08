@@ -5,7 +5,7 @@ namespace View_Model.Services
 {
     public class UserSVC
     {
-        UserDB userDB = new UserDB();
+        /*UserDB userDB = new UserDB();
 
         public List<User> GetAll()
         {
@@ -35,6 +35,6 @@ namespace View_Model.Services
         public void DeleteProduct(User user)
         {
             userDB.Delete(user);
-        }
+        }*/
     }
 }

@@ -7,83 +7,139 @@ namespace View_Model.DB
 {
     public abstract class BaseEntityDB
     {
-        protected readonly string _connectionString;
+        protected readonly string connectionString;
         protected OleDbConnection connection;
-        protected OleDbCommand cmd;
+        protected OleDbCommand command;
         protected OleDbDataReader reader;
-        protected abstract BaseEntity newEntity();
-        protected abstract BaseEntity CreateModel(BaseEntity entity);
 
-        public BaseEntityDB()
+		protected List<ChangeEntity> inserted;
+		protected List<ChangeEntity> deleted;
+		protected List<ChangeEntity> updated;
+
+		public BaseEntityDB()
         {
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             DirectoryInfo di = new DirectoryInfo(baseDir);
             string projectDir = di.Parent.Parent.Parent.Parent.FullName;
-            string absolutePath = Path.Combine(projectDir, "View Model", "DB", "RobotGarageDB.accdb");
+			string absolutePath = Path.Combine(projectDir, "View Model", "DB", "RobotGarageDB.accdb");
             Debug.WriteLine("Absolute Path Found: " + absolutePath);
-            _connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
+            
+            connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
 								Data Source={absolutePath};
 								Persist Security Info=True";
-            connection = new OleDbConnection(_connectionString);
-            cmd = new OleDbCommand();
-        }
 
-        protected int SaveChanges(string cmd_text)
-        {
-            OleDbCommand cmd = new OleDbCommand();
-            int records = 0;
-            try
-            {
-                cmd.Connection = connection;
-                cmd.CommandText = cmd_text;
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message + "\nSQL:" + cmd.CommandText);
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
+			connection = new OleDbConnection(connectionString);
+			command = new OleDbCommand();
 
-            }
-            return records;
-        }
+			inserted = new List<ChangeEntity>();
+			deleted = new List<ChangeEntity>();
+			updated = new List<ChangeEntity>();
+		}
 
 
-        protected List<BaseEntity> Select()
-        {
-            List<BaseEntity> list = new List<BaseEntity>();
-            try
-            {
-                cmd.Connection = connection;
-                connection.Open();
-                reader = cmd.ExecuteReader();
+		public List<BaseEntity> Select() {
+			List<BaseEntity> list = new List<BaseEntity>();
 
-                while (reader.Read())
-                {
-                    BaseEntity entity = newEntity();
-                    list.Add(CreateModel(entity));
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message + "\nSQL" + cmd.CommandText);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-                if (connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
-            return list;
-        }
-    }
+			try {
+				this.command.Connection = connection;
+				this.connection.Open();
+				this.reader = command.ExecuteReader();
+
+				BaseEntity entity;
+
+				while (this.reader.Read()) {
+					entity = NewEntity();
+
+					this.CreateModel(entity);
+
+					list.Add(entity);
+				}
+			}
+			catch (Exception ex) {
+				System.Diagnostics.Debug.WriteLine(ex.Message + "\nSQL: " + command.CommandText);
+			}
+			finally {
+				if (this.reader != null)
+					this.reader.Close();
+
+				if (this.connection.State == ConnectionState.Open)
+					this.connection.Close();
+			}
+
+			return list;
+
+		}
+
+		public virtual void Insert(BaseEntity entity) {
+			if (entity?.GetType() == NewEntity().GetType()) {
+				inserted.Add(new ChangeEntity(CreateInsertSQL, AddInsertParameters, entity));
+			}
+		}
+		public virtual void Update(BaseEntity entity) {
+			if (entity?.GetType() == NewEntity().GetType())
+				updated.Add(new ChangeEntity(CreateUpdateSQL, AddUpdateParameters, entity));
+		}
+		public virtual void Delete(BaseEntity entity) {
+			if (entity?.GetType() == NewEntity().GetType())
+				deleted.Add(new ChangeEntity(CreateDeleteSQL, AddDeleteParameters, entity));
+		}
+
+
+		public int SaveChanges() {
+			int records = 0;
+			var cmd = new OleDbCommand { Connection = this.connection };
+			this.connection.Open();
+
+			try {
+
+				foreach (ChangeEntity change in this.inserted) {
+					cmd.Parameters.Clear();
+					cmd.CommandText = change.CreateSQL(change.Entity);
+					change.Binder(cmd, change.Entity);
+
+					records += cmd.ExecuteNonQuery();
+
+					cmd.CommandText = "Select @@Identity";
+					cmd.Parameters.Clear();
+					change.Entity.ID = (int)cmd.ExecuteScalar();
+				}
+
+				foreach (ChangeEntity change in this.updated) {
+					cmd.Parameters.Clear();
+					cmd.CommandText = change.CreateSQL(change.Entity);
+					change.Binder(cmd, change.Entity);
+				}
+
+				foreach (ChangeEntity change in this.deleted) {
+					cmd.Parameters.Clear();
+					cmd.CommandText = change.CreateSQL(change.Entity);
+					change.Binder(cmd, change.Entity);
+
+					records += cmd.ExecuteNonQuery();
+				}
+			}
+			catch (Exception ex) {
+				System.Diagnostics.Debug.Write(ex.Message + "\nSQL: " + cmd.CommandText);
+			}
+			finally {
+				inserted.Clear();
+				updated.Clear();
+				deleted.Clear();
+
+				if (this.connection.State == ConnectionState.Open)
+					this.connection.Close();
+			}
+
+			return records;
+		}
+
+		protected abstract BaseEntity NewEntity();
+		protected abstract void CreateModel(BaseEntity entity);
+		public abstract string CreateInsertSQL(BaseEntity entity);
+		public abstract string CreateUpdateSQL(BaseEntity entity);
+		public abstract string CreateDeleteSQL(BaseEntity entity);
+		protected abstract void AddInsertParameters(OleDbCommand cmd, BaseEntity entity);
+		protected abstract void AddUpdateParameters(OleDbCommand cmd, BaseEntity entity);
+		protected abstract void AddDeleteParameters(OleDbCommand cmd, BaseEntity entity);
+	}
 }

@@ -19,15 +19,15 @@ namespace Model
             return output;
         }
 
-        public void PrintUsers()
+        public void Print()
         {
             for (int i = 0; i < this.Count; i++)
             {
                 Debug.WriteLine("---------------------------");
                 Debug.WriteLine($"ID: {this[i].ID}" +
-                    $"Username: {this[i].Username}" +
-                    $"Group Number: {this[i].GroupNumber}" +
-                    $"Unique Code: {this[i].UniqueCode}");
+                    $"\nUsername: {this[i].Username}" +
+                    $"\nGroup Number: {this[i].GroupNumber}" +
+                    $"\nUnique Code: {this[i].UniqueCode}");
             }
             Debug.WriteLine("---------------------------");
         }

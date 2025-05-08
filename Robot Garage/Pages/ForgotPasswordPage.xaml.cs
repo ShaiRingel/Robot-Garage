@@ -25,7 +25,7 @@ namespace Robot_Garage.Pages
         {
             if (UniqueCodeGrid.Visibility == Visibility.Visible)
             {
-                currentUser = userDB.GetByCode(txtCode.Text);
+                currentUser = userDB.Select(txtCode.Text);
                 if (currentUser != null)
                 {
                     UniqueCodeGrid.Visibility = Visibility.Collapsed;

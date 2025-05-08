@@ -1,348 +1,123 @@
 ﻿using Model;
+using System;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace View_Model.DB
-{
-    public class ProductDB : BaseEntityDB
-    {
+namespace View_Model.DB {
+	public class ProductDB : BaseEntityDB {
+		#region Model Mapping
+		protected override BaseEntity NewEntity() {
+			return new Product();
+		}
 
-        public ProductDB() : base()
-        {
-            connection = new OleDbConnection(_connectionString);
-            cmd = new OleDbCommand();
-            cmd.Connection = connection;
-        }
+		protected override void CreateModel(BaseEntity entity) {
+			Product product = (Product)entity;
 
-        public int Insert(Product product)
-        {
-            int records = 0;
-            cmd.Parameters.Clear();
+			product.ID = (int)reader["product_id"];
+			product.Owner = new CaptainDB().SelectByID((int)reader["owner_id"]);
+			product.Name = reader["product_name"].ToString();
+			product.Description = reader["description"].ToString();
+			product.DatePosted = (DateTime)reader["date_posted"];
+			product.Condition = (ItemCondition)reader["condition"];
+			product.Category = (ItemCategory)reader["category"];
+			product.Price = double.Parse(reader["price"].ToString());
+			product.Image = reader["image"] as byte[];
+			product.Availability = (bool)reader["availability"];
+			product.Request = (bool)reader["request"];
+		}
+		#endregion
 
-            cmd.CommandText = "INSERT INTO ProductTbl ([owner_id], [product_name], [description], [date_posted], [condition], [category], [price], [image], [availability]) " +
-                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		#region Selectors
+		public ProductList SelectAll() {
+			this.command.CommandText = "SELECT * FROM ProductTbl";
 
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = product.Owner.ID;
-            cmd.Parameters.Add("?", OleDbType.VarWChar).Value = product.Name;
-            cmd.Parameters.Add("?", OleDbType.LongVarWChar).Value = product.Description;
-            cmd.Parameters.Add("?", OleDbType.Date).Value = product.DatePosted;
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Condition;
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Category;
-            cmd.Parameters.Add("?", OleDbType.Double).Value = product.Price;
+			return new ProductList(base.Select());
+		}
 
-            if (product.Image != null && product.Image.Length > 0)
-            {
-                cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = product.Image;
-            }
-            else
-            {
-                cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = DBNull.Value;
-            }
+		public Product SelectByID(int id) {
+			this.command.Parameters.Clear();
 
-            cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Availability;
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE product_id = ?";
 
-            try
-            {
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error occurred during INSERT operation: " + e.Message);
-                Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                {
-                    Debug.WriteLine($"{param.Value} ({param.OleDbType})");
-                }
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = id
+			});
 
-            return records;
-        }
+			var list = base.Select();
 
+			return list.Cast<Product>().FirstOrDefault();
+		}
+		#endregion
 
-        public List<Product> GetAllProducts()
-        {
-            cmd.CommandText = "SELECT * FROM ProductTbl";
+		#region CRUD
+		public override void Insert(BaseEntity entity) {
+			Product product = (Product)entity;
 
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+			base.Insert(product);
+		}
 
-        public List<Product> GetAllAvailableProducts()
-        {
-            cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true}";
+		public override void Update(BaseEntity entity) {
+			Product product = (Product)entity;
 
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+			base.Update(product);
+		}
 
-        public List<Product> GetAllRequestedAvailableProducts()
-        {
-            cmd.CommandText = $"SELECT * FROM ProductTbl WHERE [availability]={true} AND [request]={true}";
+		public override void Delete(BaseEntity entity) {
+			Product product = (Product)entity;
 
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+			base.Delete(product);
+		}
+		#endregion
 
-        public List<Product> GetNLatestRequestedAvailableProducts(int n)
-        {
-            cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl WHERE [availability]={true} AND [request]={true}";
+		#region CreateSQL
+		public override string CreateInsertSQL(BaseEntity entity)
+			=> "INSERT INTO ProductTbl " +
+			   "([owner_id],[product_name],[description],[date_posted],[condition],[category],[price],[image],[availability],[request]) " +
+			   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+		public override string CreateUpdateSQL(BaseEntity entity)
+			=> "UPDATE ProductTbl SET " +
+			   "[owner_id]=?, [product_name]=?, [description]=?, [date_posted]=?, [condition]=?, " +
+			   "[category]=?, [price]=?, [image]=?, [availability]=?, [request]=? " +
+			   "WHERE [product_id]=?";
 
-        public List<Product> GetAllRequestedAvailableProductsByCategory(ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [category]={(int)category} AND [request]={true}";
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+		public override string CreateDeleteSQL(BaseEntity entity)
+			=> "DELETE FROM ProductTbl WHERE [product_id]=?";
 
+		#endregion
 
-        public List<Product> GetNLatestRequestedAvailableProductsByCategory(int n, ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [category]={(int)category} AND [request]={true}";
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
+		#region Parameter Binders
+		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity entity) {
+			Product product = (Product)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.Owner.ID;
+			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = product.Name;
+			cmd.Parameters.Add("?", OleDbType.LongVarWChar).Value = product.Description;
+			cmd.Parameters.Add("?", OleDbType.Date).Value = product.DatePosted;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Condition;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Category;
+			cmd.Parameters.Add("?", OleDbType.Double).Value = product.Price;
+			cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = (product.Image?.Length > 0) ? product.Image : DBNull.Value;
+			cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Availability;
+			cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Request;
+		}
 
-        public Product GetProductByID(int id)
-        {
-            cmd.Parameters.Clear();
+		protected override void AddUpdateParameters(OleDbCommand cmd, BaseEntity entity) {
+			AddInsertParameters(cmd, entity);
+			Product product = (Product)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.ID;
+		}
 
-            cmd.CommandText = "SELECT * FROM ProductTbl WHERE [product_id]=@ID";
+		protected override void AddDeleteParameters(OleDbCommand cmd, BaseEntity entity) {
+			Product product = (Product)entity;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = product.ID;
+		}
 
-            cmd.Parameters.AddWithValue("@ID", id);
-
-            List<Product> productList = SelectProducts();
-            return productList.FirstOrDefault();
-        }
-
-
-        public List<Product> GetAllAvailableProductsByCategory(ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [category]={(int)category} AND [request]={false}";
-
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
-
-        public List<Product> GetAllAvailableProductsByCondition(ItemCondition condition)
-        {
-            cmd.CommandText = $"SELECT * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [condition]={(int)condition} AND [request]={false}";
-
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
-
-        public List<Product> GetNLatestAvailableProducts(int n)
-        {
-            cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
-                              $"WHERE [availability]={true} AND [request]={false} " +
-                              $"ORDER BY [date_posted] DESC";
-
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
-
-        public List<Product> GetNLatestAvailableProductsByCategory(int n, ItemCategory category)
-        {
-            cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [category]={(int)category} AND [request]={false}";
-
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
-
-        public List<Product> GetNLatestAvailableProductsByCondition(int n, ItemCondition condition)
-        {
-            cmd.CommandText = $"SELECT TOP {n} * FROM ProductTbl " +
-                $"WHERE [availability]={true} AND [condition]={(int)condition} AND [request]={false}";
-
-            List<Product> productList = SelectProducts();
-            return productList;
-        }
-
-        public int Update(Product product)
-        {
-            int records = 0;
-            cmd.Parameters.Clear();
-
-            string sqlStr = "UPDATE ProductTbl SET " +
-                "[owner_id] = ?, " +
-                "[product_name] = ?, " +
-                "[description] = ?, " +
-                "[date_posted] = ?, " +
-                "[condition] = ?, " +
-                "[category] = ?, " +
-                "[price] = ?, " +
-                "[image2] = ?, " +
-                "[availability] = ? " +
-                "WHERE [product_id] = ?";
-
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = product.Owner.ID;
-            cmd.Parameters.Add("?", OleDbType.VarWChar).Value = product.Name;
-            cmd.Parameters.Add("?", OleDbType.LongVarWChar).Value = product.Description;
-            cmd.Parameters.Add("?", OleDbType.Date).Value = product.DatePosted;
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Condition;
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)product.Category;
-            cmd.Parameters.Add("?", OleDbType.Double).Value = product.Price;
-
-            if (product.Image != null && product.Image.Length > 0)
-            {
-                cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = product.Image;
-            }
-            else
-            {
-                cmd.Parameters.Add("?", OleDbType.LongVarBinary).Value = DBNull.Value;
-            }
-
-            cmd.Parameters.Add("?", OleDbType.Boolean).Value = product.Availability;
-
-            cmd.Parameters.Add("?", OleDbType.Integer).Value = product.ID;
-
-            try
-            {
-                cmd.CommandText = sqlStr;
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error occurred during UPDATE operation: " + e.Message);
-                Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                {
-                    Debug.WriteLine($"{param.Value} ({param.OleDbType})");
-                }
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-
-            return records;
-        }
-
-        public int UpdateAvailabilityByID(int id, bool availability)
-        {
-            int records = 0;
-            cmd.Parameters.Clear();
-
-            string sqlStr = $"UPDATE ProductTbl SET [availability] = {availability} " +
-                            $"WHERE [product_id] = {id}";
-
-            try
-            {
-                cmd.CommandText = sqlStr;
-                connection.Open();
-                records = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error occurred during UPDATE operation: " + e.Message);
-                Debug.WriteLine("SQL: " + cmd.CommandText);
-                foreach (OleDbParameter param in cmd.Parameters)
-                {
-                    Debug.WriteLine($"{param.Value} ({param.OleDbType})");
-                }
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-
-            return records;
-        }
-
-
-        public int Delete(Product product)
-        {
-            cmd.Parameters.Clear();
-            cmd.CommandText = "DELETE FROM ProductTbl WHERE [product_id]=@ID";
-            cmd.Parameters.AddWithValue("@ID", product.ID);
-
-            try
-            {
-                connection.Open();
-                int records = cmd.ExecuteNonQuery();
-                return records;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error in DELETE operation: " + e.Message);
-                return 0;
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-        }
-
-        protected override BaseEntity newEntity()
-        {
-            return new Product();
-        }
-
-        protected override BaseEntity CreateModel(BaseEntity entity)
-        {
-            Product product = (Product)entity;
-
-            product.ID = (int)reader["product_id"];
-            product.Owner = new UserDB().GetUserByID((int)reader["owner_id"]);
-            product.Name = reader["product_name"].ToString();
-            product.Description = reader["description"].ToString();
-            product.DatePosted = (DateTime)reader["date_posted"];
-            product.Condition = (ItemCondition)reader["condition"];
-            product.Category = (ItemCategory)reader["category"];
-            product.Price = double.Parse(reader["price"].ToString());
-            product.Image = reader["image"] as byte[];
-            product.Availability = (bool)reader["availability"];
-            product.Request = (bool)reader["request"];
-
-            return product;
-        }
-
-        private List<Product> SelectProducts()
-        {
-            List<Product> productList = new List<Product>();
-            try
-            {
-                cmd.Connection = connection;
-                connection.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Product product = (Product)newEntity();
-                    productList.Add((Product)CreateModel(product));
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-
-                if (connection.State == System.Data.ConnectionState.Open)
-                    connection.Close();
-            }
-            return productList;
-        }
-    }
+		#endregion
+	}
 }

@@ -7,10 +7,7 @@
         private int groupNumber;
         private string uniqueCode;
 
-        public User()
-        {
-
-        }
+        public User() { }
 
         public User(string username, string password, int groupNumber, string uniqueCode)
         {

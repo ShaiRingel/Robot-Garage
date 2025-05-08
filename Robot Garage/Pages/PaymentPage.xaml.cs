@@ -127,7 +127,7 @@ namespace Robot_Garage.Pages
 
                 Transaction newTransaction = new Transaction
                 {
-                    Renter = _loggedUser,
+                    Buyer = _loggedUser,
                     Product = _selectedProduct,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now
