@@ -11,7 +11,7 @@
                 <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Messages</button>
             </li>
             <li class="nav-item mb-1">
-                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.SelectById ? "active" : "")" @onclick="() => SelectOperation(Operation.SelectById)">Select Messages by ID</button>
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Messages by ID</button>
             </li>
         </ul>
     </div>
@@ -21,7 +21,7 @@
 </div>
 
 @code {
-    enum Operation { List, SelectById }
+    enum Operation { List, GetById }
     private Operation selectedOperation = Operation.List;
 
     private List<Message> messages = new();
@@ -31,10 +31,8 @@
     private bool isLoading;
     private bool initialLoadRequested;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender && !initialLoadRequested)
-        {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender && !initialLoadRequested) {
             initialLoadRequested = true;
             await Task.Delay(10);
             await LoadAllAsync();
@@ -42,40 +40,33 @@
         }
     }
 
-    private async Task LoadAllAsync()
-    {
-        try
-        {
+    private async Task LoadAllAsync() {
+        try {
             isLoading = true;
             StateHasChanged();
             messages = (await Client.SelectAllMessagesAsync())?.ToList() ?? new List<Message>();
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             message = $"Error loading messages: {ex.Message}";
         }
-        finally
-        {
+        finally {
             isLoading = false;
             StateHasChanged();
         }
     }
 
-    private void SelectOperation(Operation op)
-    {
+    private void SelectOperation(Operation op) {
         selectedOperation = op;
         message = string.Empty;
         currentMessage = new Message();
         searchId = 0;
 
-        if (op == Operation.List)
-        {
+        if (op == Operation.List) {
             _ = LoadAllAsync();
         }
     }
 
-    private RenderFragment RenderOperation() => selectedOperation switch
-    {
+    private RenderFragment RenderOperation() => selectedOperation switch {
         Operation.List => @<div>
         <h4>All Messages</h4>
         @if (isLoading)
@@ -106,7 +97,7 @@
     }
     </div>,
 
-        Operation.SelectById => @<div>
+        Operation.GetById => @<div>
         <h4>Find Messages by ID</h4>
         <div class="input-group mb-2" style="max-width: 300px;">
             <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
@@ -129,24 +120,19 @@
         _ => @<div>Select an operation.</div>
     };
 
-    private async Task LoadMessageByIdAsync()
-    {
-        try
-        {
+    private async Task LoadMessageByIdAsync() {
+        try {
             message = string.Empty;
             var _message = await Client.SelectMessageByIDAsync(searchId);
-            if (_message == null)
-            {
+            if (_message == null) {
                 message = "Message not found";
                 currentMessage = new Message();
             }
-            else
-            {
+            else {
                 currentMessage = _message;
             }
         }
-        catch
-        {
+        catch {
             message = "Message not found";
             currentMessage = new Message();
         }
@@ -184,7 +170,7 @@
                             {
                                 try
                                 {
-    var product = await Client.SelectUserByIDAsync(searchId);
+    var product = await Client.GetUserByIDAsync(searchId);
     if (product != null)
     {
         await Client.DeleteUserAsync(product);

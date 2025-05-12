@@ -22,7 +22,7 @@
 
     public class Product : BaseEntity
     {
-        private User owner;
+        private Captain owner;
         private string name;
         private string description;
         private DateTime datePosted;
@@ -33,7 +33,7 @@
         private bool availability;
         private bool request;
 
-        public User Owner
+        public Captain Owner
         {
             get => owner;
             set => owner = value;

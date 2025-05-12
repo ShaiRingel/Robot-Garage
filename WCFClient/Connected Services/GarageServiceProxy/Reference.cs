@@ -32,7 +32,7 @@ namespace GarageServiceProxy
         
         private string NameField;
         
-        private GarageServiceProxy.User OwnerField;
+        private GarageServiceProxy.Captain OwnerField;
         
         private double PriceField;
         
@@ -130,7 +130,7 @@ namespace GarageServiceProxy
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public GarageServiceProxy.User Owner
+        public GarageServiceProxy.Captain Owner
         {
             get
             {
@@ -173,6 +173,7 @@ namespace GarageServiceProxy
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="BaseEntity", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.User))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Captain))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Message))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Product))]
     public partial class BaseEntity : object
@@ -197,6 +198,7 @@ namespace GarageServiceProxy
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="User", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Captain))]
     public partial class User : GarageServiceProxy.BaseEntity
     {
         
@@ -263,6 +265,13 @@ namespace GarageServiceProxy
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Captain", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public partial class Captain : GarageServiceProxy.User
+    {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     public partial class Message : GarageServiceProxy.BaseEntity
     {
@@ -271,9 +280,9 @@ namespace GarageServiceProxy
         
         private GarageServiceProxy.Product ProductField;
         
-        private GarageServiceProxy.User ReceiverField;
+        private GarageServiceProxy.Captain ReceiverField;
         
-        private GarageServiceProxy.User SenderField;
+        private GarageServiceProxy.Captain SenderField;
         
         private System.DateTime TimestampField;
         
@@ -304,7 +313,7 @@ namespace GarageServiceProxy
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public GarageServiceProxy.User Receiver
+        public GarageServiceProxy.Captain Receiver
         {
             get
             {
@@ -317,7 +326,7 @@ namespace GarageServiceProxy
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public GarageServiceProxy.User Sender
+        public GarageServiceProxy.Captain Sender
         {
             get
             {

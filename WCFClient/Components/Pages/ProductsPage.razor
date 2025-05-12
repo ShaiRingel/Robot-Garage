@@ -77,7 +77,7 @@
     {
         @if (!string.IsNullOrEmpty(message)) {
         <div class="alert alert-danger">@message</div>
- }
+    }
         <table class="table table-striped">
             <thead>
                 <tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th></tr>
@@ -114,7 +114,7 @@
     }
         @if (!string.IsNullOrEmpty(message)) {
         <div class="alert alert-danger">@message</div>
- }
+    }
     </div>,
 
         _ => @<div>Select an operation.</div>
@@ -138,42 +138,42 @@
         }
     }
 
-    /*private async Task InsertProductAsync() {
-        try {
-            await Client.InsertProductAsync(currentProduct);
-            message = "Inserted successfully.";
-            await LoadAllAsync();
-        }
-        catch (Exception ex) {
-            message = $"Insert failed: {ex.Message}";
-        }
-    }
-
-    private async Task UpdateProductAsync() {
-        try {
-            await Client.UpdateProductAsync(currentProduct);
-            message = "Updated successfully.";
-            await LoadAllAsync();
-        }
-        catch (Exception ex) {
-            message = $"Update failed: {ex.Message}";
-        }
-    }
-
-    private async Task DeleteByIdAsync() {
-        try {
-            var product = await Client.SelectByIDAsync(searchId);
-            if (product != null) {
-                await Client.DeleteProductAsync(product);
-                message = $"Deleted ID {searchId}.";
+        /*private async Task InsertProductAsync() {
+            try {
+                await Client.InsertProductAsync(currentProduct);
+    message = "Inserted successfully.";
                 await LoadAllAsync();
-            }
-            else {
-                message = "Product not found";
+    }
+            catch (Exception ex) {
+                message = $"Insert failed: {ex.Message}";
             }
         }
-        catch {
-            message = "Product not found";
+
+        private async Task UpdateProductAsync() {
+            try {
+    await Client.UpdateProductAsync(currentProduct);
+    message = "Updated successfully.";
+    await LoadAllAsync();
+    }
+            catch (Exception ex) {
+    message = $"Update failed: {ex.Message}";
+    }
         }
-    }*/
+
+        private async Task DeleteByIdAsync() {
+            try {
+    var product = await Client.GetProductByIDAsync(searchId);
+    if (product != null) {
+        await Client.DeleteProductAsync(product);
+        message = $"Deleted ID {searchId}.";
+        await LoadAllAsync();
+        }
+    else {
+        message = "Product not found";
+        }
+    }
+            catch {
+    message = "Product not found";
+    }
+        }*/
 }

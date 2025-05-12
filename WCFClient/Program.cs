@@ -5,22 +5,20 @@ using WCFClient.Components;
 internal class Program
 {
     private static void Main(string[] args)
-    {
+  {
         var builder = WebApplication.CreateBuilder(args);
-
 
         builder.Services
             .AddRazorComponents()
             .AddInteractiveServerComponents();
 
-        builder.Services.AddSingleton(sp =>
+		builder.Services.AddSingleton(sp =>
         {
-            return new GarageServiceClient(
-                GarageServiceClient.EndpointConfiguration.WSHttpBinding_IGarageService,
-                "https://localhost:5001/GarageService/WSHttps");
+            return new GarageServiceClient(GarageServiceClient.EndpointConfiguration.WSHttpBinding_IGarageService,
+			"https://localhost:5001/GarageService/WSHttps");
         });
 
-        var app = builder.Build();
+		var app = builder.Build();
 
         if (!app.Environment.IsDevelopment())
         {

@@ -3,8 +3,8 @@
     public class Message : BaseEntity
     {
         private Product product;
-        private User sender;
-        private User receiver;
+        private Captain sender;
+        private Captain receiver;
         private string content;
         private DateTime timestamp;
 
@@ -13,12 +13,12 @@
             get => product;
             set => product = value;
         }
-        public User Sender
+        public Captain Sender
         {
             get => sender;
             set => sender = value;
         }
-        public User Receiver
+        public Captain Receiver
         {
             get => receiver;
             set => receiver = value;

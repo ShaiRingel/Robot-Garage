@@ -87,8 +87,8 @@ namespace Robot_Garage.Pages
                 var newMessage = new Message()
                 {
                     Product = new Product() { ID = 1 },
-                    Sender = _loggedUser,
-                    Receiver = _otherUser,
+                    Sender = (Captain)_loggedUser,
+                    Receiver = (Captain)_otherUser,
                     Content = message,
                     Timestamp = DateTime.Now
                 };

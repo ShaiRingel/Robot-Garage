@@ -29,7 +29,7 @@ namespace View_Model.DB {
 		public ProductList SelectAll() {
 			this.command.CommandText = "SELECT * FROM ProductTbl";
 
-			return new ProductList(base.Select());
+			return new ProductList(base.Select().Cast<Product>().ToList());
 		}
 
 		public Product SelectByID(int id) {

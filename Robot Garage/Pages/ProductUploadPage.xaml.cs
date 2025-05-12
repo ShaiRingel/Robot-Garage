@@ -133,7 +133,7 @@ namespace Robot_Garage.Pages
             {
                 Product newProduct = new Product
                 {
-                    Owner = _loggedUser,
+                    Owner = (Captain)_loggedUser,
                     Name = txtName.Text,
                     Price = double.Parse(txtPrice.Text),
                     Description = txtDescription.Text,
