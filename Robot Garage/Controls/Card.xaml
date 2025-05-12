@@ -43,7 +43,7 @@
                 Margin="5, 2, 5, 5">
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Product.Image, Converter={StaticResource ByteArrayToImageConverter}}"
-                            Stretch="UniformToFill"/>
+                            Stretch="Fill"/>
             </Border.Background>
         </Border>
 

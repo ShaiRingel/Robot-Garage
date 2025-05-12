@@ -259,32 +259,63 @@ Margin="5, 0, 5, 0"/>
 
 
         <Grid Grid.Row="1" x:Name="gridMyItems" Visibility="Collapsed">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="20">
-                <ItemsControl ItemsSource="{Binding MyProducts}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="White" CornerRadius="10" Margin="10" Padding="10">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="Gray" BlurRadius="8" ShadowDepth="2" Opacity="0.3"/>
-                                </Border.Effect>
-                                <StackPanel Width="200" VerticalAlignment="Top">
-                                    <Image Source="{Binding Image}" Height="120" Stretch="UniformToFill" Margin="0,0,0,10"/>
-                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding Description}" FontSize="12" TextWrapping="Wrap" MaxHeight="60" Margin="0,4,0,0"/>
-                                    <TextBlock Text="{Binding Price, StringFormat=C}" FontSize="14" FontWeight="SemiBold" Foreground="Green" Margin="0,6,0,0"/>
-                                    <Button Content="Edit" Width="60" HorizontalAlignment="Right" Margin="0,10,0,0"
-                                    Command="{Binding DataContext.EditProductCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                    CommandParameter="{Binding}"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+                <Viewbox Stretch="UniformToFill">
+                    <StackPanel Width="800" Margin="5,0,0,0">
+
+                        <!-- My Listings -->
+                        <Label Content="My Listings" FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <controls:Carousel MaxHeight="160">
+                            <ItemsControl ItemsSource="{Binding MyListings}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card Margin="0,0,5,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- Sold Items -->
+                        <Label Content="Sold Items" FontSize="24" FontWeight="Bold" Margin="0,20,0,5"/>
+                        <controls:Carousel MaxHeight="160">
+                            <ItemsControl ItemsSource="{Binding ItemsSold}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card Margin="0,0,5,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- My Purchases -->
+                        <Label Content="My Purchases" FontSize="24" FontWeight="Bold" Margin="0,20,0,5"/>
+                        <controls:Carousel MaxHeight="160">
+                            <ItemsControl ItemsSource="{Binding MyPurchases}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card Margin="0,0,5,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                    </StackPanel>
+                </Viewbox>
             </ScrollViewer>
         </Grid>
     </Grid>

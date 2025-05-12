@@ -51,7 +51,7 @@ namespace View_Model.DB {
 			return list.Cast<Transaction>().FirstOrDefault();
 		}
 
-		public Transaction SelectBySeller(Captain seller) {
+		public TransactionList SelectBySeller(Captain seller) {
 			this.command.Parameters.Clear();
 
 			this.command.CommandText =
@@ -62,12 +62,10 @@ namespace View_Model.DB {
 				Value = seller.ID
 			});
 
-			var list = base.Select();
-
-			return list.Cast<Transaction>().FirstOrDefault();
+			return new TransactionList(base.Select());
 		}
 
-		public Transaction SelectByBuyer(Captain buyer) {
+		public TransactionList SelectByBuyer(Captain buyer) {
 			this.command.Parameters.Clear();
 
 			this.command.CommandText =
@@ -78,9 +76,7 @@ namespace View_Model.DB {
 				Value = buyer.ID
 			});
 
-			var list = base.Select();
-
-			return list.Cast<Transaction>().FirstOrDefault();
+			return new TransactionList(base.Select());
 		}
 
 		#endregion

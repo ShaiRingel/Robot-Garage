@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,10 +23,18 @@ namespace Robot_Garage.Pages
         public ObservableCollection<CardViewModel> EnginesCards { get; set; }
         public ObservableCollection<CardViewModel> ManufacturingCards { get; set; }
         public ObservableCollection<CardViewModel> SelectedCategoryCards { get; set; }
-        public ObservableCollection<CardViewModel> MyProducts { get; set; }
-        ProductDB productDB;
-        private User loggedUser;
+		public ObservableCollection<CardViewModel> MyListings { get; set; }
+		public ObservableCollection<CardViewModel> ItemsSold { get; set; }
+		public ObservableCollection<CardViewModel> MyPurchases { get; set; }
+
+
         private string _currentPage;
+        private User loggedUser;
+
+
+		TransactionDB transactionDB;
+		ProductDB productDB;
+
 
         public MainPage(User loggedUser)
         {
@@ -42,6 +51,7 @@ namespace Robot_Garage.Pages
 			}
 
             productDB = new ProductDB();
+            transactionDB = new TransactionDB();
 
 			// Initialize collections
 			RecentlyAddedCards = new ObservableCollection<CardViewModel>();
@@ -51,7 +61,9 @@ namespace Robot_Garage.Pages
             EnginesCards = new ObservableCollection<CardViewModel>();
             ManufacturingCards = new ObservableCollection<CardViewModel>();
             SelectedCategoryCards = new ObservableCollection<CardViewModel>();
-            MyProducts = new ObservableCollection<CardViewModel>();
+            MyListings = new ObservableCollection<CardViewModel>();
+            ItemsSold = new ObservableCollection<CardViewModel>();
+            MyPurchases = new ObservableCollection<CardViewModel>();
 
             // Load data
             LoadCardsProducts();
@@ -178,24 +190,30 @@ namespace Robot_Garage.Pages
                 col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-		void LoadMyProducts(ObservableCollection<CardViewModel> col) {
-			var list = productDB.SelectByOwnerID(loggedUser.ID);
-			foreach (var p in list)
-				col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
-		}
-
 		private Task RefreshCards() {
+            SelectedCategoryCards.Clear();
 			RecentlyAddedCards.Clear();
-            MechanicsCards.Clear();
+            ManufacturingCards.Clear();
             ElectronicsCards.Clear();
             ProgrammingCards.Clear();
+            MechanicsCards.Clear();
             EnginesCards.Clear();
-            ManufacturingCards.Clear();
-            SelectedCategoryCards.Clear();
-            MyProducts.Clear();
+			MyPurchases.Clear();
+			MyListings.Clear();
+			ItemsSold.Clear();
 
-			if (_currentPage == "MyItems") {
-				LoadMyProducts(MyProducts);
+			if (_currentPage == "My Items") {
+				var allMine = productDB.SelectByOwnerID(loggedUser.ID);
+				foreach (var p in allMine)
+					MyListings.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+
+				var soldTx = transactionDB.SelectBySeller((Captain)loggedUser);
+				foreach (var tx in soldTx)
+					ItemsSold.Add(new CardViewModel { Product = tx.Product, LoggedUser = loggedUser });
+
+				var boughtTx = transactionDB.SelectByBuyer((Captain)loggedUser);
+				foreach (var tx in boughtTx)
+					MyPurchases.Add(new CardViewModel { Product = tx.Product, LoggedUser = loggedUser });
 			}
 			else {
 				if (CategoryPanel.Visibility == Visibility.Visible) {

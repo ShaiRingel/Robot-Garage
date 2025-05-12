@@ -13,15 +13,15 @@
     <Resource Include="assets/images/Logo Small BackGround Removed White Outline.png" />
     <Resource Include="assets/images/Logo Small BackGround Removed.png" />
     <Resource Include="assets/images/RobotScoringL4.png" />
-    <Resource Include="assets/images/UserPicture.png" />
     <Resource Include="assets/images/Manufacturing.svg" />
-    <Resource Include="assets/images/Refresh.svg" />
+    <Resource Include="assets/images/UserPicture.png" />
     <Resource Include="assets/images/Programming.svg" />
     <Resource Include="assets/images/Electronics.svg" />
     <Resource Include="assets/images/RightArrow.svg" />
     <Resource Include="assets/images/LeftArrow.svg" />
     <Resource Include="assets/images/Mechanics.svg" />
     <Resource Include="assets/images/Messages.svg" />
+    <Resource Include="assets/images/Refresh.svg" />
     <Resource Include="assets/images/engine.svg" />
     <Resource Include="assets/images/Chat.svg" />
     <Resource Include="assets/images/Menu.svg" />
