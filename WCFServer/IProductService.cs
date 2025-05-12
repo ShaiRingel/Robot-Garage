@@ -7,10 +7,10 @@ namespace WCFServer
     public interface IProductService
     {
         [OperationContract]
-        List<Product> GetAllProducts();
+        ProductList SelectAllProducts();
 
         [OperationContract]
-        Product GetProductByID(int id);
+        Product SelectProductByID(int id);
 
         /*[OperationContract]
 		void InsertProduct(Product item);

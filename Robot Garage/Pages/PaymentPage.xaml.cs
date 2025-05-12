@@ -19,13 +19,13 @@ namespace Robot_Garage.Pages
     {
         public OrderItem OrderItem { get; set; }
 
-        private Product _selectedProduct;
+        private Product selectedProduct;
         private User _loggedUser;
 
         public PaymentPage(User loggedUser, Product product)
         {
             InitializeComponent();
-            _selectedProduct = product;
+            selectedProduct = product;
             _loggedUser = loggedUser;
 
             BitmapImage productImage = new BitmapImage();
@@ -128,14 +128,15 @@ namespace Robot_Garage.Pages
                 Transaction newTransaction = new Transaction
                 {
                     Buyer = _loggedUser,
-                    Product = _selectedProduct,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
-                };
+                    Seller = selectedProduct.Owner,
+                    Product = selectedProduct,
+                    Status = OrderStatus.Confirmed
+				};
 
                 transactionDB.Insert(newTransaction);
+                transactionDB.SaveChanges();
 
-                System.Windows.MessageBox.Show("Payment successful! Thank you for your purchase.");
+				System.Windows.MessageBox.Show("Payment successful! Thank you for your purchase.");
             }
             else
             {
@@ -150,7 +151,10 @@ namespace Robot_Garage.Pages
 
         private void Window_Closing(object sender, System.EventArgs e) {
 			ProductDB productDB = new ProductDB();
-			productDB.UpdateAvailabilityByID(_selectedProduct.ID, true);
+
+            selectedProduct.Availability = true;
+			productDB.Update(selectedProduct);
+            productDB.SaveChanges();
 		}
 
 		private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -159,9 +163,12 @@ namespace Robot_Garage.Pages
             {
 				NavigationService?.GoBack();
 				ProductDB productDB = new ProductDB();
-				productDB.UpdateAvailabilityByID(_selectedProduct.ID, true);
+
+				selectedProduct.Availability = true;
+				productDB.Update(selectedProduct);
+				productDB.SaveChanges();
 			}
-            else
+			else
             {
                 System.Windows.MessageBox.Show("No previous page to navigate to.");
             }

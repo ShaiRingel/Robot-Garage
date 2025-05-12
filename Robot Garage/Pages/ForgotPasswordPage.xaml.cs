@@ -25,7 +25,7 @@ namespace Robot_Garage.Pages
         {
             if (UniqueCodeGrid.Visibility == Visibility.Visible)
             {
-                currentUser = userDB.Select(txtCode.Text);
+                currentUser = userDB.SelectByCode(txtCode.Text);
                 if (currentUser != null)
                 {
                     UniqueCodeGrid.Visibility = Visibility.Collapsed;
@@ -33,7 +33,7 @@ namespace Robot_Garage.Pages
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("unique code not found!");
+                    System.Windows.MessageBox.Show("Unique code not found!");
                 }
             }
             else
@@ -42,7 +42,8 @@ namespace Robot_Garage.Pages
                 {
                     currentUser.Password = txtPassword.Text;
                     userDB.Update(currentUser);
-                    txtPasswordChnage.Visibility = Visibility.Visible;
+                    userDB.SaveChanges();
+					txtPasswordChnage.Visibility = Visibility.Visible;
 
                     await Task.Delay(750);
 

@@ -16,7 +16,7 @@ namespace Robot_Garage.Controls
         public Card()
         {
             InitializeComponent();
-        }
+		}
 
         private void ReadMoreButton_Click(object sender, RoutedEventArgs e)
         {

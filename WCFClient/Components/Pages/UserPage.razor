@@ -4,7 +4,7 @@
 @inject GarageServiceClient Client
 @rendermode InteractiveServer
 
-<PageTitle>User Management</PageTitle>
+<PaSelectitle>User Management</PaSelectitle>
 
 @if (!isLoggedIn)
 {
@@ -46,7 +46,7 @@ else
                     <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Users</button>
                 </li>
                 <li class="nav-item mb-1">
-                    <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get User by ID</button>
+                    <button type="button" class="nav-link w-100 @(selectedOperation == Operation.SelectById ? "active" : "")" @onclick="() => SelectOperation(Operation.SelectById)">Select User by ID</button>
                 </li>
             </ul>
         </div>
@@ -108,7 +108,7 @@ else
     }
 
     // User management
-    enum Operation { List, GetById }
+    enum Operation { List, SelectById }
     private Operation selectedOperation = Operation.List;
 
     private List<User> users = new();
@@ -135,7 +135,7 @@ else
         {
             isLoading = true;
             StateHasChanged();
-            users = (await Client.GetAllUsersAsync())?.ToList() ?? new List<User>();
+            users = (await Client.SelectAllUsersAsync())?.ToList() ?? new List<User>();
         }
         catch (Exception ex)
         {
@@ -192,7 +192,7 @@ else
     }
     </div>,
 
-        Operation.GetById => @<div>
+        Operation.SelectById => @<div>
         <h4>Find User by ID</h4>
         <div class="input-group mb-2" style="max-width: 300px;">
             <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
@@ -219,7 +219,7 @@ else
         try
         {
             message = string.Empty;
-            var user = await Client.GetUserByIDAsync(searchId);
+            var user = await Client.SelectUserByIDAsync(searchId);
             if (user == null)
             {
                 message = "User not found";

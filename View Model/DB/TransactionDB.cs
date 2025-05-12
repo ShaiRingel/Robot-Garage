@@ -17,14 +17,13 @@ namespace View_Model.DB {
 
 		protected override void CreateModel(BaseEntity entity) {
 			Transaction transaction = (Transaction)entity;
-			// UserDB userDB = new UserDB();
+			UserDB userDB = new UserDB();
 			ProductDB productDB = new ProductDB();
 
 			transaction.ID = (int)reader["transaction_id"];
-			// transaction.Product = productDB.GetProductByID((int)reader["product_id"]);
-			// transaction.Renter = userDB.GetUserByID((int)reader["renter_id"]);
-			transaction.StartDate = (DateTime)reader["start_date"];
-			transaction.EndDate = (DateTime)reader["end_date"];
+			transaction.Product = productDB.SelectByID((int)reader["product_id"]);
+			transaction.Seller = userDB.SelectByID((int)reader["seller_id"]);
+			transaction.Buyer = userDB.SelectByID((int)reader["buyer_id"]);
 			transaction.Status = (OrderStatus)reader["status"];
 		}
 		#endregion
@@ -51,6 +50,39 @@ namespace View_Model.DB {
 
 			return list.Cast<Transaction>().FirstOrDefault();
 		}
+
+		public Transaction SelectBySeller(Captain seller) {
+			this.command.Parameters.Clear();
+
+			this.command.CommandText =
+				"SELECT * FROM TransactionTbl WHERE [seller_id] = ?";
+
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = seller.ID
+			});
+
+			var list = base.Select();
+
+			return list.Cast<Transaction>().FirstOrDefault();
+		}
+
+		public Transaction SelectByBuyer(Captain buyer) {
+			this.command.Parameters.Clear();
+
+			this.command.CommandText =
+				"SELECT * FROM TransactionTbl WHERE [buyer_id] = ?";
+
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = buyer.ID
+			});
+
+			var list = base.Select();
+
+			return list.Cast<Transaction>().FirstOrDefault();
+		}
+
 		#endregion
 
 		#region CRUD
@@ -76,12 +108,12 @@ namespace View_Model.DB {
 		#region Create SQL
 		public override string CreateInsertSQL(BaseEntity entity)
 			=> "INSERT INTO TransactionTbl " +
-			   "([product_id], [renter_id], [start_date], [end_date], [status]) " +
-			   "VALUES (?, ?, ?, ?, ?)";
+			   "([product_id], [seller_id], [buyer_id], [status]) " +
+			   "VALUES (?, ?, ?, ?)";
 
 		public override string CreateUpdateSQL(BaseEntity entity)
 			=> "UPDATE TransactionTbl SET " +
-			   "[product_id]=?, [renter_id]=?, [start_date]=?, [end_date]=?, [status]=? " +
+			   "[product_id]=?, [seller_id]=?, [buyer_id]=?, [status]=? " +
 			   "WHERE [transaction_id]=?";
 
 		public override string CreateDeleteSQL(BaseEntity entity)
@@ -94,9 +126,8 @@ namespace View_Model.DB {
 		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity entity) {
 			Transaction transaction = (Transaction)entity;
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.Product.ID;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.Seller.ID;
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = transaction.Buyer.ID;
-			cmd.Parameters.Add("?", OleDbType.Date).Value = transaction.StartDate;
-			cmd.Parameters.Add("?", OleDbType.Date).Value = transaction.EndDate;
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = (int)transaction.Status;
 		}
 

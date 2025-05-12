@@ -108,6 +108,8 @@ namespace View_Model.DB
 					cmd.Parameters.Clear();
 					cmd.CommandText = change.CreateSQL(change.Entity);
 					change.Binder(cmd, change.Entity);
+
+					records += cmd.ExecuteNonQuery();
 				}
 
 				foreach (ChangeEntity change in this.deleted) {

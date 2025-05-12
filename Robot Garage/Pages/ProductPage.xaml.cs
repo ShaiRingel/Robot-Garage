@@ -13,37 +13,41 @@ namespace Robot_Garage.Pages
     public partial class ProductPage : Page
     {
         private readonly ProductDB productDB;
-        private readonly Product _product;
-        private readonly User _loggedUser;
+        private readonly Product product;
+        private readonly User LoggedUser;
 
         public ProductPage(Product product, User loggedUser)
         {
             InitializeComponent();
 
             productDB = new ProductDB();
-            _product = productDB.GetProductByID(product.ID);
-            _loggedUser = loggedUser;
+            this.product = productDB.SelectByID(product.ID);
+            LoggedUser = loggedUser;
 
-            if (_product.Request) {
-                btnBuy.Visibility = Visibility.Hidden;
-                btnRequest.Visibility = Visibility.Visible;
+			if (LoggedUser is Viewer) {
+				btnBuy.Visibility = Visibility.Hidden;
 			}
 
-            if (_product.Owner.ID == _loggedUser.ID)
+			if (this.product.Request) {
+				btnBuy.Visibility = Visibility.Hidden;
+				btnRequest.Visibility = Visibility.Visible;
+			}
+
+            if (this.product.Owner.ID == LoggedUser.ID)
             {
-                btnContant.Visibility = Visibility.Hidden;
-                btnBuy.IsEnabled = false;
+				btnContant.Visibility = Visibility.Hidden;
+				btnBuy.IsEnabled = false;
             }
 
-            DataContext = _product;
+			DataContext = this.product;
         }
 
-        public string Name => _product.Name;
-        public string Description => _product.Description;
-        public ItemCondition Condition => _product.Condition;
-        public double Price => _product.Price;
-        public byte[] Image => _product.Image;
-        public bool Availability => _product.Availability;
+        public string Name => product.Name;
+        public string Description => product.Description;
+        public ItemCondition Condition => product.Condition;
+        public double Price => product.Price;
+        public byte[] Image => product.Image;
+        public bool Availability => product.Availability;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -67,31 +71,31 @@ namespace Robot_Garage.Pages
 
         private void btnBuy_Click(object sender, RoutedEventArgs e)
         {
-            if (!productDB.GetProductByID(_product.ID).Availability)
+            if (!productDB.SelectByID(product.ID).Availability)
             {
                 MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
                 return;
             }
 
-            productDB.UpdateAvailabilityByID(_product.ID, false);
+            product.Availability = false;
+            productDB.Update(product);
+            productDB.SaveChanges();
 
-            NavigationService?.Navigate(new PaymentPage(_loggedUser, _product));
+            NavigationService?.Navigate(new PaymentPage(LoggedUser, product));
         }
 
         private void btnRequest_Click(object sender, RoutedEventArgs e)
         {
-            if (!productDB.GetProductByID(_product.ID).Availability)
+            if (!productDB.SelectByID(product.ID).Availability)
             {
                 MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
                 return;
             }
-
-
         }
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ChatPage(_loggedUser, _product.Owner));
+            NavigationService?.Navigate(new ChatPage(LoggedUser, product.Owner));
         }
     }
 }

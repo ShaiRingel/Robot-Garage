@@ -45,7 +45,7 @@ namespace Robot_Garage.Pages
 
         private void LoadMessages()
         {
-            currentMessages = messagesDB.GetAllMessagesInChat(_loggedUser.ID, _otherUser.ID);
+            currentMessages = messagesDB.SelectConversation(_loggedUser.ID, _otherUser.ID);
             MessagesPanel.Children.Clear();
 
             foreach (Message message in currentMessages)
@@ -56,7 +56,7 @@ namespace Robot_Garage.Pages
 
         private void MessagePollingTimer_Tick(object sender, EventArgs e)
         {
-            var latestMessages = messagesDB.GetAllMessagesInChat(_loggedUser.ID, _otherUser.ID);
+            var latestMessages = messagesDB.SelectConversation(_loggedUser.ID, _otherUser.ID);
 
             var newMessages = latestMessages.Except(currentMessages).ToList();
 
@@ -94,7 +94,8 @@ namespace Robot_Garage.Pages
                 };
 
                 messagesDB.Insert(newMessage);
-                MessageInput.Text = string.Empty;
+                messagesDB.SaveChanges();
+				MessageInput.Text = string.Empty;
             }
         }
 

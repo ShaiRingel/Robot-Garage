@@ -44,7 +44,7 @@
         try {
             isLoading = true;
             StateHasChanged();
-            products = (await Client.GetAllProductsAsync())?.ToList() ?? new List<Product>();
+            products = (await Client.SelectAllProductsAsync())?.ToList() ?? new List<Product>();
         }
         catch (Exception ex) {
             message = $"Error loading products: {ex.Message}";
@@ -123,7 +123,7 @@
     private async Task LoadProductByIdAsync() {
         try {
             message = string.Empty;
-            var product = await Client.GetProductByIDAsync(searchId);
+            var product = await Client.SelectProductByIDAsync(searchId);
             if (product == null) {
                 message = "Product not found";
                 currentProduct = new Product();
@@ -162,7 +162,7 @@
 
     private async Task DeleteByIdAsync() {
         try {
-            var product = await Client.GetProductByIDAsync(searchId);
+            var product = await Client.SelectByIDAsync(searchId);
             if (product != null) {
                 await Client.DeleteProductAsync(product);
                 message = $"Deleted ID {searchId}.";

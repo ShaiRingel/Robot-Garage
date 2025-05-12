@@ -1,11 +1,5 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace View_Model.DB {
 	public class ProductDB : BaseEntityDB {
@@ -53,25 +47,125 @@ namespace View_Model.DB {
 
 			return list.Cast<Product>().FirstOrDefault();
 		}
+
+		public ProductList SelectByOwnerID(int ownerID) {
+			this.command.Parameters.Clear();
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE owner_id = ?";
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = ownerID
+			});
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectAllAvailable() {
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE availability = true";
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectAllRequested() {
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE availability = true AND request = true";
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectAllRequestedByCategory(ItemCategory category) {
+			this.command.Parameters.Clear();
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE availability = true AND request = true AND category = ?";
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)category });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectAllAvailableByCategory(ItemCategory category) {
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE availability = true AND request = false AND category = ?";
+			this.command.Parameters.Clear();
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)category });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectAllAvailableByCondition(ItemCondition condition) {
+			this.command.CommandText =
+				"SELECT * FROM ProductTbl WHERE availability = true AND request = false AND condition = ?";
+			this.command.Parameters.Clear();
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)condition });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectLatestAvailableByCategory(int count, ItemCategory category) {
+			this.command.CommandText =
+				$"SELECT TOP {count} * FROM ProductTbl WHERE availability = true AND request = false AND category = ?";
+			this.command.Parameters.Clear();
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)category });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectLatestRequestedByCategory(int count, ItemCategory category) {
+			this.command.CommandText =
+				$"SELECT TOP {count} * FROM ProductTbl WHERE availability = true AND request = true AND category = ?";
+			this.command.Parameters.Clear();
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)category });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectLatestAvailableByCondition(int count, ItemCondition condition) {
+			this.command.CommandText =
+				$"SELECT TOP {count} * FROM ProductTbl WHERE availability = true AND request = false AND condition = ?";
+			this.command.Parameters.Clear();
+			this.command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = (int)condition });
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectLatestAvailable(int count) {
+			this.command.CommandText =
+				$"SELECT TOP {count} * FROM ProductTbl WHERE availability = true AND request = false ORDER BY date_posted DESC";
+
+			return new ProductList(base.Select());
+		}
+
+		public ProductList SelectLatestRequested(int count) {
+			this.command.CommandText =
+				$"SELECT TOP {count} * FROM ProductTbl WHERE availability = true AND request = true ORDER BY date_posted DESC";
+			return new ProductList(base.Select());
+		}
+
 		#endregion
 
 		#region CRUD
 		public override void Insert(BaseEntity entity) {
-			Product product = (Product)entity;
-
-			base.Insert(product);
+			inserted.Add(new ChangeEntity(
+				this.CreateInsertSQL,
+				this.AddInsertParameters,
+				entity
+			));
 		}
 
 		public override void Update(BaseEntity entity) {
-			Product product = (Product)entity;
-
-			base.Update(product);
+			updated.Add(new ChangeEntity(
+				this.CreateUpdateSQL,
+				this.AddUpdateParameters,
+				entity
+			));
 		}
 
 		public override void Delete(BaseEntity entity) {
-			Product product = (Product)entity;
-
-			base.Delete(product);
+			deleted.Add(new ChangeEntity(
+				this.CreateDeleteSQL,
+				this.AddDeleteParameters,
+				entity
+			));
 		}
 		#endregion
 

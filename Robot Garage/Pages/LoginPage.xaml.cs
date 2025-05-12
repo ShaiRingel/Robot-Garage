@@ -1,4 +1,5 @@
 ﻿using Model;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +24,10 @@ namespace Robot_Garage.Pages
 
         private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e)
         {
+			Debug.WriteLine(txtUsername.Text);
+			Debug.WriteLine(int.Parse(txtNumber.Text));
+			Debug.WriteLine(txtPassword.Password);
+            
             User user = new UserDB().Login(txtUsername.Text, int.Parse(txtNumber.Text), txtPassword.Password);
 
             if (user == null)
@@ -37,7 +42,9 @@ namespace Robot_Garage.Pages
 
             AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
 
-            NavigationService?.Navigate(new MainPage(user));
+            Captain captain = new CaptainDB().SelectByID(user.ID);
+
+			NavigationService?.Navigate(new MainPage(captain != null ? captain : new ViewerDB().SelectByID(user.ID)));
         }
 
         private void IntegerUpDown_PreviewTextInput(object sender, TextCompositionEventArgs e)

@@ -1,5 +1,7 @@
 ﻿using Model;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,8 +22,9 @@ namespace Robot_Garage.Pages
         public ObservableCollection<CardViewModel> EnginesCards { get; set; }
         public ObservableCollection<CardViewModel> ManufacturingCards { get; set; }
         public ObservableCollection<CardViewModel> SelectedCategoryCards { get; set; }
+        public ObservableCollection<CardViewModel> MyProducts { get; set; }
         ProductDB productDB;
-        private User _loggedUser;
+        private User loggedUser;
         private string _currentPage;
 
         public MainPage(User loggedUser)
@@ -29,19 +32,26 @@ namespace Robot_Garage.Pages
             InitializeComponent();
 
             _currentPage = "Sales";
-            _loggedUser = loggedUser;
+            this.loggedUser = loggedUser;
             Loaded += SalesPage_Loaded;
+
+            if (this.loggedUser is Viewer) {
+				btnMessages.Visibility = Visibility.Collapsed;
+				btnAddProduct.Visibility = Visibility.Collapsed;
+                btnMyItems.Visibility = Visibility.Collapsed;
+			}
 
             productDB = new ProductDB();
 
-            // Initialize collections
-            RecentlyAddedCards = new ObservableCollection<CardViewModel>();
+			// Initialize collections
+			RecentlyAddedCards = new ObservableCollection<CardViewModel>();
             MechanicsCards = new ObservableCollection<CardViewModel>();
             ElectronicsCards = new ObservableCollection<CardViewModel>();
             ProgrammingCards = new ObservableCollection<CardViewModel>();
             EnginesCards = new ObservableCollection<CardViewModel>();
             ManufacturingCards = new ObservableCollection<CardViewModel>();
             SelectedCategoryCards = new ObservableCollection<CardViewModel>();
+            MyProducts = new ObservableCollection<CardViewModel>();
 
             // Load data
             LoadCardsProducts();
@@ -60,8 +70,8 @@ namespace Robot_Garage.Pages
         {
             if (_currentPage == "Sales")
             {
-                foreach (var p in productDB.GetNLatestAvailableProducts(15))
-                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                foreach (var p in productDB.SelectLatestAvailable(15))
+                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
 
                 LoadNCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
                 LoadNCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
@@ -71,8 +81,8 @@ namespace Robot_Garage.Pages
             }
             else
             {
-                foreach (var p in productDB.GetNLatestRequestedAvailableProducts(15))
-                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                foreach (var p in productDB.SelectLatestRequested(15))
+                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
 
                 LoadNRequestingCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
                 LoadNRequestingCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
@@ -142,54 +152,65 @@ namespace Robot_Garage.Pages
 
         void LoadCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col)
         {
-            var list = productDB.GetAllAvailableProductsByCategory(cat);
+            var list = productDB.SelectAllAvailableByCategory(cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
         void LoadNCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
-            var list = productDB.GetNLatestAvailableProductsByCategory(n, cat);
+            var list = productDB.SelectLatestAvailableByCategory(n, cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
         void LoadRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col)
         {
-            var list = productDB.GetAllRequestedAvailableProductsByCategory(cat);
+            var list = productDB.SelectAllRequestedByCategory(cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
         void LoadNRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
-            var list = productDB.GetNLatestRequestedAvailableProductsByCategory(n, cat);
+            var list = productDB.SelectLatestRequestedByCategory(n, cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = _loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-        void RefreshCards()
-        {
-            RecentlyAddedCards.Clear();
+		void LoadMyProducts(ObservableCollection<CardViewModel> col) {
+			var list = productDB.SelectByOwnerID(loggedUser.ID);
+			foreach (var p in list)
+				col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+		}
+
+		private Task RefreshCards() {
+			RecentlyAddedCards.Clear();
             MechanicsCards.Clear();
             ElectronicsCards.Clear();
             ProgrammingCards.Clear();
             EnginesCards.Clear();
             ManufacturingCards.Clear();
             SelectedCategoryCards.Clear();
+            MyProducts.Clear();
 
-            if (CategoryPanel.Visibility == Visibility.Visible)
-            {
-                LoadCatrgoryCardsProducts(SelectedCategoryTitle.Content.ToString());
-            }
-            else
-            {
-                LoadCardsProducts();
-            }
-        }
+			if (_currentPage == "MyItems") {
+				LoadMyProducts(MyProducts);
+			}
+			else {
+				if (CategoryPanel.Visibility == Visibility.Visible) {
+					LoadCatrgoryCardsProducts(SelectedCategoryTitle.Content.ToString());
+				}
+				else {
+					LoadCardsProducts();
+				}
+			}
+
+			return Task.CompletedTask;
+		}
 
 
-        private void btnSales_Click(object sender, RoutedEventArgs e)
+        private async void btnSales_Click(object sender, RoutedEventArgs e)
         {
             if (_currentPage == "Sales")
             {
@@ -200,10 +221,13 @@ namespace Robot_Garage.Pages
 
             SortByComboBox.SelectedIndex = 0;
 
-            RefreshCards();
-        }
+            await RefreshCards();
 
-        private void btnRequests_Click(object sender, RoutedEventArgs e)
+			gridSales.Visibility = Visibility.Visible;
+			gridMyItems.Visibility = Visibility.Collapsed;
+		}
+
+        private async void btnRequests_Click(object sender, RoutedEventArgs e)
         {
             if (_currentPage == "Requests")
             {
@@ -214,10 +238,13 @@ namespace Robot_Garage.Pages
 
             SortByComboBox.SelectedIndex = 0;
 
-            RefreshCards();
-        }
+            await RefreshCards();
 
-        private void btnMyItems_Click(object sender, RoutedEventArgs e)
+			gridSales.Visibility = Visibility.Visible;
+			gridMyItems.Visibility = Visibility.Collapsed;
+		}
+
+        private async void btnMyItems_Click(object sender, RoutedEventArgs e)
         {
             if (_currentPage == "My Items")
             {
@@ -225,17 +252,21 @@ namespace Robot_Garage.Pages
             }
 
             _currentPage = "My Items";
-            MessageBox.Show("My Items clicked");
-        }
 
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+            await RefreshCards();
+
+			gridMyItems.Visibility = Visibility.Visible;
+            gridSales.Visibility = Visibility.Collapsed;
+		}
+
+        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            RefreshCards();
+            await RefreshCards();
         }
 
         private void btnMessages_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ChatsListPage(_loggedUser));
+            NavigationService?.Navigate(new ChatsListPage(loggedUser));
         }
 
         private void SalesPage_Loaded(object sender, RoutedEventArgs e)
@@ -281,10 +312,10 @@ namespace Robot_Garage.Pages
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ProductUploadPage(_loggedUser));
+            NavigationService?.Navigate(new ProductUploadPage(loggedUser));
         }
 
-        private void CatagoryButton_Click(object sender, RoutedEventArgs e)
+        private async void CatagoryButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = (Button)sender;
             var panel = btn.Content as StackPanel;
@@ -296,7 +327,7 @@ namespace Robot_Garage.Pages
                 // Show all carousels
                 GeneralPanel.Visibility = Visibility.Visible;
                 CategoryPanel.Visibility = Visibility.Collapsed;
-                RefreshCards();
+				await RefreshCards();
                 return;
             }
 
@@ -306,7 +337,7 @@ namespace Robot_Garage.Pages
             CategoryPanel.Visibility = Visibility.Visible;
             SelectedCategoryTitle.Content = category;
 
-            RefreshCards();
+            await RefreshCards();
         }
     }
 

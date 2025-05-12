@@ -7,29 +7,32 @@ namespace View_Model.Services
     {
         ProductDB productDB = new ProductDB();
 
-        public List<Product> GetAll()
+        public ProductList SelectAll()
         {
             return productDB.SelectAll();
         }
 
-        public Product GetByID(int id)
+        public Product SelectByID(int id)
         {
             return productDB.SelectByID(id);
         }
 
-        public void InsertProduct(Product product)
+        public void Insert(Product product)
         {
             productDB.Insert(product);
-        }
+			productDB.SaveChanges();
+		}
 
-        public void UpdateProduct(Product product)
+		public void Update(Product product)
         {
             productDB.Update(product);
-        }
+			productDB.SaveChanges();
+		}
 
-        public void DeleteProduct(Product product)
+		public void Delete(Product product)
         {
             productDB.Delete(product);
-        }
-    }
+			productDB.SaveChanges();
+		}
+	}
 }

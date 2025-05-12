@@ -7,10 +7,10 @@ namespace WCFServer
     public interface IMessageService
     {
         [OperationContract]
-        List<Message> GetAllMessages();
+        MessageList SelectAllMessages();
 
         [OperationContract]
-        Message GetMessageByID(int id);
+        Message SelectMessageByID(int id);
 
         /*[OperationContract]
 		void InsertProduct(Product item);

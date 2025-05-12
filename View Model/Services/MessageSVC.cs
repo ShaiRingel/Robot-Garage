@@ -5,36 +5,39 @@ namespace View_Model.Services
 {
     public class MessageSVC
     {
-        /*MessageDB messageDB = new MessageDB();
+        MessageDB messageDB = new MessageDB();
 
-        public List<Message> GetAll()
+        public MessageList SelectAll()
         {
-            return messageDB.GetAll();
+            return messageDB.SelectAll();
         }
 
-        public Message GetByID(int id)
+        public Message SelectByID(int id)
         {
-            return messageDB.GetMessageByID(id);
+            return messageDB.SelectByID(id);
         }
 
-        public List<Message> GetByUsers(User sender, User reciever)
+        public MessageList SelectConversation(User sender, User reciever)
         {
-            return messageDB.GetAllMessagesInChat(sender.ID, reciever.ID);
+            return messageDB.SelectConversation(sender.ID, reciever.ID);
         }
 
-        public void InsertUser(Message message)
+        public void Insert(Message message)
         {
             messageDB.Insert(message);
-        }
+            messageDB.SaveChanges();
+		}
 
-        public void UpdateProduct(Message message)
+        public void Update(Message message)
         {
             messageDB.Update(message);
-        }
+			messageDB.SaveChanges();
+		}
 
-        public void DeleteProduct(Message message)
+		public void Delete(Message message)
         {
             messageDB.Delete(message);
-        }*/
-    }
+            messageDB.SaveChanges();
+		}
+	}
 }

@@ -125,18 +125,5 @@ namespace View_Model.DB {
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = Captain.ID;
 		}
 		#endregion
-
-		public override User Login(string username, int groupnumber, string password) {
-			command.Parameters.Clear();
-
-			command.CommandText = "SELECT * FROM UserTbl " +
-				"WHERE username=@Username AND group_number=@GroupNumber AND password=@Password";
-
-			command.Parameters.AddWithValue("@Username", username);
-			command.Parameters.AddWithValue("@GroupNumber", groupnumber);
-			command.Parameters.AddWithValue("@Password", password);
-
-			return (User)Select().FirstOrDefault();
-		}
 	}
 }

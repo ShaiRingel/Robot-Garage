@@ -11,7 +11,7 @@
                 <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Messages</button>
             </li>
             <li class="nav-item mb-1">
-                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Messages by ID</button>
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.SelectById ? "active" : "")" @onclick="() => SelectOperation(Operation.SelectById)">Select Messages by ID</button>
             </li>
         </ul>
     </div>
@@ -21,7 +21,7 @@
 </div>
 
 @code {
-    enum Operation { List, GetById }
+    enum Operation { List, SelectById }
     private Operation selectedOperation = Operation.List;
 
     private List<Message> messages = new();
@@ -48,7 +48,7 @@
         {
             isLoading = true;
             StateHasChanged();
-            messages = (await Client.GetAllMessagesAsync())?.ToList() ?? new List<Message>();
+            messages = (await Client.SelectAllMessagesAsync())?.ToList() ?? new List<Message>();
         }
         catch (Exception ex)
         {
@@ -106,7 +106,7 @@
     }
     </div>,
 
-        Operation.GetById => @<div>
+        Operation.SelectById => @<div>
         <h4>Find Messages by ID</h4>
         <div class="input-group mb-2" style="max-width: 300px;">
             <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
@@ -134,7 +134,7 @@
         try
         {
             message = string.Empty;
-            var _message = await Client.GetMessageByIDAsync(searchId);
+            var _message = await Client.SelectMessageByIDAsync(searchId);
             if (_message == null)
             {
                 message = "Message not found";
@@ -184,7 +184,7 @@
                             {
                                 try
                                 {
-    var product = await Client.GetUserByIDAsync(searchId);
+    var product = await Client.SelectUserByIDAsync(searchId);
     if (product != null)
     {
         await Client.DeleteUserAsync(product);

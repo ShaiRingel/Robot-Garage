@@ -9,10 +9,10 @@ namespace WCFServer
         [OperationContract]
         bool Login(string username, int groupnumber, string password);
         [OperationContract]
-        List<User> GetAllUsers();
+        UserList SelectAllUsers();
 
         [OperationContract]
-        User GetUserByID(int id);
+        User SelectUserByID(int id);
 
         /*[OperationContract]
         void InsertUser(User item);

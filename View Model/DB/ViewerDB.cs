@@ -60,8 +60,6 @@ namespace View_Model.DB {
 
 		#region CRUD
 		public override void Insert(BaseEntity entity) {
-			var v = (Viewer)entity;
-
 			inserted.Add(new ChangeEntity(
 				base.CreateInsertSQL,
 				base.AddInsertParameters,
@@ -76,7 +74,17 @@ namespace View_Model.DB {
 		}
 
 		public override void Update(BaseEntity entity) {
-			base.Update(entity);
+			updated.Add(new ChangeEntity(
+				base.CreateUpdateSQL,
+				base.AddUpdateParameters,
+				entity
+			));
+
+			updated.Add(new ChangeEntity(
+				this.CreateUpdateSQL,
+				this.AddUpdateParameters,
+				entity
+			));
 		}
 
 		/*public override void Delete(BaseEntity entity) {
@@ -123,18 +131,5 @@ namespace View_Model.DB {
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = viewer.ID;
 		}
 		#endregion
-
-		public override User Login(string username, int groupnumber, string password) {
-			command.Parameters.Clear();
-
-			command.CommandText = "SELECT * FROM UserTbl " +
-				"WHERE username=@Username AND group_number=@GroupNumber AND password=@Password";
-
-			command.Parameters.AddWithValue("@Username", username);
-			command.Parameters.AddWithValue("@GroupNumber", groupnumber);
-			command.Parameters.AddWithValue("@Password", password);
-
-			return (User)Select().FirstOrDefault();
-		}
 	}
 }

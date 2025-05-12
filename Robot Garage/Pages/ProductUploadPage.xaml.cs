@@ -110,9 +110,9 @@ namespace Robot_Garage.Pages
         private async void Upload_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine($"Username: {_loggedUser.Username}" +
-                $"Group Name: {_loggedUser.GroupNumber}" +
-                $"Password: {_loggedUser.Password}" +
-                $"Unique Code: {_loggedUser.UniqueCode}");
+                $"\nGroup Name: {_loggedUser.GroupNumber}" +
+                $"\nPassword: {_loggedUser.Password}" +
+                $"\nUnique Code: {_loggedUser.UniqueCode}");
 
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
             {
@@ -145,8 +145,9 @@ namespace Robot_Garage.Pages
                 };
 
                 productDB.Insert(newProduct);
+                productDB.SaveChanges();
 
-                txtSuccess.Text = "Successfully Registered Product!, Going back to the main menu!";
+				txtSuccess.Text = "Successfully Registered Product!, Going back to the main menu!";
 
                 await Task.Delay(500);
 

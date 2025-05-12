@@ -53,13 +53,13 @@ namespace Robot_Garage.Pages
         {
             MessageDB messageDB = new MessageDB();
 
-            var chatUsers = messageDB.GetChatUsers(_loggedUser.ID);
+            var chatUsers = messageDB.SelectChatParticipants(_loggedUser.ID);
 
             ChatItems.Clear();
 
             foreach (var user in chatUsers)
             {
-                var lastMessage = messageDB.GetAllMessagesInChat(_loggedUser.ID, user.ID)
+                var lastMessage = messageDB.SelectConversation(_loggedUser.ID, user.ID)
                                            .OrderByDescending(m => m.Timestamp)
                                            .FirstOrDefault();
 

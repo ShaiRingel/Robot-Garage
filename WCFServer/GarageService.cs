@@ -8,24 +8,25 @@ namespace WCFServer
         ProductSVC productSVC = new ProductSVC();
         UserSVC userSVC = new UserSVC();
         MessageSVC messageSVC = new MessageSVC();
-        public List<Product> GetAllProducts()
+
+        public ProductList SelectAllProducts()
         {
-            return productSVC.GetAll();
+            return productSVC.SelectAll();
         }
 
-        public Product GetProductByID(int id)
+        public Product SelectProductByID(int id)
         {
-            return productSVC.GetByID(id);
+            return productSVC.SelectByID(id);
         }
 
-        public List<User> GetAllUsers()
+        public UserList SelectAllUsers()
         {
-            return userSVC.GetAll();
+            return userSVC.SelectAll();
         }
 
-        public User GetUserByID(int id)
+        public User SelectUserByID(int id)
         {
-            return userSVC.GetByID(id);
+            return userSVC.SelectByID(id);
         }
 
         public bool Login(string username, int groupnumber, string password)
@@ -43,14 +44,14 @@ namespace WCFServer
             return false;
         }
 
-        public List<Message> GetAllMessages()
+		public MessageList SelectAllMessages()
         {
-            return messageSVC.GetAll();
+            return messageSVC.SelectAll();
         }
 
-        public Message GetMessageByID(int id)
+        public Message SelectMessageByID(int id)
         {
-            return messageSVC.GetByID(id);
+            return messageSVC.SelectByID(id);
         }
 
         /*public void InsertProduct(Product item) {

@@ -17,17 +17,70 @@ namespace View_Model.DB {
 
 		protected override void CreateModel(BaseEntity entity) {
 			Message message = (Message)entity;
-			//UserDB userDB = new UserDB();
-			ProductDB productDB = new ProductDB();
+			CaptainDB captainDB = new CaptainDB();
 
 			message.ID = (int)reader["message_id"];
-			//message.Sender = userDB.GetUserByID((int)reader["sender_id"]);
-			Debug.WriteLine(message.Sender.Username);
-			//message.Receiver = userDB.GetUserByID((int)reader["receiver_id"]);
-			Debug.WriteLine(message.Receiver.Username);
-			message.Product = new Product { ID = (int)reader["product_id"] };
+			message.Sender = captainDB.SelectByID((int)reader["sender_id"]);
+			message.Receiver = captainDB.SelectByID((int)reader["receiver_id"]);
 			message.Content = reader["message"].ToString();
 			message.Timestamp = (DateTime)reader["timestamp"];
+		}
+
+		#endregion
+
+		#region Selectors
+		public MessageList SelectAll() {
+			command.Parameters.Clear();
+			command.CommandText = "SELECT * FROM MessageTbl";
+			return new MessageList(base.Select().Cast<Message>().ToList());
+		}
+
+		public Message SelectByID(int id) {
+			command.Parameters.Clear();
+			command.CommandText = "SELECT * FROM MessageTbl WHERE message_id = ?";
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = id });
+			return base.Select().Cast<Message>().FirstOrDefault();
+		}
+
+		public MessageList SelectConversation(int userAId, int userBId) {
+			command.Parameters.Clear();
+			command.CommandText =
+				"SELECT * FROM MessageTbl WHERE (sender_id = ? AND receiver_id = ?) " +
+				"OR (sender_id = ? AND receiver_id = ?) ORDER BY [timestamp] ASC";
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = userAId });
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = userBId });
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = userBId });
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = userAId });
+			return new MessageList(base.Select().Cast<Message>().ToList());
+		}
+
+		public CaptainList SelectChatParticipants(int currentUserId) {
+			CaptainList users = new CaptainList();
+			command.Parameters.Clear();
+			command.CommandText =
+				"SELECT DISTINCT sender_id AS user_id FROM MessageTbl WHERE receiver_id = ? " +
+				"UNION SELECT DISTINCT receiver_id AS user_id FROM MessageTbl WHERE sender_id = ?";
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = currentUserId });
+			command.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = currentUserId });
+
+			try {
+				connection.Open();
+				command.Connection = connection;
+				reader = command.ExecuteReader();
+				while (reader.Read()) {
+					users.Add(new CaptainDB().SelectByID((int)reader["user_id"]));
+				}
+			}
+			catch (Exception ex) {
+				Debug.WriteLine("Error in GetChatParticipants: " + ex.Message);
+			}
+			finally {
+				reader?.Close();
+				if (connection.State == System.Data.ConnectionState.Open)
+					connection.Close();
+			}
+
+			return users;
 		}
 
 		#endregion
@@ -53,39 +106,14 @@ namespace View_Model.DB {
 
 		#endregion
 
-		#region Selectors
-		public MessageList SelectAll() {
-			this.command.CommandText = "SELECT * FROM MessageTbl";
-
-			return new MessageList(base.Select());
-		}
-
-		public Message SelectByID(int id) {
-			this.command.Parameters.Clear();
-
-			this.command.CommandText =
-				"SELECT * FROM MessageTbl WHERE message_id = ?";
-
-			this.command.Parameters.Add(new OleDbParameter {
-				OleDbType = OleDbType.Integer,
-				Value = id
-			});
-
-			var list = base.Select();
-
-			return list.Cast<Message>().FirstOrDefault();
-		}
-
-		#endregion
-
 		#region CreateSQL
 		public override string CreateInsertSQL(BaseEntity entity)
-			=> "INSERT INTO MessageTbl ([product_id],[sender_id],[receiver_id],[message],[timestamp]) " +
+			=> "INSERT INTO MessageTbl ([sender_id],[receiver_id],[message],[timestamp]) " +
 			   "VALUES (?, ?, ?, ?, ?)";
 
 		public override string CreateUpdateSQL(BaseEntity entity)
 			=> "UPDATE MessageTbl " +
-			   "SET [product_id]=?, [sender_id]=?, [receiver_id]=?, [message]=?, [timestamp]=? " +
+			   "SET [sender_id]=?, [receiver_id]=?, [message]=?, [timestamp]=? " +
 			   "WHERE message_id = ?";
 
 		public override string CreateDeleteSQL(BaseEntity entity)
@@ -96,7 +124,6 @@ namespace View_Model.DB {
 		#region Parameter Binders
 		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity entity) {
 			Message message = (Message)entity;
-			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Product.ID });
 			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Sender.ID });
 			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Integer, Value = message.Receiver.ID });
 			cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarWChar, Value = message.Content });

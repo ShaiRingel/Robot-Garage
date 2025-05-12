@@ -5,16 +5,16 @@ namespace View_Model.Services
 {
     public class UserSVC
     {
-        /*UserDB userDB = new UserDB();
+        UserDB userDB = new UserDB();
 
-        public List<User> GetAll()
+        public UserList SelectAll()
         {
-            return userDB.GetAllUsers();
+            return userDB.SelectAll();
         }
 
-        public User GetByID(int id)
+        public User SelectByID(int id)
         {
-            return userDB.GetUserByID(id);
+            return userDB.SelectByID(id);
         }
 
         public User Login(string name, int groupnumber, string password)
@@ -22,19 +22,22 @@ namespace View_Model.Services
             return userDB.Login(name, groupnumber, password);
         }
 
-        public void InsertUser(User user)
+        public void Insert(User user)
         {
             userDB.Insert(user);
-        }
+			userDB.SaveChanges();
+		}
 
-        public void UpdateProduct(User user)
+		public void Update(User user)
         {
             userDB.Update(user);
+			userDB.SaveChanges();
         }
 
-        public void DeleteProduct(User user)
+        public void Delete(User user)
         {
             userDB.Delete(user);
-        }*/
+			userDB.SaveChanges();
+        }
     }
 }

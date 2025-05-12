@@ -36,6 +36,8 @@ namespace GarageServiceProxy
         
         private double PriceField;
         
+        private bool RequestField;
+        
         [System.Runtime.Serialization.DataMemberAttribute()]
         public bool Availability
         {
@@ -150,6 +152,19 @@ namespace GarageServiceProxy
             set
             {
                 this.PriceField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Request
+        {
+            get
+            {
+                return this.RequestField;
+            }
+            set
+            {
+                this.RequestField = value;
             }
         }
     }
@@ -378,26 +393,26 @@ namespace GarageServiceProxy
     public interface IGarageService
     {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/GetAllProducts", ReplyAction="http://tempuri.org/IProductService/GetAllProductsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> GetAllProductsAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectAllProducts", ReplyAction="http://tempuri.org/IProductService/SelectAllProductsResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/GetProductByID", ReplyAction="http://tempuri.org/IProductService/GetProductByIDResponse")]
-        System.Threading.Tasks.Task<GarageServiceProxy.Product> GetProductByIDAsync(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectProductByID", ReplyAction="http://tempuri.org/IProductService/SelectProductByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/Login", ReplyAction="http://tempuri.org/IUserService/LoginResponse")]
         System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/GetAllUsers", ReplyAction="http://tempuri.org/IUserService/GetAllUsersResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> GetAllUsersAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SelectAllUsers", ReplyAction="http://tempuri.org/IUserService/SelectAllUsersResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> SelectAllUsersAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/GetUserByID", ReplyAction="http://tempuri.org/IUserService/GetUserByIDResponse")]
-        System.Threading.Tasks.Task<GarageServiceProxy.User> GetUserByIDAsync(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SelectUserByID", ReplyAction="http://tempuri.org/IUserService/SelectUserByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.User> SelectUserByIDAsync(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetAllMessages", ReplyAction="http://tempuri.org/IMessageService/GetAllMessagesResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> GetAllMessagesAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/SelectAllMessages", ReplyAction="http://tempuri.org/IMessageService/SelectAllMessagesResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> SelectAllMessagesAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetMessageByID", ReplyAction="http://tempuri.org/IMessageService/GetMessageByIDResponse")]
-        System.Threading.Tasks.Task<GarageServiceProxy.Message> GetMessageByIDAsync(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/SelectMessageByID", ReplyAction="http://tempuri.org/IMessageService/SelectMessageByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.Message> SelectMessageByIDAsync(int id);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
@@ -443,14 +458,14 @@ namespace GarageServiceProxy
         {
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> GetAllProductsAsync()
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync()
         {
-            return base.Channel.GetAllProductsAsync();
+            return base.Channel.SelectAllProductsAsync();
         }
         
-        public System.Threading.Tasks.Task<GarageServiceProxy.Product> GetProductByIDAsync(int id)
+        public System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id)
         {
-            return base.Channel.GetProductByIDAsync(id);
+            return base.Channel.SelectProductByIDAsync(id);
         }
         
         public System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password)
@@ -458,24 +473,24 @@ namespace GarageServiceProxy
             return base.Channel.LoginAsync(username, groupnumber, password);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> GetAllUsersAsync()
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.User>> SelectAllUsersAsync()
         {
-            return base.Channel.GetAllUsersAsync();
+            return base.Channel.SelectAllUsersAsync();
         }
         
-        public System.Threading.Tasks.Task<GarageServiceProxy.User> GetUserByIDAsync(int id)
+        public System.Threading.Tasks.Task<GarageServiceProxy.User> SelectUserByIDAsync(int id)
         {
-            return base.Channel.GetUserByIDAsync(id);
+            return base.Channel.SelectUserByIDAsync(id);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> GetAllMessagesAsync()
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> SelectAllMessagesAsync()
         {
-            return base.Channel.GetAllMessagesAsync();
+            return base.Channel.SelectAllMessagesAsync();
         }
         
-        public System.Threading.Tasks.Task<GarageServiceProxy.Message> GetMessageByIDAsync(int id)
+        public System.Threading.Tasks.Task<GarageServiceProxy.Message> SelectMessageByIDAsync(int id)
         {
-            return base.Channel.GetMessageByIDAsync(id);
+            return base.Channel.SelectMessageByIDAsync(id);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
