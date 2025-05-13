@@ -14,17 +14,15 @@ namespace Robot_Garage.Pages
     {
         private readonly ProductDB productDB;
         private readonly Product product;
-        private readonly User LoggedUser;
 
-        public ProductPage(Product product, User loggedUser)
+        public ProductPage(Product product)
         {
             InitializeComponent();
 
             productDB = new ProductDB();
             this.product = productDB.SelectByID(product.ID);
-            LoggedUser = loggedUser;
 
-			if (LoggedUser is Viewer) {
+			if (App.CurrentUser is Viewer) {
 				btnBuy.Visibility = Visibility.Hidden;
 			}
 
@@ -33,7 +31,7 @@ namespace Robot_Garage.Pages
 				btnRequest.Visibility = Visibility.Visible;
 			}
 
-            if (this.product.Owner.ID == LoggedUser.ID)
+            if (this.product.Owner.ID == App.CurrentUser.ID)
             {
 				btnContant.Visibility = Visibility.Hidden;
 				btnBuy.IsEnabled = false;
@@ -61,7 +59,6 @@ namespace Robot_Garage.Pages
             if (NavigationService != null && NavigationService.CanGoBack)
             {
                 NavigationService?.GoBack();
-                // NavigationService?.Navigate(new MainPage(_loggedUser));
             }
             else
             {
@@ -71,31 +68,43 @@ namespace Robot_Garage.Pages
 
         private void btnBuy_Click(object sender, RoutedEventArgs e)
         {
-            if (!productDB.SelectByID(product.ID).Availability)
-            {
-                MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
-                return;
-            }
+			if (App.CurrentUser?.PaymentMethod == null) {
+				MessageBox.Show("You need to set up your paymentMethod first in your settings.", "paymentMethod", MessageBoxButton.OK, MessageBoxImage.Error);
+				NavigationService.Navigate(new MainPage());
+			}
+			else {
+				if (!productDB.SelectByID(product.ID).Availability) {
+					MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
+					return;
+				}
 
-            product.Availability = false;
-            productDB.Update(product);
-            productDB.SaveChanges();
+				MessageBox.Show("Request submitted successfully!", "Request", MessageBoxButton.OK, MessageBoxImage.Information);
+                product.Availability = false;
+                productDB.Update(product);
+                productDB.SaveChanges();
+			}
 
-            NavigationService?.Navigate(new PaymentPage(LoggedUser, product));
         }
 
         private void btnRequest_Click(object sender, RoutedEventArgs e)
         {
-            if (!productDB.SelectByID(product.ID).Availability)
-            {
-                MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
-                return;
-            }
-        }
+			if (App.CurrentUser?.PaymentMethod == null) {
+				MessageBox.Show("You need to set up your paymentMethod first in your settings.", "paymentMethod", MessageBoxButton.OK, MessageBoxImage.Error);
+				NavigationService.Navigate(new MainPage());
+			}
+			else {
+				if (!productDB.SelectByID(product.ID).Availability) {
+					MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
+					return;
+				}
+
+				MessageBox.Show("Request submitted successfully!", "Request", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ChatPage(LoggedUser, product.Owner));
+            NavigationService?.Navigate(new ChatPage(product.Owner));
         }
     }
 }

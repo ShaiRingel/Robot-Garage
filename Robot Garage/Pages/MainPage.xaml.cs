@@ -31,22 +31,20 @@ namespace Robot_Garage.Pages
 
 
         private string _currentPage;
-        private User loggedUser;
 
 
 		TransactionDB transactionDB;
 		ProductDB productDB;
 
 
-        public MainPage(User loggedUser)
+        public MainPage()
         {
             InitializeComponent();
 
             _currentPage = "Sales";
-            this.loggedUser = loggedUser;
             Loaded += SalesPage_Loaded;
 
-            if (this.loggedUser is Viewer) {
+            if (App.CurrentUser is Viewer) {
 				btnMessages.Visibility = Visibility.Collapsed;
 				btnAddProduct.Visibility = Visibility.Collapsed;
                 btnMyItems.Visibility = Visibility.Collapsed;
@@ -86,7 +84,7 @@ namespace Robot_Garage.Pages
             if (_currentPage == "Sales")
             {
                 foreach (var p in productDB.SelectLatestAvailable(15))
-                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
 
                 LoadLatestAvailableByCategory(ItemCategory.Mechanics, MechanicsCards, 15);
                 LoadLatestAvailableByCategory(ItemCategory.Electronics, ElectronicsCards, 15);
@@ -97,7 +95,7 @@ namespace Robot_Garage.Pages
             else
             {
                 foreach (var p in productDB.SelectLatestRequested(15))
-                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                    RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
 
                 LoadLatestRequestedByCategory(ItemCategory.Mechanics, MechanicsCards, 15);
                 LoadLatestRequestedByCategory(ItemCategory.Electronics, ElectronicsCards, 15);
@@ -169,40 +167,40 @@ namespace Robot_Garage.Pages
         {
             var list = productDB.SelectAllAvailableByCategory(cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
         }
 
         void LoadLatestAvailableByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
             var list = productDB.SelectLatestAvailableByCategory(n, cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
         }
 
         void LoadAllRequestedByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col)
         {
             var list = productDB.SelectAllRequestedByCategory(cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
         }
 
         void LoadLatestRequestedByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
             var list = productDB.SelectLatestRequestedByCategory(n, cat);
             foreach (var p in list)
-                col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = p, LoggedUser = App.CurrentUser });
         }
 
         void LoadAllCardsByList(ProductList products, ObservableCollection<CardViewModel> col)
         {
             foreach (Product product in products)
-                col.Add(new CardViewModel { Product = product, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = product, LoggedUser = App.CurrentUser });
         }
 
         void LoadAllCardsByTransactions(TransactionList transactions, ObservableCollection<CardViewModel> col)
         {
             foreach (Model.Transaction transaction in transactions)
-                col.Add(new CardViewModel { Product = transaction.Product, LoggedUser = loggedUser });
+                col.Add(new CardViewModel { Product = transaction.Product, LoggedUser = App.CurrentUser });
         }
 
         private Task RefreshCards() {
@@ -219,10 +217,10 @@ namespace Robot_Garage.Pages
 			ItemsSold.Clear();
 
 			if (_currentPage == "My Items") {
-                LoadAllCardsByList(productDB.SelectByOwnerID(loggedUser.ID), MyListings);
-                LoadAllCardsByList(productDB.SelectRequestedByOwnerID(loggedUser.ID), MyRequests);
-                LoadAllCardsByTransactions(transactionDB.SelectBySeller((Captain)loggedUser), ItemsSold);
-                LoadAllCardsByTransactions(transactionDB.SelectByBuyer((Captain)loggedUser), MyPurchases);
+                LoadAllCardsByList(productDB.SelectByOwnerID(App.CurrentUser.ID), MyListings);
+                LoadAllCardsByList(productDB.SelectRequestedByOwnerID(App.CurrentUser.ID), MyRequests);
+                LoadAllCardsByTransactions(transactionDB.SelectBySeller((Captain)App.CurrentUser), ItemsSold);
+                LoadAllCardsByTransactions(transactionDB.SelectByBuyer((Captain)App.CurrentUser), MyPurchases);
 			}
 			else {
 				if (CategoryPanel.Visibility == Visibility.Visible) {
@@ -293,10 +291,14 @@ namespace Robot_Garage.Pages
 
         private void btnMessages_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ChatsListPage(loggedUser));
-        }
+            NavigationService?.Navigate(new ChatsListPage());
+		}
 
-        private void SalesPage_Loaded(object sender, RoutedEventArgs e)
+		private void btnSettings_Click(object sender, RoutedEventArgs e) {
+            NavigationService?.Navigate(new SettingsPage());
+		}
+
+		private void SalesPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (!(RenderTransform is TranslateTransform trans))
                 RenderTransform = trans = new TranslateTransform();
@@ -339,7 +341,14 @@ namespace Robot_Garage.Pages
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new ProductUploadPage(loggedUser));
+            PaymentMethodDB paymentMethodDB = new PaymentMethodDB();
+
+            if (paymentMethodDB.SelectByUser(App.CurrentUser) == null) {
+				MessageBox.Show("Please add a payment method before uploading a product.");
+				return;
+			}
+
+			NavigationService?.Navigate(new ProductUploadPage());
         }
 
         private async void CatagoryButton_Click(object sender, RoutedEventArgs e)
@@ -375,7 +384,7 @@ namespace Robot_Garage.Pages
         }
     }
 
-    public class CardViewModel
+	public class CardViewModel
     {
         public Product Product { get; set; }
         public User LoggedUser { get; set; }

@@ -18,14 +18,12 @@ namespace Robot_Garage.Pages
     public partial class ProductUploadPage : Page
     {
         ProductDB productDB = new ProductDB();
-        private readonly User _loggedUser;
 
-        public ProductUploadPage(User loggedUser)
+        public ProductUploadPage()
         {
             InitializeComponent();
             PopulateList(typeof(ItemCondition), txtCondition);
             PopulateList(typeof(ItemCategory), txtCategory);
-            _loggedUser = loggedUser;
         }
 
         private void PopulateList(Type enumType, ComboBox comboBox)
@@ -95,10 +93,10 @@ namespace Robot_Garage.Pages
 
         private async void Upload_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine($"Username: {_loggedUser.Username}" +
-                $"\nGroup Name: {_loggedUser.GroupNumber}" +
-                $"\nPassword: {_loggedUser.Password}" +
-                $"\nUnique Code: {_loggedUser.UniqueCode}");
+            Debug.WriteLine($"Username: {App.CurrentUser.Username}" +
+                $"\nGroup Name: {App.CurrentUser.GroupNumber}" +
+                $"\nPassword: {App.CurrentUser.Password}" +
+                $"\nUnique Code: {App.CurrentUser.UniqueCode}");
 
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
             {
@@ -120,7 +118,7 @@ namespace Robot_Garage.Pages
             {
                 Product newProduct = new Product
                 {
-                    Owner = (Captain)_loggedUser,
+                    Owner = (Captain)App.CurrentUser,
                     Name = txtName.Text,
                     Price = double.Parse(txtPrice.Text),
                     Description = txtDescription.Text,
@@ -138,7 +136,7 @@ namespace Robot_Garage.Pages
 
                 await Task.Delay(500);
 
-                NavigationService?.Navigate(new MainPage(_loggedUser));
+                NavigationService?.Navigate(new MainPage());
             }
             else
             {

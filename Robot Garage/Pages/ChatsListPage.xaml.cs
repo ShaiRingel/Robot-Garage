@@ -15,13 +15,9 @@ namespace Robot_Garage.Pages
     {
         public ObservableCollection<ChatListItemViewModel> ChatItems { get; set; }
 
-        private User _loggedUser;
-
-        public ChatsListPage(User loggedUser)
+        public ChatsListPage()
         {
             InitializeComponent();
-
-            this._loggedUser = loggedUser;
 
             ChatItems = new ObservableCollection<ChatListItemViewModel>();
 
@@ -53,13 +49,13 @@ namespace Robot_Garage.Pages
         {
             MessageDB messageDB = new MessageDB();
 
-            var chatUsers = messageDB.SelectChatParticipants(_loggedUser.ID);
+            var chatUsers = messageDB.SelectChatParticipants(App.CurrentUser.ID);
 
             ChatItems.Clear();
 
             foreach (var user in chatUsers)
             {
-                var lastMessage = messageDB.SelectConversation(_loggedUser.ID, user.ID)
+                var lastMessage = messageDB.SelectConversation(App.CurrentUser.ID, user.ID)
                                            .OrderByDescending(m => m.Timestamp)
                                            .FirstOrDefault();
 
@@ -93,7 +89,7 @@ namespace Robot_Garage.Pages
         {
             if (sender is FrameworkElement element && element.DataContext is ChatListItemViewModel chatItem)
             {
-                NavigationService?.Navigate(new ChatPage(this._loggedUser, chatItem.User));
+                NavigationService?.Navigate(new ChatPage(chatItem.User));
             }
         }
     }

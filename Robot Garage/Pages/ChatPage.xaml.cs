@@ -13,17 +13,15 @@ namespace Robot_Garage.Pages
     /// </summary>
     public partial class ChatPage : Page
     {
-        private User _loggedUser;
         private User _otherUser;
         private MessageDB messagesDB;
         private DispatcherTimer messagePollingTimer;
         private MessageList currentMessages;
 
-        public ChatPage(User loggedUser, User otherUser)
+        public ChatPage(User otherUser)
         {
             InitializeComponent();
 
-            _loggedUser = loggedUser;
             _otherUser = otherUser;
             messagesDB = new MessageDB();
             currentMessages = new MessageList();
@@ -45,7 +43,7 @@ namespace Robot_Garage.Pages
 
         private void LoadMessages()
         {
-            currentMessages = messagesDB.SelectConversation(_loggedUser.ID, _otherUser.ID);
+            currentMessages = messagesDB.SelectConversation(App.CurrentUser.ID, _otherUser.ID);
             MessagesPanel.Children.Clear();
 
             foreach (Message message in currentMessages)
@@ -56,7 +54,7 @@ namespace Robot_Garage.Pages
 
         private void MessagePollingTimer_Tick(object sender, EventArgs e)
         {
-            var latestMessages = messagesDB.SelectConversation(_loggedUser.ID, _otherUser.ID);
+            var latestMessages = messagesDB.SelectConversation(App.CurrentUser.ID, _otherUser.ID);
 
             var newMessages = latestMessages.Except(currentMessages).ToList();
 
@@ -74,7 +72,7 @@ namespace Robot_Garage.Pages
         {
             MessageBubble newMessage = new MessageBubble();
             newMessage.SetValue(MessageBubble.MessageTextProperty, message.Content);
-            newMessage.SetValue(MessageBubble.IsSenderProperty, message.Sender.ID == _loggedUser.ID);
+            newMessage.SetValue(MessageBubble.IsSenderProperty, message.Sender.ID == App.CurrentUser.ID);
             newMessage.SetValue(BackgroundProperty, System.Windows.Media.Brushes.Transparent);
             MessagesPanel.Children.Add(newMessage);
         }
@@ -87,7 +85,7 @@ namespace Robot_Garage.Pages
                 var newMessage = new Message()
                 {
                     Product = new Product() { ID = 1 },
-                    Sender = (Captain)_loggedUser,
+                    Sender = (Captain)App.CurrentUser,
                     Receiver = (Captain)_otherUser,
                     Content = message,
                     Timestamp = DateTime.Now

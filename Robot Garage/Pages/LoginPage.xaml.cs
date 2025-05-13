@@ -27,8 +27,10 @@ namespace Robot_Garage.Pages
 			Debug.WriteLine(txtUsername.Text);
 			Debug.WriteLine(int.Parse(txtNumber.Text));
 			Debug.WriteLine(txtPassword.Password);
-            
-            User user = new UserDB().Login(txtUsername.Text, int.Parse(txtNumber.Text), txtPassword.Password);
+
+			UserDB userDB = new UserDB();
+
+			User user = userDB.Login(txtUsername.Text, int.Parse(txtNumber.Text), txtPassword.Password);
 
             if (user == null)
             {
@@ -40,11 +42,10 @@ namespace Robot_Garage.Pages
 
             await Task.Delay(500);
 
-            AnimationHelper.PlayAnimation(this, "SlideLeftStoryboard");
-
             Captain captain = new CaptainDB().SelectByID(user.ID);
+            App.CurrentUser = captain != null ? captain : new ViewerDB().SelectByID(user.ID);
 
-			NavigationService?.Navigate(new MainPage(captain != null ? captain : new ViewerDB().SelectByID(user.ID)));
+			NavigationService?.Navigate(new MainPage());
         }
 
         private void IntegerUpDown_PreviewTextInput(object sender, TextCompositionEventArgs e)

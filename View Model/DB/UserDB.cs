@@ -16,12 +16,14 @@ namespace View_Model.DB {
 
 		protected override void CreateModel(BaseEntity entity) {
 			User user = (User)entity;
+			PaymentMethodDB paymentMethodDB = new PaymentMethodDB();
 
 			user.ID = (int)reader["user_id"];
 			user.Username = reader["username"].ToString();
 			user.Password = reader["password"].ToString();
 			user.GroupNumber = (int)reader["group_number"];
 			user.UniqueCode = reader["unique_code"].ToString();
+			user.PaymentMethod = paymentMethodDB.SelectByUser(user);
 		}
 		#endregion
 

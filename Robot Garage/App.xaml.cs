@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Model;
+using System.Windows;
 
 namespace Robot_Garage
 {
@@ -7,7 +8,9 @@ namespace Robot_Garage
     /// </summary>
     public partial class App : Application
     {
-        private void App_Startup(object sender, StartupEventArgs e)
+		public static User CurrentUser { get; set; }
+
+		private void App_Startup(object sender, StartupEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
 

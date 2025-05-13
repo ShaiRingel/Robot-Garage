@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\images\settings.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="assets/images/Logo Small BackGround Removed White Outline.png" />
     <Resource Include="assets/images/Logo Small BackGround Removed.png" />
     <Resource Include="assets/images/RobotScoringL4.png" />
@@ -21,6 +25,7 @@
     <Resource Include="assets/images/LeftArrow.svg" />
     <Resource Include="assets/images/Mechanics.svg" />
     <Resource Include="assets/images/Messages.svg" />
+    <Resource Include="assets/images/Settings.svg" />
     <Resource Include="assets/images/Refresh.svg" />
     <Resource Include="assets/images/engine.svg" />
     <Resource Include="assets/images/Chat.svg" />

@@ -11,8 +11,6 @@ namespace Robot_Garage.Controls
     /// </summary>
     public partial class Card : UserControl
     {
-        public User LoggedUser { get; set; }
-
         public Card()
         {
             InitializeComponent();
@@ -22,9 +20,7 @@ namespace Robot_Garage.Controls
         {
             if (DataContext is CardViewModel cardViewModel)
             {
-
                 var product = cardViewModel.Product;
-                var loggedUser = cardViewModel.LoggedUser;
 
                 // Debug NavigationService
                 var navigationService = NavigationService.GetNavigationService(this);
@@ -35,9 +31,9 @@ namespace Robot_Garage.Controls
                 }
 
                 // Navigate to ProductPage
-                if (loggedUser != null)
+                if (App.CurrentUser != null)
                 {
-                    var productPage = new ProductPage(product, loggedUser);
+                    var productPage = new ProductPage(product);
                     navigationService.Navigate(productPage);
                 }
                 else

@@ -6,8 +6,9 @@
         private string password;
         private int groupNumber;
         private string uniqueCode;
+        private PaymentMethod paymentMethod;
 
-        public User() { }
+		public User() { }
 
         public User(string username, string password, int groupNumber, string uniqueCode)
         {
@@ -40,5 +41,10 @@
             get => uniqueCode;
             set => uniqueCode = value;
         }
-    }
+
+		public PaymentMethod PaymentMethod {
+			get => paymentMethod;
+			set => paymentMethod = value;
+		}
+	}
 }
