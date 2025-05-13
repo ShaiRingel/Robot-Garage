@@ -109,25 +109,19 @@ Click="BackButton_Click" Style="{StaticResource ArrowButtonStyle}">
 
                             <!-- Condition -->
                             <Label Grid.Row="3" Grid.Column="0" Content="Condition:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                            <xctk:DropDownButton Grid.Row="3" Grid.Column="1" x:Name="txtCondition" Margin="0,0,5,10"
-                                         Content="Select Condition" Padding="8" Click="txtCondition_Click" Background="#3E3E42">
-                                <xctk:DropDownButton.DropDownContent>
-                                    <ListBox x:Name="ConditionListBox" Visibility="Collapsed" SelectionChanged="ConditionListBox_SelectionChanged">
-                                        <!-- Items will be populated dynamically -->
-                                    </ListBox>
-                                </xctk:DropDownButton.DropDownContent>
-                            </xctk:DropDownButton>
+                            <ComboBox x:Name="txtCondition" Grid.Row="3" Grid.Column="1" Margin="0,0,5,10"
+                              Style="{StaticResource DarkComboBoxStyle}"
+                              SelectionChanged="ConditionListBox_SelectionChanged">
+                                
+                            </ComboBox>
 
                             <!-- Category -->
                             <Label Grid.Row="4" Grid.Column="0" Content="Category:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>
-                            <xctk:DropDownButton Grid.Row="4" Grid.Column="1" x:Name="txtCategory" Margin="0,0,5,10"
-                                         Content="Select Category" Padding="8" Click="txtCategory_Click" Background="#3E3E42">
-                                <xctk:DropDownButton.DropDownContent>
-                                    <ListBox x:Name="CategoryListBox" Visibility="Collapsed" SelectionChanged="CategoryListBox_SelectionChanged">
-                                        <!-- Items will be populated dynamically -->
-                                    </ListBox>
-                                </xctk:DropDownButton.DropDownContent>
-                            </xctk:DropDownButton>
+                            <ComboBox x:Name="txtCategory" Grid.Row="4" Grid.Column="1" Margin="0,0,5,10"
+                              Style="{StaticResource DarkComboBoxStyle}"
+                              SelectionChanged="CategoryListBox_SelectionChanged">
+                                
+                            </ComboBox>
 
                             <!-- Image Upload -->
                             <Label Grid.Row="5" Grid.Column="0" Content="Product Image:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="White"/>

@@ -110,7 +110,7 @@ Margin="5, 0, 5, 0"/>
                 </StackPanel>
             </Viewbox>
 
-            <ScrollViewer VerticalAlignment="Top" Grid.Column="1" x:Name="GeneralPanel" Margin="15,5,5,10">
+            <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" VerticalAlignment="Top" Grid.Column="1" x:Name="GeneralPanel" Margin="15,5,5,10">
                 <Viewbox Stretch="UniformToFill">
                     <StackPanel Orientation="Vertical" Width="560" Margin="5,0,0,0">
                         <!-- Recently Added Carousel -->
@@ -226,16 +226,17 @@ Margin="5, 0, 5, 0"/>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,10">
                             <Label Content="Sort by:" FontSize="14" FontWeight="Bold" 
                        VerticalAlignment="Center" Foreground="White"/>
-                            <ComboBox x:Name="SortByComboBox" Width="180" Margin="10,0,0,0"
-                          Background="{StaticResource ControlBackgroundBrush2}"
-                          Foreground="White"
-                          ItemContainerStyle="{StaticResource DarkComboBoxItemStyle}"
-                          SelectionChanged="SortByComboBox_SelectionChanged">
+                            <ComboBox x:Name="SortByComboBox"
+                                        Width="180"
+                                        Margin="10,0,0,0"
+                                        Style="{StaticResource DarkComboBoxStyle}"
+                                        SelectionChanged="SortByComboBox_SelectionChanged">
                                 <ComboBoxItem Content="Release Date" Tag="ReleaseDate"/>
                                 <ComboBoxItem Content="Condition" Tag="Condition"/>
                                 <ComboBoxItem Content="Price: Low to High" Tag="PriceAsc"/>
                                 <ComboBoxItem Content="Price: High to Low" Tag="PriceDesc"/>
                             </ComboBox>
+
                         </StackPanel>
 
                         <Label x:Name="SelectedCategoryTitle" Content="Category" FontSize="24" 
@@ -259,7 +260,7 @@ Margin="5, 0, 5, 0"/>
 
 
         <Grid Grid.Row="1" x:Name="gridMyItems" Visibility="Collapsed">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+            <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" VerticalScrollBarVisibility="Auto" Padding="20">
                 <Viewbox Stretch="UniformToFill">
                     <StackPanel Width="800" Margin="5,0,0,0">
 
@@ -267,6 +268,23 @@ Margin="5, 0, 5, 0"/>
                         <Label Content="My Listings" FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
                         <controls:Carousel MaxHeight="160">
                             <ItemsControl ItemsSource="{Binding MyListings}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card Margin="0,0,5,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+
+                        <!-- My Requests -->
+                        <Label Content="My Requests" FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <controls:Carousel MaxHeight="160">
+                            <ItemsControl ItemsSource="{Binding MyRequests}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>

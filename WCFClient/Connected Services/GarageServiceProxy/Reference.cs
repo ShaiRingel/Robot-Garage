@@ -14,6 +14,100 @@ namespace GarageServiceProxy
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="User", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Captain))]
+    public partial class User : GarageServiceProxy.BaseEntity
+    {
+        
+        private int GroupNumberField;
+        
+        private string PasswordField;
+        
+        private string UniqueCodeField;
+        
+        private string UsernameField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GroupNumber
+        {
+            get
+            {
+                return this.GroupNumberField;
+            }
+            set
+            {
+                this.GroupNumberField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Password
+        {
+            get
+            {
+                return this.PasswordField;
+            }
+            set
+            {
+                this.PasswordField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UniqueCode
+        {
+            get
+            {
+                return this.UniqueCodeField;
+            }
+            set
+            {
+                this.UniqueCodeField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Username
+        {
+            get
+            {
+                return this.UsernameField;
+            }
+            set
+            {
+                this.UsernameField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="BaseEntity", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Product))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Message))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Transaction))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.User))]
+    public partial class BaseEntity : object
+    {
+        
+        private int IDField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ID
+        {
+            get
+            {
+                return this.IDField;
+            }
+            set
+            {
+                this.IDField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Product", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     public partial class Product : GarageServiceProxy.BaseEntity
     {
@@ -171,107 +265,6 @@ namespace GarageServiceProxy
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="BaseEntity", Namespace="http://schemas.datacontract.org/2004/07/Model")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.User))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Captain))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Message))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Product))]
-    public partial class BaseEntity : object
-    {
-        
-        private int IDField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int ID
-        {
-            get
-            {
-                return this.IDField;
-            }
-            set
-            {
-                this.IDField = value;
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="User", Namespace="http://schemas.datacontract.org/2004/07/Model")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Captain))]
-    public partial class User : GarageServiceProxy.BaseEntity
-    {
-        
-        private int GroupNumberField;
-        
-        private string PasswordField;
-        
-        private string UniqueCodeField;
-        
-        private string UsernameField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int GroupNumber
-        {
-            get
-            {
-                return this.GroupNumberField;
-            }
-            set
-            {
-                this.GroupNumberField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Password
-        {
-            get
-            {
-                return this.PasswordField;
-            }
-            set
-            {
-                this.PasswordField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string UniqueCode
-        {
-            get
-            {
-                return this.UniqueCodeField;
-            }
-            set
-            {
-                this.UniqueCodeField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Username
-        {
-            get
-            {
-                return this.UsernameField;
-            }
-            set
-            {
-                this.UsernameField = value;
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Captain", Namespace="http://schemas.datacontract.org/2004/07/Model")]
-    public partial class Captain : GarageServiceProxy.User
-    {
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     public partial class Message : GarageServiceProxy.BaseEntity
     {
@@ -352,6 +345,80 @@ namespace GarageServiceProxy
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Transaction", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public partial class Transaction : GarageServiceProxy.BaseEntity
+    {
+        
+        private GarageServiceProxy.User BuyerField;
+        
+        private GarageServiceProxy.Product ProductField;
+        
+        private GarageServiceProxy.User SellerField;
+        
+        private GarageServiceProxy.OrderStatus StatusField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.User Buyer
+        {
+            get
+            {
+                return this.BuyerField;
+            }
+            set
+            {
+                this.BuyerField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.Product Product
+        {
+            get
+            {
+                return this.ProductField;
+            }
+            set
+            {
+                this.ProductField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.User Seller
+        {
+            get
+            {
+                return this.SellerField;
+            }
+            set
+            {
+                this.SellerField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.OrderStatus Status
+        {
+            get
+            {
+                return this.StatusField;
+            }
+            set
+            {
+                this.StatusField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Captain", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public partial class Captain : GarageServiceProxy.User
+    {
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ItemCategory", Namespace="http://schemas.datacontract.org/2004/07/Model")]
     public enum ItemCategory : int
@@ -398,15 +465,24 @@ namespace GarageServiceProxy
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="OrderStatus", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public enum OrderStatus : int
+    {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Confirmed = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Shipped = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Delivered = 2,
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GarageServiceProxy.IGarageService")]
     public interface IGarageService
     {
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectAllProducts", ReplyAction="http://tempuri.org/IProductService/SelectAllProductsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectProductByID", ReplyAction="http://tempuri.org/IProductService/SelectProductByIDResponse")]
-        System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/Login", ReplyAction="http://tempuri.org/IUserService/LoginResponse")]
         System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password);
@@ -417,11 +493,23 @@ namespace GarageServiceProxy
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SelectUserByID", ReplyAction="http://tempuri.org/IUserService/SelectUserByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.User> SelectUserByIDAsync(int id);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectAllProducts", ReplyAction="http://tempuri.org/IProductService/SelectAllProductsResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectProductByID", ReplyAction="http://tempuri.org/IProductService/SelectProductByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/SelectAllMessages", ReplyAction="http://tempuri.org/IMessageService/SelectAllMessagesResponse")]
         System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> SelectAllMessagesAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/SelectMessageByID", ReplyAction="http://tempuri.org/IMessageService/SelectMessageByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.Message> SelectMessageByIDAsync(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITransacionService/SelectAllTransactions", ReplyAction="http://tempuri.org/ITransacionService/SelectAllTransactionsResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllTransactionsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITransacionService/SelectTransactionByID", ReplyAction="http://tempuri.org/ITransacionService/SelectTransactionByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.Transaction> SelectTransactionByIDAsync(int id);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
@@ -467,16 +555,6 @@ namespace GarageServiceProxy
         {
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync()
-        {
-            return base.Channel.SelectAllProductsAsync();
-        }
-        
-        public System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id)
-        {
-            return base.Channel.SelectProductByIDAsync(id);
-        }
-        
         public System.Threading.Tasks.Task<bool> LoginAsync(string username, int groupnumber, string password)
         {
             return base.Channel.LoginAsync(username, groupnumber, password);
@@ -492,6 +570,16 @@ namespace GarageServiceProxy
             return base.Channel.SelectUserByIDAsync(id);
         }
         
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync()
+        {
+            return base.Channel.SelectAllProductsAsync();
+        }
+        
+        public System.Threading.Tasks.Task<GarageServiceProxy.Product> SelectProductByIDAsync(int id)
+        {
+            return base.Channel.SelectProductByIDAsync(id);
+        }
+        
         public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Message>> SelectAllMessagesAsync()
         {
             return base.Channel.SelectAllMessagesAsync();
@@ -500,6 +588,16 @@ namespace GarageServiceProxy
         public System.Threading.Tasks.Task<GarageServiceProxy.Message> SelectMessageByIDAsync(int id)
         {
             return base.Channel.SelectMessageByIDAsync(id);
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllTransactionsAsync()
+        {
+            return base.Channel.SelectAllTransactionsAsync();
+        }
+        
+        public System.Threading.Tasks.Task<GarageServiceProxy.Transaction> SelectTransactionByIDAsync(int id)
+        {
+            return base.Channel.SelectTransactionByIDAsync(id);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()

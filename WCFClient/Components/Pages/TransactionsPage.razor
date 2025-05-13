@@ -1,0 +1,187 @@
+﻿@page "/transactions"
+@using GarageServiceProxy
+@inject GarageServiceClient Client
+@rendermode InteractiveServer
+
+<h3> Management</h3>
+<div class="row">
+    <div class="col-3">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Transaction</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Transaction by ID</button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-9">
+        @RenderOperation()
+    </div>
+</div>
+
+@code {
+    enum Operation { List, GetById }
+    private Operation selectedOperation = Operation.List;
+
+    private List<Transaction> transaction = new();
+    private Transaction currentTransaction = new();
+    private int searchId;
+    private string message;
+    private bool isLoading;
+    private bool initialLoadRequested;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender && !initialLoadRequested) {
+            initialLoadRequested = true;
+            await Task.Delay(10);
+            await LoadAllAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAllAsync() {
+        try {
+            isLoading = true;
+            StateHasChanged();
+            transaction = (await Client.SelectAllTransactionsAsync())?.ToList() ?? new List<Transaction>();
+        }
+        catch (Exception ex) {
+            message = $"Error loading transcations: {ex.Message}";
+        }
+        finally {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SelectOperation(Operation op) {
+        selectedOperation = op;
+        message = string.Empty;
+        currentTransaction = new Transaction();
+        searchId = 0;
+
+        if (op == Operation.List) {
+            _ = LoadAllAsync();
+        }
+    }
+
+    private RenderFragment RenderOperation() => selectedOperation switch {
+        Operation.List => @<div>
+        <h4>All Transactions</h4>
+        @if (isLoading)
+    {
+        <p>Loading transactions...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+        <table class="table table-striped">
+            <thead>
+                <tr><th>ID</th><th>Product ID</th><th>Seller ID</th><th>Buyer ID</th><th>Product Name</th><th>Seller</th><th>Buyer</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+                @foreach (Transaction t in transaction)
+            {
+                <tr>
+                    <td>@t.ID</td>
+                    <td>@t.Product.ID</td>
+                    <td>@t.Seller.ID</td>
+                    <td>@t.Buyer.ID</td>
+                    <td>@t.Product.Name</td>
+                    <td>@t.Seller.Username</td>
+                    <td>@t.Buyer.Username</td>
+                    <td>₪@t.Product.Price</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>,
+
+        Operation.GetById => @<div>
+        <h4>Find Transaction by ID</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-primary" @onclick="LoadTransactionByIdAsync">Search</button>
+        </div>
+        @if (currentTransaction?.ID > 0)
+    {
+        <div>
+            <p><strong>ID:</strong> @currentTransaction.ID</p>
+            <p><strong>Product ID:</strong> @currentTransaction.Product.ID</p>
+            <p><strong>Seller ID:</strong> @currentTransaction.Seller.ID</p>
+            <p><strong>Buyer ID:</strong> @currentTransaction.Buyer.ID</p>
+            <p><strong>Product Name:</strong> @currentTransaction.Product.Name</p>
+            <p><strong>Seller Name:</strong> @currentTransaction.Seller.Username</p>
+            <p><strong>Buyer Name:</strong> @currentTransaction.Buyer.Username</p>
+            <p><strong>Products Price:</strong> ₪@currentTransaction.Product.Price</p>
+        </div>
+    }
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+    </div>,
+
+        _ => @<div>Select an operation.</div>
+    };
+
+    private async Task LoadTransactionByIdAsync() {
+        try {
+            message = string.Empty;
+            var transaction = await Client.SelectTransactionByIDAsync(searchId);
+            if (transaction == null) {
+                message = "Transaction not found";
+                currentTransaction = new Transaction();
+            }
+            else {
+                currentTransaction = transaction;
+            }
+        }
+        catch {
+            message = "Transaction not found";
+            currentTransaction = new Transaction();
+        }
+    }
+
+        /*private async Task InsertTransactionAsync() {
+            try {
+                await Client.InsertTransactionAsync(currentTransaction);
+    message = "Inserted successfully.";
+                await LoadAllAsync();
+    }
+            catch (Exception ex) {
+                message = $"Insert failed: {ex.Message}";
+            }
+        }
+
+        private async Task UpdateTransactionAsync() {
+            try {
+    await Client.UpdateTransactionAsync(currentTransaction);
+    message = "Updated successfully.";
+    await LoadAllAsync();
+    }
+            catch (Exception ex) {
+    message = $"Update failed: {ex.Message}";
+    }
+        }
+
+        private async Task DeleteByIdAsync() {
+            try {
+    var transaction = await Client.GetTransactionByIDAsync(searchId);
+    if (transaction != null) {
+        await Client.DeleteTransactionAsync(Transaction);
+        message = $"Deleted ID {searchId}.";
+        await LoadAllAsync();
+        }
+    else {
+        message = "Transaction not found";
+        }
+    }
+            catch {
+    message = "Transaction not found";
+    }
+        }*/
+}

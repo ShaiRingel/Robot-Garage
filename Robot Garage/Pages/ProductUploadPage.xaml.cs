@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using View_Model.DB;
@@ -22,18 +23,18 @@ namespace Robot_Garage.Pages
         public ProductUploadPage(User loggedUser)
         {
             InitializeComponent();
-            PopulateList(typeof(ItemCondition), ConditionListBox);
-            PopulateList(typeof(ItemCategory), CategoryListBox);
+            PopulateList(typeof(ItemCondition), txtCondition);
+            PopulateList(typeof(ItemCategory), txtCategory);
             _loggedUser = loggedUser;
         }
 
-        private void PopulateList(Type enumType, ListBox listBox)
+        private void PopulateList(Type enumType, ComboBox comboBox)
         {
             var items = Enum.GetValues(enumType).Cast<Enum>();
 
             foreach (var item in items)
             {
-                listBox.Items.Add(new ListBoxItem
+                comboBox.Items.Add(new ComboBoxItem
                 {
                     Content = item.ToString(),
                     Tag = item
@@ -41,43 +42,28 @@ namespace Robot_Garage.Pages
             }
         }
 
-        private void txtCondition_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleListBoxVisibility(ConditionListBox);
-        }
-
-        private void txtCategory_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleListBoxVisibility(CategoryListBox);
-        }
-
-        private void ToggleListBoxVisibility(ListBox listBox)
-        {
-            listBox.Visibility = listBox.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-
-            listBox.UpdateLayout();
-        }
-
         private void ConditionListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateSelectedItem(ConditionListBox, txtCondition);
+            UpdateSelectedItem(txtCondition);
         }
 
         private void CategoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateSelectedItem(CategoryListBox, txtCategory);
+            UpdateSelectedItem(txtCategory);
         }
 
-        private void UpdateSelectedItem(ListBox listBox, ContentControl contentControl)
+        private void UpdateSelectedItem(ComboBox comboBox)
         {
-            if (listBox.SelectedItem is ListBoxItem selectedItem)
+            if (comboBox.SelectedItem is ComboBoxItem selectedItem)
             {
-                contentControl.Content = selectedItem.Content.ToString();
-                listBox.Visibility = Visibility.Collapsed;
+                comboBox.SelectedItem = selectedItem;
+            }
+            else
+            {
+                comboBox.SelectedItem = null;
             }
         }
+
 
         private void SelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -128,8 +114,9 @@ namespace Robot_Garage.Pages
 
             byte[] imageBytes = File.ReadAllBytes(txtImagePath.Text);
 
-            if (ConditionListBox.SelectedItem is ListBoxItem selectedCondition &&
-                CategoryListBox.SelectedItem is ListBoxItem selectedCategory)
+            // Check if a valid condition and category are selected
+            if (txtCondition.SelectedItem is ComboBoxItem selectedCondition && selectedCondition.Tag != null &&
+                txtCategory.SelectedItem is ComboBoxItem selectedCategory && selectedCategory.Tag != null)
             {
                 Product newProduct = new Product
                 {
@@ -147,7 +134,7 @@ namespace Robot_Garage.Pages
                 productDB.Insert(newProduct);
                 productDB.SaveChanges();
 
-				txtSuccess.Text = "Successfully Registered Product!, Going back to the main menu!";
+                txtSuccess.Text = "Successfully Registered Product!, Going back to the main menu!";
 
                 await Task.Delay(500);
 
@@ -211,5 +198,6 @@ namespace Robot_Garage.Pages
                 e.Handled = true; // Prevents the Enter key from being processed
             }
         }
+
     }
 }

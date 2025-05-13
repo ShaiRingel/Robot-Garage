@@ -89,7 +89,7 @@
                     <td>@p.ID</td>
                     <td>@p.Name</td>
                     <td>@p.Description</td>
-                    <td>@p.Price</td>
+                    <td>₪@p.Price</td>
                 </tr>
             }
             </tbody>
@@ -109,7 +109,7 @@
             <p><strong>ID:</strong> @currentProduct.ID</p>
             <p><strong>Name:</strong> @currentProduct.Name</p>
             <p><strong>Description:</strong> @currentProduct.Description</p>
-            <p><strong>Price:</strong> @currentProduct.Price</p>
+            <p><strong>Price:</strong> ₪@currentProduct.Price</p>
         </div>
     }
         @if (!string.IsNullOrEmpty(message)) {

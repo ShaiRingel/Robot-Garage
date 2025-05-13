@@ -8,6 +8,7 @@ namespace WCFServer
 		ProductSVC productSVC = new ProductSVC();
 		UserSVC userSVC = new UserSVC();
 		MessageSVC messageSVC = new MessageSVC();
+		TransactionSVC transactionSVC = new TransactionSVC();
 
 		public ProductList SelectAllProducts() {
 			return productSVC.SelectAll();
@@ -46,7 +47,17 @@ namespace WCFServer
 			return messageSVC.SelectByID(id);
 		}
 
-		/*public void InsertProduct(Product item) {
+        public TransactionList SelectAllTransactions()
+        {
+            return transactionSVC.SelectAll();
+        }
+
+        public Transaction SelectTransactionByID(int id)
+        {
+            return transactionSVC.SelectByID(id);
+        }
+
+        /*public void InsertProduct(Product item) {
 			productSVC.InsertProduct(item);
 		}
 
@@ -57,6 +68,6 @@ namespace WCFServer
 		public void DeleteProduct(Product item) {
 			productSVC.DeleteProduct(item);
 		}*/
-	}
+    }
 }
 

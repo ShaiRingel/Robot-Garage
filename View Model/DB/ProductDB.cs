@@ -51,7 +51,7 @@ namespace View_Model.DB {
 		public ProductList SelectByOwnerID(int ownerID) {
 			this.command.Parameters.Clear();
 			this.command.CommandText =
-				"SELECT * FROM ProductTbl WHERE owner_id = ?";
+				"SELECT * FROM ProductTbl WHERE owner_id = ? AND availability = true AND request = false";
 			this.command.Parameters.Add(new OleDbParameter {
 				OleDbType = OleDbType.Integer,
 				Value = ownerID
@@ -60,7 +60,21 @@ namespace View_Model.DB {
 			return new ProductList(base.Select());
 		}
 
-		public ProductList SelectAllAvailable() {
+        public ProductList SelectRequestedByOwnerID(int ownerID)
+        {
+            this.command.Parameters.Clear();
+            this.command.CommandText =
+                "SELECT * FROM ProductTbl WHERE owner_id = ? AND availability = true AND request = true";
+            this.command.Parameters.Add(new OleDbParameter
+            {
+                OleDbType = OleDbType.Integer,
+                Value = ownerID
+            });
+
+            return new ProductList(base.Select());
+        }
+
+        public ProductList SelectAllAvailable() {
 			this.command.CommandText =
 				"SELECT * FROM ProductTbl WHERE availability = true";
 

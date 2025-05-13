@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using View_Model.DB;
@@ -26,6 +27,7 @@ namespace Robot_Garage.Pages
 		public ObservableCollection<CardViewModel> MyListings { get; set; }
 		public ObservableCollection<CardViewModel> ItemsSold { get; set; }
 		public ObservableCollection<CardViewModel> MyPurchases { get; set; }
+		public ObservableCollection<CardViewModel> MyRequests { get; set; }
 
 
         private string _currentPage;
@@ -64,6 +66,7 @@ namespace Robot_Garage.Pages
             MyListings = new ObservableCollection<CardViewModel>();
             ItemsSold = new ObservableCollection<CardViewModel>();
             MyPurchases = new ObservableCollection<CardViewModel>();
+            MyRequests = new ObservableCollection<CardViewModel>();
 
             // Load data
             LoadCardsProducts();
@@ -85,22 +88,22 @@ namespace Robot_Garage.Pages
                 foreach (var p in productDB.SelectLatestAvailable(15))
                     RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
 
-                LoadNCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
-                LoadNCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
-                LoadNCardsByCat(ItemCategory.Programming, ProgrammingCards, 15);
-                LoadNCardsByCat(ItemCategory.Engines, EnginesCards, 15);
-                LoadNCardsByCat(ItemCategory.Manufacturing, ManufacturingCards, 15);
+                LoadLatestAvailableByCategory(ItemCategory.Mechanics, MechanicsCards, 15);
+                LoadLatestAvailableByCategory(ItemCategory.Electronics, ElectronicsCards, 15);
+                LoadLatestAvailableByCategory(ItemCategory.Programming, ProgrammingCards, 15);
+                LoadLatestAvailableByCategory(ItemCategory.Engines, EnginesCards, 15);
+                LoadLatestAvailableByCategory(ItemCategory.Manufacturing, ManufacturingCards, 15);
             }
             else
             {
                 foreach (var p in productDB.SelectLatestRequested(15))
                     RecentlyAddedCards.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
 
-                LoadNRequestingCardsByCat(ItemCategory.Mechanics, MechanicsCards, 15);
-                LoadNRequestingCardsByCat(ItemCategory.Electronics, ElectronicsCards, 15);
-                LoadNRequestingCardsByCat(ItemCategory.Programming, ProgrammingCards, 15);
-                LoadNRequestingCardsByCat(ItemCategory.Engines, EnginesCards, 15);
-                LoadNRequestingCardsByCat(ItemCategory.Manufacturing, ManufacturingCards, 15);
+                LoadLatestRequestedByCategory(ItemCategory.Mechanics, MechanicsCards, 15);
+                LoadLatestRequestedByCategory(ItemCategory.Electronics, ElectronicsCards, 15);
+                LoadLatestRequestedByCategory(ItemCategory.Programming, ProgrammingCards, 15);
+                LoadLatestRequestedByCategory(ItemCategory.Engines, EnginesCards, 15);
+                LoadLatestRequestedByCategory(ItemCategory.Manufacturing, ManufacturingCards, 15);
             }
         }
 
@@ -137,19 +140,19 @@ namespace Robot_Garage.Pages
                 switch (category)
                 {
                     case "Mechanics":
-                        LoadRequestingCardsByCat(ItemCategory.Mechanics, source);
+                        LoadAllRequestedByCategory(ItemCategory.Mechanics, source);
                         break;
                     case "Electronics":
-                        LoadRequestingCardsByCat(ItemCategory.Electronics, source);
+                        LoadAllRequestedByCategory(ItemCategory.Electronics, source);
                         break;
                     case "Programming":
-                        LoadRequestingCardsByCat(ItemCategory.Programming, source);
+                        LoadAllRequestedByCategory(ItemCategory.Programming, source);
                         break;
                     case "Engines":
-                        LoadRequestingCardsByCat(ItemCategory.Engines, source);
+                        LoadAllRequestedByCategory(ItemCategory.Engines, source);
                         break;
                     case "Manufacturing":
-                        LoadRequestingCardsByCat(ItemCategory.Manufacturing, source);
+                        LoadAllRequestedByCategory(ItemCategory.Manufacturing, source);
                         break;
                     default:
                         source = RecentlyAddedCards;
@@ -169,28 +172,40 @@ namespace Robot_Garage.Pages
                 col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-        void LoadNCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
+        void LoadLatestAvailableByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
             var list = productDB.SelectLatestAvailableByCategory(n, cat);
             foreach (var p in list)
                 col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-        void LoadRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col)
+        void LoadAllRequestedByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col)
         {
             var list = productDB.SelectAllRequestedByCategory(cat);
             foreach (var p in list)
                 col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-        void LoadNRequestingCardsByCat(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
+        void LoadLatestRequestedByCategory(ItemCategory cat, ObservableCollection<CardViewModel> col, int n)
         {
             var list = productDB.SelectLatestRequestedByCategory(n, cat);
             foreach (var p in list)
                 col.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
         }
 
-		private Task RefreshCards() {
+        void LoadAllCardsByList(ProductList products, ObservableCollection<CardViewModel> col)
+        {
+            foreach (Product product in products)
+                col.Add(new CardViewModel { Product = product, LoggedUser = loggedUser });
+        }
+
+        void LoadAllCardsByTransactions(TransactionList transactions, ObservableCollection<CardViewModel> col)
+        {
+            foreach (Model.Transaction transaction in transactions)
+                col.Add(new CardViewModel { Product = transaction.Product, LoggedUser = loggedUser });
+        }
+
+        private Task RefreshCards() {
             SelectedCategoryCards.Clear();
 			RecentlyAddedCards.Clear();
             ManufacturingCards.Clear();
@@ -200,20 +215,14 @@ namespace Robot_Garage.Pages
             EnginesCards.Clear();
 			MyPurchases.Clear();
 			MyListings.Clear();
+			MyRequests.Clear();
 			ItemsSold.Clear();
 
 			if (_currentPage == "My Items") {
-				var allMine = productDB.SelectByOwnerID(loggedUser.ID);
-				foreach (var p in allMine)
-					MyListings.Add(new CardViewModel { Product = p, LoggedUser = loggedUser });
-
-				var soldTx = transactionDB.SelectBySeller((Captain)loggedUser);
-				foreach (var tx in soldTx)
-					ItemsSold.Add(new CardViewModel { Product = tx.Product, LoggedUser = loggedUser });
-
-				var boughtTx = transactionDB.SelectByBuyer((Captain)loggedUser);
-				foreach (var tx in boughtTx)
-					MyPurchases.Add(new CardViewModel { Product = tx.Product, LoggedUser = loggedUser });
+                LoadAllCardsByList(productDB.SelectByOwnerID(loggedUser.ID), MyListings);
+                LoadAllCardsByList(productDB.SelectRequestedByOwnerID(loggedUser.ID), MyRequests);
+                LoadAllCardsByTransactions(transactionDB.SelectBySeller((Captain)loggedUser), ItemsSold);
+                LoadAllCardsByTransactions(transactionDB.SelectByBuyer((Captain)loggedUser), MyPurchases);
 			}
 			else {
 				if (CategoryPanel.Visibility == Visibility.Visible) {
@@ -356,6 +365,13 @@ namespace Robot_Garage.Pages
             SelectedCategoryTitle.Content = category;
 
             await RefreshCards();
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer)sender;
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 
