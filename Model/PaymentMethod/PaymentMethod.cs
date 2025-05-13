@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Model {
 	public class PaymentMethod : BaseEntity {
-		private User user;
+		private int userID;
 		private string cardholderName;
 		private string cardNumber;
 		private DateTime expiry;
 		private int cvc;
 
-		public User User {
-			get => user;
-			set => user = value;
+		public int UserID {
+			get => userID;
+			set => userID = value;
 		}
 
 		public string CardholderName { 

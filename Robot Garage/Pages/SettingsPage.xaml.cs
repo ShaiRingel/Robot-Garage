@@ -55,7 +55,7 @@ namespace Robot_Garage.Pages {
 			);
 
 			PaymentMethod method = new PaymentMethod {
-				User = App.CurrentUser,
+				UserID = App.CurrentUser.ID,
 				CardholderName = CardholderNameTextBox.Text.Trim(),
 				CardNumber = CardNumberMaskedTextBox.Text.Replace(" ", "").Trim(),
 				Expiry = expiry,

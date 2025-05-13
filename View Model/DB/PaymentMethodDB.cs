@@ -18,7 +18,7 @@ namespace View_Model.DB {
 			PaymentMethod paymentMethod = (PaymentMethod)entity;
 
 			paymentMethod.ID = (int)reader["payment_id"];
-			paymentMethod.User = new User { ID = (int)reader["user_id"] };
+			paymentMethod.UserID = (int)reader["user_id"];
 			paymentMethod.CardholderName = reader["cardholder_name"].ToString();
 			paymentMethod.CardNumber = reader["card_number"].ToString();
 			paymentMethod.Expiry = (DateTime)reader["expiry"];
@@ -63,7 +63,7 @@ namespace View_Model.DB {
 		#region Parameter Binders
 		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity e) {
 			PaymentMethod paymentMethod = (PaymentMethod)e;
-			cmd.Parameters.Add("?", OleDbType.Integer).Value = paymentMethod.User.ID;
+			cmd.Parameters.Add("?", OleDbType.Integer).Value = paymentMethod.UserID;
 			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = paymentMethod.CardholderName;
 			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = paymentMethod.CardNumber;
 			cmd.Parameters.Add("?", OleDbType.Date).Value = paymentMethod.Expiry;
