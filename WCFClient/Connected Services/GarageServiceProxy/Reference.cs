@@ -23,6 +23,8 @@ namespace GarageServiceProxy
         
         private string PasswordField;
         
+        private GarageServiceProxy.PaymentMethod PaymentMethodField;
+        
         private string UniqueCodeField;
         
         private string UsernameField;
@@ -50,6 +52,19 @@ namespace GarageServiceProxy
             set
             {
                 this.PasswordField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public GarageServiceProxy.PaymentMethod PaymentMethod
+        {
+            get
+            {
+                return this.PaymentMethodField;
+            }
+            set
+            {
+                this.PaymentMethodField = value;
             }
         }
         
@@ -83,6 +98,7 @@ namespace GarageServiceProxy
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="BaseEntity", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.PaymentMethod))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Product))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Message))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(GarageServiceProxy.Transaction))]
@@ -102,6 +118,88 @@ namespace GarageServiceProxy
             set
             {
                 this.IDField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="PaymentMethod", Namespace="http://schemas.datacontract.org/2004/07/Model")]
+    public partial class PaymentMethod : GarageServiceProxy.BaseEntity
+    {
+        
+        private string CardNumberField;
+        
+        private string CardholderNameField;
+        
+        private int CvcField;
+        
+        private System.DateTime ExpiryField;
+        
+        private int UserIDField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CardNumber
+        {
+            get
+            {
+                return this.CardNumberField;
+            }
+            set
+            {
+                this.CardNumberField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CardholderName
+        {
+            get
+            {
+                return this.CardholderNameField;
+            }
+            set
+            {
+                this.CardholderNameField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Cvc
+        {
+            get
+            {
+                return this.CvcField;
+            }
+            set
+            {
+                this.CvcField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Expiry
+        {
+            get
+            {
+                return this.ExpiryField;
+            }
+            set
+            {
+                this.ExpiryField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int UserID
+        {
+            get
+            {
+                return this.UserIDField;
+            }
+            set
+            {
+                this.UserIDField = value;
             }
         }
     }
@@ -493,6 +591,12 @@ namespace GarageServiceProxy
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SelectUserByID", ReplyAction="http://tempuri.org/IUserService/SelectUserByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.User> SelectUserByIDAsync(int id);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPaymentService/SelectAllPaymentMethods", ReplyAction="http://tempuri.org/IPaymentService/SelectAllPaymentMethodsResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.PaymentMethod>> SelectAllPaymentMethodsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPaymentService/SelectPaymentMethodByID", ReplyAction="http://tempuri.org/IPaymentService/SelectPaymentMethodByIDResponse")]
+        System.Threading.Tasks.Task<GarageServiceProxy.PaymentMethod> SelectPaymentMethodByIDAsync(int id);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProductService/SelectAllProducts", ReplyAction="http://tempuri.org/IProductService/SelectAllProductsResponse")]
         System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync();
         
@@ -505,8 +609,8 @@ namespace GarageServiceProxy
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/SelectMessageByID", ReplyAction="http://tempuri.org/IMessageService/SelectMessageByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.Message> SelectMessageByIDAsync(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITransacionService/SelectAllTransactions", ReplyAction="http://tempuri.org/ITransacionService/SelectAllTransactionsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllTransactionsAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITransacionService/SelectAllPaymentMethod", ReplyAction="http://tempuri.org/ITransacionService/SelectAllPaymentMethodResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllPaymentMethodAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITransacionService/SelectTransactionByID", ReplyAction="http://tempuri.org/ITransacionService/SelectTransactionByIDResponse")]
         System.Threading.Tasks.Task<GarageServiceProxy.Transaction> SelectTransactionByIDAsync(int id);
@@ -570,6 +674,16 @@ namespace GarageServiceProxy
             return base.Channel.SelectUserByIDAsync(id);
         }
         
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.PaymentMethod>> SelectAllPaymentMethodsAsync()
+        {
+            return base.Channel.SelectAllPaymentMethodsAsync();
+        }
+        
+        public System.Threading.Tasks.Task<GarageServiceProxy.PaymentMethod> SelectPaymentMethodByIDAsync(int id)
+        {
+            return base.Channel.SelectPaymentMethodByIDAsync(id);
+        }
+        
         public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Product>> SelectAllProductsAsync()
         {
             return base.Channel.SelectAllProductsAsync();
@@ -590,9 +704,9 @@ namespace GarageServiceProxy
             return base.Channel.SelectMessageByIDAsync(id);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllTransactionsAsync()
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<GarageServiceProxy.Transaction>> SelectAllPaymentMethodAsync()
         {
-            return base.Channel.SelectAllTransactionsAsync();
+            return base.Channel.SelectAllPaymentMethodAsync();
         }
         
         public System.Threading.Tasks.Task<GarageServiceProxy.Transaction> SelectTransactionByIDAsync(int id)

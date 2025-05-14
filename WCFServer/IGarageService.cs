@@ -3,7 +3,7 @@
 namespace WCFServer
 {
     [ServiceContract]
-    public interface IGarageService : IUserService, IProductService, IMessageService, ITransacionService
+    public interface IGarageService : IUserService, IPaymentService, IProductService, IMessageService, ITransacionService
     {
 
     }

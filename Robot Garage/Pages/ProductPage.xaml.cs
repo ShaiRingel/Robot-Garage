@@ -70,7 +70,7 @@ namespace Robot_Garage.Pages
         {
 			if (App.CurrentUser?.PaymentMethod == null) {
 				MessageBox.Show("You need to set up your paymentMethod first in your settings.", "paymentMethod", MessageBoxButton.OK, MessageBoxImage.Error);
-				NavigationService.Navigate(new MainPage());
+				NavigationService.GoBack();
 			}
 			else {
 				if (!productDB.SelectByID(product.ID).Availability) {
@@ -78,10 +78,24 @@ namespace Robot_Garage.Pages
 					return;
 				}
 
-				MessageBox.Show("Request submitted successfully!", "Request", MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show("The purchase was successful!", "Purchase", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                TransactionDB transactionDB = new TransactionDB();
+                Transaction transaction = new Transaction
+                {
+                    Seller = product.Owner,
+                    Buyer = App.CurrentUser,
+                    Product = product,
+                    Status = OrderStatus.Confirmed
+                };
+                transactionDB.Insert(transaction);
+                transactionDB.SaveChanges();
+
                 product.Availability = false;
                 productDB.Update(product);
                 productDB.SaveChanges();
+
+				NavigationService.GoBack();
 			}
 
         }
@@ -90,16 +104,34 @@ namespace Robot_Garage.Pages
         {
 			if (App.CurrentUser?.PaymentMethod == null) {
 				MessageBox.Show("You need to set up your paymentMethod first in your settings.", "paymentMethod", MessageBoxButton.OK, MessageBoxImage.Error);
-				NavigationService.Navigate(new MainPage());
-			}
+                NavigationService.GoBack();
+            }
 			else {
 				if (!productDB.SelectByID(product.ID).Availability) {
 					MessageBox.Show("Product was probably bought in the last couple of minutes, therefore is not available for purchase.");
 					return;
 				}
 
-				MessageBox.Show("Request submitted successfully!", "Request", MessageBoxButton.OK, MessageBoxImage.Information);
-			}
+				MessageBox.Show("Request accepted successfully!", "Request", MessageBoxButton.OK, MessageBoxImage.Information);
+                
+                product.Availability = false;
+
+                TransactionDB transactionDB = new TransactionDB();
+                Transaction transaction = new Transaction
+                {
+                    Seller = product.Owner,
+                    Buyer = App.CurrentUser,
+                    Product = product,
+                    Status = OrderStatus.Confirmed
+                };
+                transactionDB.Insert(transaction);
+                transactionDB.SaveChanges();
+
+                productDB.Update(product);
+                productDB.SaveChanges();
+
+                NavigationService.GoBack();
+            }
 		}
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)

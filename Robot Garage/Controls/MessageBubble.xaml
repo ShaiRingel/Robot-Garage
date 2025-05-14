@@ -20,7 +20,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Border Padding="7" Margin="5" CornerRadius="18" >
+    <Border Padding="7" Margin="5" CornerRadius="10" >
         <TextBlock Text="{Binding MessageText, RelativeSource={RelativeSource AncestorType=UserControl}}"
            FontSize="14" FontWeight="DemiBold" TextWrapping="Wrap"
            Foreground="{StaticResource DarkForegroundBrush}" />

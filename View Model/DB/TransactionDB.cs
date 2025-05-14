@@ -79,10 +79,37 @@ namespace View_Model.DB {
 			return new TransactionList(base.Select());
 		}
 
-		#endregion
+        public TransactionList SelectRequestedByBuyer(Captain buyer)
+        {
+            this.command.Parameters.Clear();
 
-		#region CRUD
-		public override void Insert(BaseEntity entity) {
+            this.command.CommandText =
+                "SELECT * FROM TransactionTbl WHERE [buyer_id] = ?";
+
+            this.command.Parameters.Add(new OleDbParameter
+            {
+                OleDbType = OleDbType.Integer,
+                Value = buyer.ID
+            });
+
+			TransactionList list = new TransactionList(base.Select());
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!list[i].Product.Request)
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return list;
+        }
+
+        #endregion
+
+        #region CRUD
+        public override void Insert(BaseEntity entity) {
 			Transaction transaction = (Transaction)entity;
 
 			base.Insert(transaction);

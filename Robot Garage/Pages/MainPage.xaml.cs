@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,6 +27,7 @@ namespace Robot_Garage.Pages
 		public ObservableCollection<CardViewModel> ItemsSold { get; set; }
 		public ObservableCollection<CardViewModel> MyPurchases { get; set; }
 		public ObservableCollection<CardViewModel> MyRequests { get; set; }
+		public ObservableCollection<CardViewModel> AcceptedRequests { get; set; }
 
 
         private string _currentPage;
@@ -65,6 +65,7 @@ namespace Robot_Garage.Pages
             ItemsSold = new ObservableCollection<CardViewModel>();
             MyPurchases = new ObservableCollection<CardViewModel>();
             MyRequests = new ObservableCollection<CardViewModel>();
+            AcceptedRequests = new ObservableCollection<CardViewModel>();
 
             // Load data
             LoadCardsProducts();
@@ -197,7 +198,7 @@ namespace Robot_Garage.Pages
                 col.Add(new CardViewModel { Product = product, LoggedUser = App.CurrentUser });
         }
 
-        void LoadAllCardsByTransactions(TransactionList transactions, ObservableCollection<CardViewModel> col)
+        void LoadAllCardsByPaymentMethod(TransactionList transactions, ObservableCollection<CardViewModel> col)
         {
             foreach (Model.Transaction transaction in transactions)
                 col.Add(new CardViewModel { Product = transaction.Product, LoggedUser = App.CurrentUser });
@@ -209,18 +210,21 @@ namespace Robot_Garage.Pages
             ManufacturingCards.Clear();
             ElectronicsCards.Clear();
             ProgrammingCards.Clear();
+            AcceptedRequests.Clear();
             MechanicsCards.Clear();
             EnginesCards.Clear();
 			MyPurchases.Clear();
 			MyListings.Clear();
 			MyRequests.Clear();
-			ItemsSold.Clear();
+
+            ItemsSold.Clear();
 
 			if (_currentPage == "My Items") {
                 LoadAllCardsByList(productDB.SelectByOwnerID(App.CurrentUser.ID), MyListings);
                 LoadAllCardsByList(productDB.SelectRequestedByOwnerID(App.CurrentUser.ID), MyRequests);
-                LoadAllCardsByTransactions(transactionDB.SelectBySeller((Captain)App.CurrentUser), ItemsSold);
-                LoadAllCardsByTransactions(transactionDB.SelectByBuyer((Captain)App.CurrentUser), MyPurchases);
+                LoadAllCardsByPaymentMethod(transactionDB.SelectBySeller((Captain)App.CurrentUser), ItemsSold);
+                LoadAllCardsByPaymentMethod(transactionDB.SelectByBuyer((Captain)App.CurrentUser), MyPurchases);
+                LoadAllCardsByPaymentMethod(transactionDB.SelectRequestedByBuyer((Captain)App.CurrentUser), AcceptedRequests);
 			}
 			else {
 				if (CategoryPanel.Visibility == Visibility.Visible) {
@@ -295,7 +299,7 @@ namespace Robot_Garage.Pages
 		}
 
 		private void btnSettings_Click(object sender, RoutedEventArgs e) {
-            NavigationService?.Navigate(new SettingsPage());
+            NavigationService?.Navigate(new PaymentSettingsPage());
 		}
 
 		private void SalesPage_Loaded(object sender, RoutedEventArgs e)

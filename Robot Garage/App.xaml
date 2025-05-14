@@ -4,8 +4,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:convertors="clr-namespace:Robot_Garage.Convertors"
              xmlns:local="clr-namespace:Robot_Garage"
-             StartupUri="MainWindow.xaml"
-             Startup="App_Startup">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- Dark Accents -->
         <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#FF1F1F1F"/>

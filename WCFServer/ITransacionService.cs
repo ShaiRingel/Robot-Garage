@@ -7,18 +7,18 @@ namespace WCFServer
     public interface ITransacionService
     {
         [OperationContract]
-        TransactionList SelectAllTransactions();
+        TransactionList SelectAllPaymentMethod();
 
         [OperationContract]
         Transaction SelectTransactionByID(int id);
 
         /*[OperationContract]
-		void InsertTransactions(Transactions item);
+		void InsertPaymentMethod(PaymentMethod item);
 
 		[OperationContract]
-		void UpdateTransactions(Transactions item);
+		void UpdatePaymentMethod(PaymentMethod item);
 
 		[OperationContract]
-		void DeleteTransactions(Transactions item);*/
+		void DeletePaymentMethod(PaymentMethod item);*/
     }
 }

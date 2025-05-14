@@ -56,7 +56,7 @@
             Click="btnSettings_Click"
             VerticalAlignment="Center"
             Cursor="Hand" Margin="0, 0, 15, 0">
-                        <svgc:SvgViewbox Source="/assets/images/Settings.svg" Height="20" VerticalAlignment="Center"/>
+                        <svgc:SvgViewbox Source="/assets/images/PaymentMethod.svg" Height="18" VerticalAlignment="Center"/>
                     </Button>
                     <Button Grid.Row="0" BorderBrush="Transparent" Background="{x:Null}" 
                         Style="{StaticResource NoHighlightButtonStyle}"
@@ -326,6 +326,23 @@ Margin="5, 0, 5, 0"/>
                         <Label Content="My Purchases" FontSize="24" FontWeight="Bold" Margin="0,20,0,5"/>
                         <controls:Carousel MaxHeight="160">
                             <ItemsControl ItemsSource="{Binding MyPurchases}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:Card Margin="0,0,5,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Carousel>
+                        
+                        <!-- Accepted Requests -->
+                        <Label Content="Accepted Requests" FontSize="24" FontWeight="Bold" Margin="0,20,0,5"/>
+                        <controls:Carousel MaxHeight="160">
+                            <ItemsControl ItemsSource="{Binding AcceptedRequests}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>

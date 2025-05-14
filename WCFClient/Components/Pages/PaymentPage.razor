@@ -1,0 +1,185 @@
+﻿@page "/paymentmethod"
+@using GarageServiceProxy
+@inject GarageServiceClient Client
+@rendermode InteractiveServer
+
+<h3>Payment Method Management</h3>
+<div class="row">
+    <div class="col-3">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.List ? "active" : "")" @onclick="() => SelectOperation(Operation.List)">List Payment Method</button>
+            </li>
+            <li class="nav-item mb-1">
+                <button type="button" class="nav-link w-100 @(selectedOperation == Operation.GetById ? "active" : "")" @onclick="() => SelectOperation(Operation.GetById)">Get Payment Method by ID</button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-9">
+        @RenderOperation()
+    </div>
+</div>
+
+@code {
+    enum Operation { List, GetById }
+    private Operation selectedOperation = Operation.List;
+
+    private List<PaymentMethod> paymentMethods = new();
+    private PaymentMethod currentPaymentMethod = new();
+    private int searchId;
+    private string message;
+    private bool isLoading;
+    private bool initialLoadRequested;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender && !initialLoadRequested) {
+            initialLoadRequested = true;
+            await Task.Delay(10);
+            await LoadAllAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAllAsync() {
+        try {
+            isLoading = true;
+            StateHasChanged();
+            paymentMethods = (await Client.SelectAllPaymentMethodsAsync())?.ToList() ?? new List<PaymentMethod>();
+        }
+        catch (Exception ex) {
+            message = $"Error loading Payment Methods: {ex.Message}";
+        }
+        finally {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SelectOperation(Operation op) {
+        selectedOperation = op;
+        message = string.Empty;
+        currentPaymentMethod = new PaymentMethod();
+        searchId = 0;
+
+        if (op == Operation.List) {
+            _ = LoadAllAsync();
+        }
+    }
+
+    private RenderFragment RenderOperation() => selectedOperation switch {
+        Operation.List => @<div>
+        <h4>All Payment Methods</h4>
+        @if (isLoading)
+    {
+        <p>Loading Payment Methods...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+        <table class="table table-striped">
+            <thead>
+                <tr><th>ID</th><th>User ID</th><th>User Name</th><th>CardHolderName</th><th>CardNumber</th><th>Expiry</th><th>Cvc</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var p in paymentMethods)
+            {
+                <tr>
+                    <td>@p.ID</td>
+                    <td>@p.UserID</td>
+                    <td>@Client.SelectUserByIDAsync(p.UserID).Result.Username</td>
+                    <td>@p.CardholderName</td>
+                    <td>@p.CardNumber</td>
+                    <td>@p.Expiry</td>
+                    <td>@p.Cvc</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>,
+
+        Operation.GetById => @<div>
+        <h4>Find Payment Method by ID</h4>
+        <div class="input-group mb-2" style="max-width: 300px;">
+            <InputNumber @bind-Value="searchId" class="form-control" placeholder="ID" />
+            <button class="btn btn-primary" @onclick="LoadPaymentMethodByIdAsync">Search</button>
+        </div>
+        @if (currentPaymentMethod?.ID > 0)
+    {
+        <div>
+            <p><strong>ID:</strong> @currentPaymentMethod.ID</p>
+            <p><strong>User ID:</strong> @currentPaymentMethod.UserID</p>
+            <p><strong>User Name:</strong> @Client.SelectUserByIDAsync(currentPaymentMethod.UserID).Result.Username</p>
+            <p><strong>Cardholder Name:</strong> ₪@currentPaymentMethod.CardholderName</p>
+            <p><strong>Card Number:</strong> ₪@currentPaymentMethod.CardNumber</p>
+            <p><strong>Expiry:</strong> ₪@currentPaymentMethod.Expiry</p>
+            <p><strong>CVC:</strong> ₪@currentPaymentMethod.Cvc</p>
+        </div>
+    }
+        @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert alert-danger">@message</div>
+    }
+    </div>,
+
+        _ => @<div>Select an operation.</div>
+    };
+
+    private async Task LoadPaymentMethodByIdAsync() {
+        try {
+            message = string.Empty;
+            var payment = await Client.SelectPaymentMethodByIDAsync(searchId);
+            if (payment == null) {
+                message = "Payment Method not found";
+                currentPaymentMethod = new PaymentMethod();
+            }
+            else {
+                currentPaymentMethod = payment;
+            }
+        }
+        catch {
+            message = "Payment Method not found";
+            currentPaymentMethod = new PaymentMethod();
+        }
+    }
+
+        /*private async Task InsertPaymentMethodAsync() {
+            try {
+                await Client.InsertPaymentMethodAsync(currentPaymentMethod);
+    message = "Inserted successfully.";
+                await LoadAllAsync();
+    }
+            catch (Exception ex) {
+                message = $"Insert failed: {ex.Message}";
+            }
+        }
+
+        private async Task UpdatePaymentMethodAsync() {
+            try {
+    await Client.UpdatePaymentMethodAsync(currentPaymentMethod);
+    message = "Updated successfully.";
+    await LoadAllAsync();
+    }
+            catch (Exception ex) {
+    message = $"Update failed: {ex.Message}";
+    }
+        }
+
+        private async Task DeleteByIdAsync() {
+            try {
+    var payment = await Client.GetPaymentMethodByIDAsync(searchId);
+    if (payment != null) {
+        await Client.DeletePaymentMethodAsync(payment);
+        message = $"Deleted ID {searchId}.";
+        await LoadAllAsync();
+        }
+    else {
+        message = "PaymentMethod not found";
+        }
+    }
+            catch {
+    message = "PaymentMethod not found";
+    }
+        }*/
+}

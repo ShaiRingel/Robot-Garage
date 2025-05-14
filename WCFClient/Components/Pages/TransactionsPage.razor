@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 
 <h3>Transaction Management</h3>
-<div class="row w-50">
+<div class="row">
     <div class="col-3">
         <ul class="nav flex-column nav-pills">
             <li class="nav-item mb-1">
@@ -44,7 +44,7 @@
         try {
             isLoading = true;
             StateHasChanged();
-            transaction = (await Client.SelectAllTransactionsAsync())?.ToList() ?? new List<Transaction>();
+            transaction = (await Client.SelectAllPaymentMethodAsync())?.ToList() ?? new List<Transaction>();
         }
         catch (Exception ex) {
             message = $"Error loading transcations: {ex.Message}";
@@ -68,7 +68,7 @@
 
     private RenderFragment RenderOperation() => selectedOperation switch {
         Operation.List => @<div>
-        <h4>All Transactions</h4>
+        <h4>All PaymentMethod</h4>
         @if (isLoading)
     {
         <p>Loading transactions...</p>

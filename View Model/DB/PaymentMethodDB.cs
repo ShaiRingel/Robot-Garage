@@ -47,10 +47,39 @@ namespace View_Model.DB {
 
 			return base.Select().Cast<PaymentMethod>().FirstOrDefault();
 		}
-		#endregion
+        #endregion
 
-		#region CreateSQL
-		public override string CreateInsertSQL(BaseEntity e)
+        #region CRUD
+        public override void Insert(BaseEntity entity)
+        {
+            inserted.Add(new ChangeEntity(
+                this.CreateInsertSQL,
+                this.AddInsertParameters,
+                entity
+            ));
+        }
+
+        public override void Update(BaseEntity entity)
+        {
+            updated.Add(new ChangeEntity(
+                this.CreateUpdateSQL,
+                this.AddUpdateParameters,
+                entity
+            ));
+        }
+
+        public override void Delete(BaseEntity entity)
+        {
+            deleted.Add(new ChangeEntity(
+                this.CreateDeleteSQL,
+                this.AddDeleteParameters,
+                entity
+            ));
+        }
+        #endregion
+
+        #region CreateSQL
+        public override string CreateInsertSQL(BaseEntity e)
 			=> "INSERT INTO PaymentMethodTbl ([user_id],[cardholder_name],[card_number],[expiry],[cvc]) VALUES (?, ?, ?, ?, ?)";
 
 		public override string CreateUpdateSQL(BaseEntity e)
@@ -64,8 +93,8 @@ namespace View_Model.DB {
 		protected override void AddInsertParameters(OleDbCommand cmd, BaseEntity e) {
 			PaymentMethod paymentMethod = (PaymentMethod)e;
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = paymentMethod.UserID;
-			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = paymentMethod.CardholderName;
-			cmd.Parameters.Add("?", OleDbType.VarWChar).Value = paymentMethod.CardNumber;
+			cmd.Parameters.Add("?", OleDbType.VarChar).Value = paymentMethod.CardholderName;
+			cmd.Parameters.Add("?", OleDbType.VarChar).Value = paymentMethod.CardNumber;
 			cmd.Parameters.Add("?", OleDbType.Date).Value = paymentMethod.Expiry;
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = paymentMethod.Cvc;
 		}

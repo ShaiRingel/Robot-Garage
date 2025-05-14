@@ -22,7 +22,6 @@ namespace View_Model.DB
             DirectoryInfo di = new DirectoryInfo(baseDir);
             string projectDir = di.Parent.Parent.Parent.Parent.FullName;
 			string absolutePath = Path.Combine(projectDir, "View Model", "DB", "RobotGarageDB.accdb");
-            Debug.WriteLine("Absolute Path Found: " + absolutePath);
             
             connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
 								Data Source={absolutePath};

@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 
 <h3>Product Management</h3>
-<div class="row w-50">
+<div class="row">
     <div class="col-3">
         <ul class="nav flex-column nav-pills">
             <li class="nav-item mb-1">
@@ -80,7 +80,7 @@
     }
         <table class="table table-striped">
             <thead>
-                <tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th></tr>
+                <tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th><th>Available</th></tr>
             </thead>
             <tbody>
                 @foreach (var p in products)
@@ -90,6 +90,7 @@
                     <td>@p.Name</td>
                     <td>@p.Description</td>
                     <td>₪@p.Price</td>
+                    <td>@(p.Availability ? "Available" : "Unavailable")</td>
                 </tr>
             }
             </tbody>
@@ -110,6 +111,7 @@
             <p><strong>Name:</strong> @currentProduct.Name</p>
             <p><strong>Description:</strong> @currentProduct.Description</p>
             <p><strong>Price:</strong> ₪@currentProduct.Price</p>
+            <p><strong>Available:</strong> @currentProduct.Availability</p>
         </div>
     }
         @if (!string.IsNullOrEmpty(message)) {

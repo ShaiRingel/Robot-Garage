@@ -109,7 +109,7 @@ namespace View_Model.DB {
 		#region CreateSQL
 		public override string CreateInsertSQL(BaseEntity entity)
 			=> "INSERT INTO MessageTbl ([sender_id],[receiver_id],[message],[timestamp]) " +
-			   "VALUES (?, ?, ?, ?, ?)";
+			   "VALUES (?, ?, ?, ?)";
 
 		public override string CreateUpdateSQL(BaseEntity entity)
 			=> "UPDATE MessageTbl " +

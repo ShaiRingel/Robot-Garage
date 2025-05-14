@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" class="bi bi-credit-card-fill">
+ <g class="layer">
+  <title>Layer 1</title>
+  <path d="m0,4a2,2 0 0 1 2,-2l12,0a2,2 0 0 1 2,2l0,1l-16,0l0,-1zm0,3l0,5a2,2 0 0 0 2,2l12,0a2,2 0 0 0 2,-2l0,-5l-16,0zm3,2l1,0a1,1 0 0 1 1,1l0,1a1,1 0 0 1 -1,1l-1,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1" fill="#ffffff" id="svg_1"/>
+ </g>
+</svg>
