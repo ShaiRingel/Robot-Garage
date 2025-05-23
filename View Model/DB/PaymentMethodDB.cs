@@ -1,10 +1,6 @@
 ﻿using Model;
-using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using System.Linq;
 
 namespace View_Model.DB {
 	public class PaymentMethodDB : BaseEntityDB {
@@ -47,39 +43,36 @@ namespace View_Model.DB {
 
 			return base.Select().Cast<PaymentMethod>().FirstOrDefault();
 		}
-        #endregion
+		#endregion
 
-        #region CRUD
-        public override void Insert(BaseEntity entity)
-        {
-            inserted.Add(new ChangeEntity(
-                this.CreateInsertSQL,
-                this.AddInsertParameters,
-                entity
-            ));
-        }
+		#region CRUD
+		public override void Insert(BaseEntity entity) {
+			inserted.Add(new ChangeEntity(
+				this.CreateInsertSQL,
+				this.AddInsertParameters,
+				entity
+			));
+		}
 
-        public override void Update(BaseEntity entity)
-        {
-            updated.Add(new ChangeEntity(
-                this.CreateUpdateSQL,
-                this.AddUpdateParameters,
-                entity
-            ));
-        }
+		public override void Update(BaseEntity entity) {
+			updated.Add(new ChangeEntity(
+				this.CreateUpdateSQL,
+				this.AddUpdateParameters,
+				entity
+			));
+		}
 
-        public override void Delete(BaseEntity entity)
-        {
-            deleted.Add(new ChangeEntity(
-                this.CreateDeleteSQL,
-                this.AddDeleteParameters,
-                entity
-            ));
-        }
-        #endregion
+		public override void Delete(BaseEntity entity) {
+			deleted.Add(new ChangeEntity(
+				this.CreateDeleteSQL,
+				this.AddDeleteParameters,
+				entity
+			));
+		}
+		#endregion
 
-        #region CreateSQL
-        public override string CreateInsertSQL(BaseEntity e)
+		#region CreateSQL
+		public override string CreateInsertSQL(BaseEntity e)
 			=> "INSERT INTO PaymentMethodTbl ([user_id],[cardholder_name],[card_number],[expiry],[cvc]) VALUES (?, ?, ?, ?, ?)";
 
 		public override string CreateUpdateSQL(BaseEntity e)
@@ -110,6 +103,6 @@ namespace View_Model.DB {
 			cmd.Parameters.Add("?", OleDbType.Integer).Value = paymentMethod.ID;
 		}
 		#endregion
-	
+
 	}
 }

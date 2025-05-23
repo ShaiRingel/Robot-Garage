@@ -1,10 +1,5 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace View_Model.DB {
 	public class UserDB : BaseEntityDB {

@@ -1,6 +1,5 @@
 ﻿using Model;
 using System.Data.OleDb;
-using System.Reflection;
 
 namespace View_Model.DB {
 	public delegate string CreateSql(BaseEntity e);

@@ -2,6 +2,10 @@
 {
     public abstract class BaseEntity
     {
-        public int ID { get; set; }
-    }
+        private int id;
+		public int ID {
+			get => id;
+			set => id = value;
+		}
+	}
 }

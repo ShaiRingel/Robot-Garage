@@ -1,11 +1,5 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using View_Model.DB;
 
 namespace View_Model.DB {
 	public class TransactionDB : BaseEntityDB {
@@ -79,37 +73,33 @@ namespace View_Model.DB {
 			return new TransactionList(base.Select());
 		}
 
-        public TransactionList SelectRequestedByBuyer(Captain buyer)
-        {
-            this.command.Parameters.Clear();
+		public TransactionList SelectRequestedByBuyer(Captain buyer) {
+			this.command.Parameters.Clear();
 
-            this.command.CommandText =
-                "SELECT * FROM TransactionTbl WHERE [buyer_id] = ?";
+			this.command.CommandText =
+				"SELECT * FROM TransactionTbl WHERE [buyer_id] = ?";
 
-            this.command.Parameters.Add(new OleDbParameter
-            {
-                OleDbType = OleDbType.Integer,
-                Value = buyer.ID
-            });
+			this.command.Parameters.Add(new OleDbParameter {
+				OleDbType = OleDbType.Integer,
+				Value = buyer.ID
+			});
 
 			TransactionList list = new TransactionList(base.Select());
 
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (!list[i].Product.Request)
-                {
-                    list.RemoveAt(i);
-                    i--;
-                }
-            }
+			for (int i = 0; i < list.Count; i++) {
+				if (!list[i].Product.Request) {
+					list.RemoveAt(i);
+					i--;
+				}
+			}
 
-            return list;
-        }
+			return list;
+		}
 
-        #endregion
+		#endregion
 
-        #region CRUD
-        public override void Insert(BaseEntity entity) {
+		#region CRUD
+		public override void Insert(BaseEntity entity) {
 			Transaction transaction = (Transaction)entity;
 
 			base.Insert(transaction);

@@ -1,29 +1,25 @@
 ﻿using Model;
 using System.Data;
 using System.Data.OleDb;
-using System.Diagnostics;
 
-namespace View_Model.DB
-{
-    public abstract class BaseEntityDB
-    {
-        protected readonly string connectionString;
-        protected OleDbConnection connection;
-        protected OleDbCommand command;
-        protected OleDbDataReader reader;
+namespace View_Model.DB {
+	public abstract class BaseEntityDB {
+		protected readonly string connectionString;
+		protected OleDbConnection connection;
+		protected OleDbCommand command;
+		protected OleDbDataReader reader;
 
 		protected List<ChangeEntity> inserted;
 		protected List<ChangeEntity> deleted;
 		protected List<ChangeEntity> updated;
 
-		public BaseEntityDB()
-        {
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            DirectoryInfo di = new DirectoryInfo(baseDir);
-            string projectDir = di.Parent.Parent.Parent.Parent.FullName;
+		public BaseEntityDB() {
+			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+			DirectoryInfo di = new DirectoryInfo(baseDir);
+			string projectDir = di.Parent.Parent.Parent.Parent.FullName;
 			string absolutePath = Path.Combine(projectDir, "View Model", "DB", "RobotGarageDB.accdb");
-            
-            connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
+
+			connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;
 								Data Source={absolutePath};
 								Persist Security Info=True";
 

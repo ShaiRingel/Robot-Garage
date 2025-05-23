@@ -1,18 +1,7 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using View_Model.DB;
 
 namespace Robot_Garage.Pages {
@@ -64,7 +53,7 @@ namespace Robot_Garage.Pages {
 
 			App.CurrentUser.PaymentMethod = method;
 			PaymentMethodDB paymentMethodDB = new PaymentMethodDB();
-			
+
 			if (paymentMethodDB.SelectByUser(App.CurrentUser) == null) {
 				paymentMethodDB.Insert(method);
 				paymentMethodDB.SaveChanges();

@@ -1,11 +1,6 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace View_Model.DB {
 	public class MessageDB : BaseEntityDB {
@@ -118,7 +113,7 @@ namespace View_Model.DB {
 
 		public override string CreateDeleteSQL(BaseEntity entity)
 			=> "DELETE FROM MessageTbl WHERE message_id = ?";
-		
+
 		#endregion
 
 		#region Parameter Binders
